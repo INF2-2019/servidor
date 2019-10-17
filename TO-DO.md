@@ -9,8 +9,9 @@ Essa é uma lista de afazeres globais do repositório.
   - [x] Adicionar instruções de _build_
   - [x] Instruções de editores
   - [x] Referência as documentações
-- [] Adicionar os dumps sql
+- [x] Adicionar os dumps sql
 - [] Adicionar documentações do banco de dados
+- [] Adicionar os serviços e utilidades
 - [] Criar as rotas do painel administrativo
 - [x] Criar `.editorconfig`
   - [x] Adicionar o `EditorConfig` para as instruções de editores
