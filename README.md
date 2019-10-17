@@ -18,7 +18,7 @@ Instruções para instalação: [aqui](https://duckduckgo.com/)
 
 ### IDE's recomendadas
 
-- NetBeans 8+
+- NetBeans 8.2+
 - IntelliJ IDEA
 
 ### Plugins e Configurações
