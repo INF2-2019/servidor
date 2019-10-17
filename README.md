@@ -1,6 +1,6 @@
-# Apicação Desktop
+# Servidor
 
-Esse repositório é dedicado a parte de `front-end` desktop da aplicação a ser der desenvolvida.
+Esse repositório é dedicado a parte de `back-end` da aplicação a ser der desenvolvida.
 
 ## Aviso
 
@@ -14,7 +14,7 @@ _A Fazer_
 
 _A Fazer_
 
-## Sobre a estilização
+## Sobre os bancos de dados
 
 _A Fazer_
 

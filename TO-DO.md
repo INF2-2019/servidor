@@ -9,9 +9,9 @@ Essa é uma lista de afazeres globais do repositório.
   - [] Adicionar instruções de _build_
   - [] Instruções de editores
   - [] Referência as documentações
-- [] Adicionar o `css`/`scss` global
-- [] Adicionar documentações do css global
-- [] Criar a tela principal do projeto
+- [] Adicionar os dumps sql
+- [] Adicionar documentações do banco de dados
+- [] Criar as rotas do painel administrativo
 - [] Criar `.editorconfig`
   - [] Adicionar o `EditorConfig` para as instruções de editores
 - [] Adicionar o padrão de _PR_
