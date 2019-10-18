@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `alunos` (
   `cep` INT NOT NULL,
   `uf` VARCHAR(255) NOT NULL,
   `foto` text NOT NULL,
-  PRIMARY KEY(id)Ï
+  PRIMARY KEY(id)
 );
 
 DROP TABLE IF EXISTS `operador`;
