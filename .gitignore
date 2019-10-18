@@ -152,4 +152,6 @@ local.properties
 .scala_dependencies
 .worksheet
 
+.gradle/
+**/.idea/dictionaries/
 
