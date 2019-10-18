@@ -1,18 +1,9 @@
--- TO-DO:
--- Foreign Keys
--- Tabelas de admin
--- Senhas
--- Ordenar
-
--- `senha` VARCHAR(255) NOT NULL
-
 SET time_zone = "-03:00";
 
 
 CREATE DATABASE IF NOT EXISTS diario CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE diario;
 
--- Usuários
 
 DROP TABLE IF EXISTS `alunos`;
 CREATE TABLE IF NOT EXISTS `alunos` (
@@ -54,8 +45,6 @@ CREATE TABLE IF NOT EXISTS `admin` (
   PRIMARY KEY(id)
 );
 
--- Demais
-
 DROP TABLE IF EXISTS `campi`;
 CREATE TABLE IF NOT EXISTS `campi` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -92,9 +81,6 @@ CREATE TABLE IF NOT EXISTS `disciplinas` (
   PRIMARY KEY(id)
 );
 
--- Não faltam dados na tabela de Etapas?
--- Adicionado ano
-
 DROP TABLE IF EXISTS `etapas`;
 CREATE TABLE IF NOT EXISTS `etapas` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -126,8 +112,6 @@ CREATE TABLE IF NOT EXISTS `turmas` (
   `nome` VARCHAR(255) NOT NULL,
   PRIMARY KEY(id)
 );
-
--- -- --
 
 DROP TABLE IF EXISTS `atividades`;
 CREATE TABLE IF NOT EXISTS `atividades` (

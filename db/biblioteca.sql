@@ -1,8 +1,3 @@
--- TO-DO:
--- Foreign Keys
--- Tabelas de usuários
--- Modificar descartes para id do funcionário
-
 SET time_zone = "-03:00";
 
 
@@ -98,8 +93,6 @@ CREATE TABLE IF NOT EXISTS `midias` (
   `tempo` TIME NOT NULL,
   `subtipo` ENUM('CD', 'DVD', 'FITA', 'PENDRIVE') NOT NULL
 );
-
--- O que são partes?
 
 DROP TABLE IF EXISTS `partes`;
 CREATE TABLE IF NOT EXISTS `partes` (
