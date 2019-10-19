@@ -10,7 +10,7 @@ Essa é uma lista de afazeres globais do repositório.
   - [x] Instruções de editores
   - [x] Referência as documentações
 - [x] Adicionar os dumps sql
-- [] Adicionar documentações do banco de dados
+- [x] Adicionar documentações do banco de dados
 - [] Adicionar os serviços e utilidades
 - [] Criar as rotas do painel administrativo
 - [x] Criar `.editorconfig`
