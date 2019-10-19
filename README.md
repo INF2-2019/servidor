@@ -52,7 +52,10 @@ Utilizar a ferramenta de _build_ padrão da IDE utilizada. O servidor tem que se
 
 ## Sobre os bancos de dados
 
-Os bancos de dados seguem um padrão semelhante ao documento do projeto, futuramente serão adicionados os `dumps` e um esquema
+Os bancos de dados seguem um padrão semelhante ao documento do projeto.
+
+Os "dumps" estão na pasta [db](db/) do projeto.  
+A documentação pode ser acessada [aqui](docs/bd/README.md)
 
 ## Bibliotecas
 
