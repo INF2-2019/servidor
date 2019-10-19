@@ -20,7 +20,6 @@ public class Consultar extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response){
 		Connection conexao = ConnectionFactory.getDiario();
-		System.out.println(conexao.toString());
 		CursoRepository cursoRep = new CursoRepository(conexao);
 
 		Set<Curso> resultado = new HashSet<>();
@@ -45,6 +44,7 @@ public class Consultar extends HttpServlet {
 
 		try {
 			resultado = cursoRep.realizarBusca(filtros);
+
 			System.out.println(resultado);
 		} catch(NumberFormatException excecaoFormatoErrado) {
 			System.err.println("Número inteiro inválido para o parâmetro. Erro: "+excecaoFormatoErrado.toString());

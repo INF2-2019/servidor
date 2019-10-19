@@ -15,6 +15,7 @@ public class CursoRepository {
 	}
 
 	public Set<Curso> realizarBusca(Map<String, String> filtros) throws NumberFormatException, SQLException {
+		// Base da query SQL
 		String sql = "SELECT * FROM `cursos` WHERE ";
 		Set<Curso> cursosResultado = new HashSet<>();
 		boolean jaAdicionado = false;
@@ -31,6 +32,7 @@ public class CursoRepository {
 			Integer.parseUnsignedInt(filtros.get("horas"));
 		}
 
+		// Montar a query SQL com base nos filtros passados no Map
 		for (Map.Entry<String, String> filtro : filtros.entrySet()) {
 			if (jaAdicionado) {
 				sql += "AND (`" + filtro.getKey() + "` = '"+ filtro.getValue() +"') ";
@@ -40,10 +42,10 @@ public class CursoRepository {
 			}
 		}
 
-		System.out.println(sql);
 		PreparedStatement ps = con.prepareStatement(sql);
 		ResultSet resultadoBusca = ps.executeQuery();
 
+		// Itera por cada item do resultado
 		while(resultadoBusca.next()){
 			cursosResultado.add(converterResultSetParaCurso(resultadoBusca));
 		}
