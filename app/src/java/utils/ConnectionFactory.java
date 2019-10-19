@@ -9,12 +9,12 @@ public class ConnectionFactory {
 	private final static String DRIVER = "com.mysql.jdbc.Driver";
 	private final static String URL = "jdbc:mysql://localhost/";
 	private final static String USUARIO = "root";
-	private final static String SENHA = "123456";
-	
+	private final static String SENHA = "";
+
 	public static Connection getConnection(String database) {
 		try {
 			Class.forName(DRIVER);
-			return DriverManager.getConnection(URL + database, USUARIO, SENHA);            
+			return DriverManager.getConnection(URL + database + "?useTimezone=true&serverTimezone=UTC", USUARIO, SENHA);
 		} catch(ClassNotFoundException e) {
 			System.err.println("Driver não encontrado: " + e);
 			return null;
