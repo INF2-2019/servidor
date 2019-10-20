@@ -33,8 +33,8 @@ public class ConsultarCursos extends HttpServlet {
 
 			CursoRepository cursoRep = new CursoRepository(conexao);
 
-			Set<CursoModel> resultado;
-			Map<String, String> filtros = definirFiltros(request); // criando um Map para armazenar os filtros de maneira pratica
+		Set<CursoModel> resultado;
+		Map<String, String> filtros = cursoRep.definirMap(request); // criando um Map para armazenar os filtros de maneira pratica
 
 			try {
 				PrintWriter out = response.getWriter();
@@ -66,23 +66,24 @@ public class ConsultarCursos extends HttpServlet {
     private Map<String, String> definirFiltros(HttpServletRequest req) {
     	Map<String, String> filtros = new HashMap<>();
 
-			// definir os valores do map condicionalmente, conforme a requisição
-			if (req.getParameter("departamento") != null) {
-				filtros.put("id-depto", req.getParameter("departamento"));
-			}
-
-			if (req.getParameter("nome") != null) {
-				filtros.put("nome", req.getParameter("nome"));
-			}
-
-			if (req.getParameter("horas") != null) {
-				filtros.put("horas-total", req.getParameter("horas"));
-			}
-
-			if (req.getParameter("modalidade") != null) {
-				filtros.put("modalidade", req.getParameter("modalidade"));
-			}
-
-			return filtros;
+		// definir os valores do map condicionalmente, conforme a requisição
+		if (req.getParameter("departamento") != null) {
+			filtros.put("id-depto", req.getParameter("departamento"));
 		}
+
+		if (req.getParameter("nome") != null) {
+			filtros.put("nome", req.getParameter("nome"));
+		}
+
+		if (req.getParameter("horas") != null) {
+			filtros.put("horas-total", req.getParameter("horas"));
+		}
+
+		if (req.getParameter("modalidade") != null) {
+			filtros.put("modalidade", req.getParameter("modalidade"));
+		}
+
+		return filtros;
+	}
+
 }
