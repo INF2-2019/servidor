@@ -6,12 +6,16 @@ Esse repositório é dedicado a parte de `back-end` da aplicação a ser der des
 
 Esse repositório tem afazeres globais, caso queira ajudar verifique o [`TO-DO`](TO-DO.md).
 
+## A estrutura do projeto
+
+Leia sobre a estrutura do projeto [aqui](docs/estrutura.md).
+
 ## Instruções para IDEs e Editores recomendados
 
 ### Ferramentas necessárias
 
 - `Oracle JDK 8+` ou `OpenJDK 8+`
-- Servidor para desenvolvimento: `Glassfish 5.x`
+- Servidor para desenvolvimento: `Glassfish 4`
 - Uma IDE recomendada
 
 Instruções para instalação: [aqui](https://duckduckgo.com/)
@@ -48,7 +52,7 @@ insert_final_newline = true
 
 ## Como _buildar_ o projeto
 
-Utilizar a ferramenta de _build_ padrão da IDE utilizada. O servidor tem que ser o `Glassfish 5`.
+Utilizar a ferramenta de _build_ padrão da IDE utilizada. O servidor tem que ser o `Glassfish 4`.
 
 ## Sobre os bancos de dados
 
@@ -61,12 +65,10 @@ A documentação pode ser acessada [aqui](docs/bd/README.md)
 
 As bibliotecas usadas atualmente são:
 
-- `JSTL`
+- `MySQL Connector`
 
 ## Documentações e links úteis
 
 A documentação estará disponível na pasta `docs`.
 
-`Glassfish 5.0-` download: [aqui](https://javaee.github.io/glassfish/download)
-`Glassfish 5.1+` download: [aqui](https://eclipse-ee4j.github.io/glassfish/download)
-`Glassfish 5.1+` repo: [aqui](https://github.com/eclipse-ee4j/glassfish/tree/5.1.0)
+`Glassfish 4.1.2-` download: [aqui](https://javaee.github.io/glassfish/download)
