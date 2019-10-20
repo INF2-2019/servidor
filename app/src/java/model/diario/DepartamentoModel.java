@@ -10,6 +10,10 @@ public class DepartamentoModel extends Model {
 	public DepartamentoModel() {
 		this(0, 0, "");
 	}
+	
+	public DepartamentoModel(int idCampi, String nome) {
+		this(0, idCampi, nome);
+	}
 
 	public DepartamentoModel(int id, int idCampi, String nome) {
 		this.id = id;

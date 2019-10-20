@@ -41,5 +41,29 @@ public class DepartamentoRepository {
 			);
 
 	}
+	
+	public static void insere(DepartamentoModel depto)
+            throws SQLException {
+        Connection con = ConnectionFactory.getDiario();
+        if(con == null) throw new SQLException();
+
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate (
+                "INSERT INTO `departamentos` (`id-campi`, `nome`)"
+                + " VALUES (" + depto.getIdCampi() + ", '" + depto.getNome() + "')"
+        );
+    }
+
+    public static void remove(int id)
+            throws SQLException {
+        Connection con = ConnectionFactory.getDiario();
+        if(con == null) throw new SQLException();
+
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate (
+                "DELETE FROM `departamentos`"
+                + " WHERE `id` = " + id
+        );
+    }
 
 }
