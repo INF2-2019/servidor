@@ -2,7 +2,6 @@ package utils;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -19,6 +18,8 @@ public class Conversores {
         Transformer transformador = tf.newTransformer();
 
         transformador.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformador.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+        transformador.setOutputProperty(OutputKeys.INDENT, "yes");
         transformador.setOutputProperty(OutputKeys.ENCODING,"UTF-8");
 
         StringWriter escreveLinhas = new StringWriter();
