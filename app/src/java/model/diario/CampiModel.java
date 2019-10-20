@@ -1,7 +1,6 @@
 package model.diario;
 
 import model.Model;
-import static model.Model.ID_INDEFINIDO;
 
 public class CampiModel extends Model {
 	private int id;
