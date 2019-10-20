@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Map;
 
 @WebServlet(name = "Deletar", urlPatterns = "/diario/cursos/deletar")
 public class DeletarCursos extends HttpServlet {
@@ -20,10 +19,10 @@ public class DeletarCursos extends HttpServlet {
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		response.addHeader("Content-Type", "text/xml; charset=utf-8");
 
-		Map<String, String> filtros = cursoRep.definirMap(request);
+		String idParam = request.getParameter("id");
 
 		try {
-			boolean sucesso = cursoRep.deletar(filtros);
+			boolean sucesso = cursoRep.deletar(idParam);
 			if(sucesso)
 				System.out.println("Deletado.");
 			else

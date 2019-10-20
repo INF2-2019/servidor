@@ -2,12 +2,10 @@ package repository.diario;
 
 import model.diario.CursoModel;
 
-import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -66,27 +64,13 @@ public class CursoRepository {
 		return cursosResultado;
 	}
 
-	public boolean deletar(Map<String, String> filtros) throws NumberFormatException, SQLException {
-		String sql = "DELETE FROM `cursos` WHERE ";
-		boolean jaAdicionado = false;
+	public boolean deletar(String idStr) throws NumberFormatException, SQLException {
+		PreparedStatement ps = con.prepareStatement("DELETE FROM `cursos` WHERE `id` = ?");
+		// Se id não for um inteiro sem sinal, joga a exceção NumberFormatException
+		int id = Integer.parseUnsignedInt(idStr);
 
-		if (filtros.containsKey("id-depto"))
-			Integer.parseUnsignedInt(filtros.get("id-depto"));
+		ps.setInt(1, id);
 
-
-		if (filtros.containsKey("horas-total"))
-			Integer.parseUnsignedInt(filtros.get("horas-total"));
-
-		for (Map.Entry<String, String> filtro : filtros.entrySet()) {
-			if (jaAdicionado) {
-				sql += "AND (`" + filtro.getKey() + "` = '" + filtro.getValue() + "') ";
-			} else {
-				sql += "(`" + filtro.getKey() + "` = '" + filtro.getValue() + "') ";
-				jaAdicionado = true;
-			}
-		}
-
-		PreparedStatement ps = con.prepareStatement(sql);
 		int sucesso = ps.executeUpdate();
 
 		// Se deletou algo, retorna true, senão retorna false
@@ -130,29 +114,6 @@ public class CursoRepository {
 		String modalidade = res.getString("modalidade");
 
 		return new CursoModel(id, id_depto, nome, horas_total, modalidade);
-	}
-
-	public Map<String, String> definirMap(HttpServletRequest req) {
-		Map<String, String> dados = new LinkedHashMap<>();
-
-		// definir os valores do map condicionalmente, conforme a requisição
-		if (req.getParameter("departamento") != null) {
-			dados.put("id-depto", req.getParameter("departamento"));
-		}
-
-		if (req.getParameter("nome") != null) {
-			dados.put("nome", req.getParameter("nome"));
-		}
-
-		if (req.getParameter("horas") != null) {
-			dados.put("horas-total", req.getParameter("horas"));
-		}
-
-		if (req.getParameter("modalidade") != null) {
-			dados.put("modalidade", req.getParameter("modalidade"));
-		}
-
-		return dados;
 	}
 
 }

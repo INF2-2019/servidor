@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @WebServlet(name = "Inserir", urlPatterns = "/diario/cursos/inserir")
@@ -20,7 +21,7 @@ public class InserirCursos extends HttpServlet {
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		response.addHeader("Content-Type", "text/xml; charset=utf-8");
 
-		Map<String, String> dados = cursoRep.definirMap(request);
+		Map<String, String> dados = definirFiltros(request);
 
 		try {
 			if(cursoRep.inserir(dados))
@@ -33,4 +34,27 @@ public class InserirCursos extends HttpServlet {
 			System.err.println("Busca SQL inválida. Erro: "+excecaoSQL.toString());
 		}
     }
+
+	public Map<String, String> definirFiltros(HttpServletRequest req) {
+		Map<String, String> dados = new LinkedHashMap<>();
+
+		// definir os valores do map condicionalmente, conforme a requisição
+		if (req.getParameter("departamento") != null) {
+			dados.put("id-depto", req.getParameter("departamento"));
+		}
+
+		if (req.getParameter("nome") != null) {
+			dados.put("nome", req.getParameter("nome"));
+		}
+
+		if (req.getParameter("horas") != null) {
+			dados.put("horas-total", req.getParameter("horas"));
+		}
+
+		if (req.getParameter("modalidade") != null) {
+			dados.put("modalidade", req.getParameter("modalidade"));
+		}
+
+		return dados;
+	}
 }
