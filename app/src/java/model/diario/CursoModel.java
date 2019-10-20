@@ -1,18 +1,12 @@
 package model.diario;
 
-<<<<<<< refs/remotes/origin/master
 import model.Model;
 
 public class CursoModel extends Model {
-=======
-public class CursoModel {
-	private static final int ID_INDEFINIDO = -1;
->>>>>>> Adicionado XML de erro
 	private int id, idDepto, horasTotal;
 	private String nome, modalidade;
 
 	public CursoModel(int idDepto, String nome, int horasTotal, String modalidade){
-<<<<<<< refs/remotes/origin/master
 		// Para evitar repetição, reaproveitamento do construtor completo
 		this(ID_INDEFINIDO, idDepto, nome, horasTotal, modalidade);
 	}
@@ -24,21 +18,6 @@ public class CursoModel {
 		this.setNome(nome);
 		this.setHorasTotal(horasTotal);
 		this.setModalidade(modalidade);
-=======
-		this.id = ID_INDEFINIDO;
-		this.idDepto = idDepto;
-		this.nome = nome;
-		this.horasTotal = horasTotal;
-		this.modalidade = modalidade;
-	}
-
-	public CursoModel(int id, int idDepto, String nome, int horasTotal, String modalidade){
-		this.id = id;
-		this.idDepto = idDepto;
-		this.nome = nome;
-		this.horasTotal = horasTotal;
-		this.modalidade = modalidade;
->>>>>>> Adicionado XML de erro
 	}
 
 	public int getId(){
