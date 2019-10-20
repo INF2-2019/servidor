@@ -2,13 +2,27 @@ package controller.diario.cursos;
 
 import repository.diario.CursoRepository;
 import utils.ConnectionFactory;
+<<<<<<< HEAD
+=======
+import utils.Conversores;
+import view.diario.cursos.CursoView;
+>>>>>>> cursos
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+<<<<<<< HEAD
 import java.sql.Connection;
 import java.sql.SQLException;
+=======
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+>>>>>>> cursos
 import java.util.Map;
 
 @WebServlet(name = "Inserir", urlPatterns = "/diario/cursos/inserir")

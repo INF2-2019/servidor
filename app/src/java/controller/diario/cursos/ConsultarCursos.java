@@ -3,10 +3,15 @@ package controller.diario.cursos;
 import model.diario.CursoModel;
 import repository.diario.CursoRepository;
 import utils.ConnectionFactory;
+<<<<<<< HEAD
 import utils.Headers;
 import views.RenderException;
 import views.View;
 import views.diario.cursos.CursoConsultaView;
+=======
+import utils.Conversores;
+import view.diario.cursos.CursoView;
+>>>>>>> cursos
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -57,5 +62,34 @@ public class ConsultarCursos extends HttpServlet {
 				System.err.println("Erro ao fechar banco de dados. Erro: "+erro.toString());
 			}
 
+<<<<<<< HEAD
+=======
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		response.addHeader("Content-Type", "text/xml; charset=utf-8");
+
+		Set<CursoModel> resultado;
+		Map<String, String> filtros = cursoRep.definirMap(request); // criando um Map para armazenar os filtros de maneira pratica
+
+		try {
+
+			resultado = cursoRep.consultar(filtros); // Executa consulta
+			String xmlRetorno = CursoView.setParaXML(resultado); // Transforma em XML
+
+			response.getWriter().print(xmlRetorno);
+
+		} catch (NumberFormatException excecaoFormatoErrado) {
+			System.err.println("Número inteiro inválido para o parâmetro. Erro: "+excecaoFormatoErrado.toString());
+		} catch (SQLException excecaoSQL) {
+			System.err.println("Busca SQL inválida. Erro: "+excecaoSQL.toString());
+		} catch (IOException e) {
+			System.err.println("Não foi possível mostrar o resultado, erro ao pegar Writer. Erro: "+e.toString());
+		}
+
+		try	{
+			conexao.close();
+		} catch(SQLException erro) {
+			System.err.println("Erro ao fechar banco de dados. Erro: "+erro.toString());
+		}
+>>>>>>> cursos
     }
 }
