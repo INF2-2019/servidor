@@ -1,6 +1,6 @@
 package repository.diario;
 
-import model.diario.cursos.Curso;
+import model.diario.CursoModel;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,10 +17,10 @@ public class CursoRepository {
 		this.con = conexao;
 	}
 
-	public Set<Curso> consultar(Map<String, String> filtros) throws NumberFormatException, SQLException {
+	public Set<CursoModel> consultar(Map<String, String> filtros) throws NumberFormatException, SQLException {
 		// Base da query SQL
 		String sql;
-		Set<Curso> cursosResultado = new HashSet<>();
+		Set<CursoModel> cursosResultado = new HashSet<>();
 		boolean jaAdicionado = false;
 
 		if(filtros.isEmpty()){
@@ -62,14 +62,14 @@ public class CursoRepository {
 		return cursosResultado;
 	}
 
-	private Curso converterResultSetParaCurso(ResultSet res) throws SQLException {
+	private CursoModel converterResultSetParaCurso(ResultSet res) throws SQLException {
 		int id = res.getInt("id");
 		int id_depto = res.getInt("id-depto");
 		String nome = res.getString("nome");
 		int horas_total = res.getInt("horas-total");
 		String modalidade = res.getString("modalidade");
 
-		return new Curso(id, id_depto, nome, horas_total, modalidade);
+		return new CursoModel(id, id_depto, nome, horas_total, modalidade);
 	}
 
 }

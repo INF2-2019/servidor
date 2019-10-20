@@ -1,6 +1,6 @@
 package controller.diario.cursos;
 
-import model.diario.cursos.Curso;
+import model.diario.CursoModel;
 import repository.diario.CursoRepository;
 import utils.ConnectionFactory;
 import view.diario.cursos.CursoView;
@@ -26,15 +26,15 @@ public class ConsultarCursos extends HttpServlet {
 		CursoRepository cursoRep = new CursoRepository(conexao);
 
 		response.addHeader("Access-Control-Allow-Origin", "*");
-		response.addHeader("Content-type", "utf-8");
+		response.addHeader("Content-Type", "text/xml; charset=utf-8");
 
-		Set<Curso> resultado;
+		Set<CursoModel> resultado;
 		Map<String, String> filtros = definirFiltros(request); // criando um Map para armazenar os filtros de maneira pratica
 
 		try {
 
 			resultado = cursoRep.consultar(filtros); // Executa consulta
-			String xmlRetorno = CursoView.converterCursoParaXML(resultado); // Transforma em XML
+			String xmlRetorno = CursoView.setParaXML(resultado); // Transforma em XML
 
 			response.getWriter().print(xmlRetorno);
 

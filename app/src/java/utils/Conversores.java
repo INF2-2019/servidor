@@ -9,6 +9,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 
+import java.io.StringWriter;
+
 public class Conversores {
 
     public static String converterDocumentEmXMLString(Document doc) throws TransformerException {
@@ -17,9 +19,9 @@ public class Conversores {
         Transformer transformador = tf.newTransformer();
 
         transformador.setOutputProperty(OutputKeys.METHOD, "xml");
-        transformador.setOutputProperty(OutputKeys.ENCODING,"ISO-8859-1");
+        transformador.setOutputProperty(OutputKeys.ENCODING,"UTF-8");
 
-        java.io.StringWriter escreveLinhas = new java.io.StringWriter();
+        StringWriter escreveLinhas = new StringWriter();
         StreamResult resultado = new StreamResult(escreveLinhas);
 
         transformador.transform(dom, resultado);
