@@ -28,8 +28,8 @@ public class AtualizarDepartamento extends HttpServlet {
 				String nome = request.getParameter("nome");
 				Departamento depto = new Departamento(id, idCampi, nome);
 				DepartamentoRepository.atualiza(depto);
-			} catch(SQLException ex) {
-				System.err.println(ex);
+			} catch(SQLException | NumberFormatException ex) {
+				out.println("<erro>" + ex + "</erro>");
 			}
 
 		}

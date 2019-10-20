@@ -35,10 +35,10 @@ public class DepartamentoRepository {
 		if(con == null) throw new SQLException();
 
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery(
-				"UPDATE `departamentos` "
-				+ "SET `id-campi` = " + depto.getIdCampi() + ", `nome` = " + depto.getNome()
-				+ "WHERE `id` = " + depto.getId()
+		stmt.executeUpdate (
+				"UPDATE `departamentos`"
+				+ " SET `id-campi` = " + depto.getIdCampi() + ", `nome` = '" + depto.getNome() + "'"
+				+ " WHERE `id` = " + depto.getId()
 			);
 
 	}
