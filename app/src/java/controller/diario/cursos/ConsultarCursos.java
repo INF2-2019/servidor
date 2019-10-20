@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+//teste de push
 @WebServlet(name = "ConsultarCursos", urlPatterns = "/diario/cursos/consultar")
 public class ConsultarCursos extends HttpServlet {
 
