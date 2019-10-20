@@ -19,6 +19,8 @@ public class Conversores {
         Transformer transformador = tf.newTransformer();
 
         transformador.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformador.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+        transformador.setOutputProperty(OutputKeys.INDENT, "yes");
         transformador.setOutputProperty(OutputKeys.ENCODING,"UTF-8");
 
         StringWriter escreveLinhas = new StringWriter();
