@@ -28,8 +28,11 @@ public class AtualizarDepartamento extends HttpServlet {
 				String nome = request.getParameter("nome");
 				DepartamentoModel depto = new DepartamentoModel(id, idCampi, nome);
 				DepartamentoRepository.atualiza(depto);
-			} catch(SQLException | NumberFormatException ex) {
-				out.println("<erro>" + ex + "</erro>");
+				out.println("<msg>Departamento atualizado com sucesso</msg>");
+			} catch(SQLException ex) {
+				out.println("<msg>Falha ao atualizar o banco de dados</msg>");
+			} catch(NumberFormatException ex) {
+				out.println("<msg>Falha ao formatar parâmetros</msg>");
 			}
 
 		}

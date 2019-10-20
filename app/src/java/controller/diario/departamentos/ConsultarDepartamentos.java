@@ -29,7 +29,7 @@ public class ConsultarDepartamentos extends HttpServlet {
 				String xml = DepartamentoView.xmlDepartamentos(deptos);
 				out.println(xml);
 			} catch(SQLException ex) {
-				System.err.println(ex);
+				out.println("<msg>Falha ao consultar o banco de dados</msg>");
 			}
 
 		}

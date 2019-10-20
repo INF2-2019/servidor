@@ -26,10 +26,12 @@ public class InserirDepartamento extends HttpServlet {
 				int idCampi = Integer.parseInt(request.getParameter("id-campi"));
 				String nome = request.getParameter("nome");
 				DepartamentoModel depto = new DepartamentoModel(idCampi, nome);
-
 				DepartamentoRepository.insere(depto);
-			} catch(SQLException | NumberFormatException ex) {
-				out.println("<erro>" + ex + "</erro>");
+				out.println("<msg>Departamento inserido com sucesso</msg>");
+			} catch(SQLException ex) {
+				out.println("<msg>Falha ao inserir no banco de dados</msg>");
+			} catch(NumberFormatException ex) {
+				out.println("<msg>Falha ao formatar parâmetros</msg>");
 			}
 
 		}
@@ -49,6 +51,6 @@ public class InserirDepartamento extends HttpServlet {
 
     @Override
     public String getServletInfo() {
-        return "Servlet que insere departamento";
+        return "Servlet que insere departamento.";
     }
 }
