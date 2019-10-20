@@ -11,12 +11,12 @@ import model.diario.departamentos.Departamento;
 import utils.ConnectionFactory;
 
 public class DepartamentoRepository {
-	
+
 	public static List<Departamento> consulta()
 			throws SQLException {
 		Connection con = ConnectionFactory.getDiario();
 		if(con == null) throw new SQLException();
-		
+
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT * FROM departamentos");
 
@@ -28,5 +28,19 @@ public class DepartamentoRepository {
 
 		return deptos;
 	}
-	
+
+	public static void atualiza(Departamento depto)
+			throws SQLException {
+		Connection con = ConnectionFactory.getDiario();
+		if(con == null) throw new SQLException();
+
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery(
+				"UPDATE `departamentos` "
+				+ "SET `id-campi` = " + depto.getIdCampi() + ", `nome` = " + depto.getNome()
+				+ "WHERE `id` = " + depto.getId()
+			);
+
+	}
+
 }
