@@ -1,20 +1,20 @@
-package view.diario;
+package views.diario.departamentos;
 
 import java.util.List;
-import model.diario.departamentos.Departamento;
+import model.diario.DepartamentoModel;
 
 public class DepartamentoView {
 
-	public static String xmlDepartamentos(List<Departamento> deptos) {
+	public static String xmlDepartamentos(List<DepartamentoModel> deptos) {
 		String xml = "<departamentos>";
-		for(Departamento depto : deptos) {
+		for(DepartamentoModel depto : deptos) {
 			xml += xmlDepartamento(depto);
 		}
 		xml += "</departamentos>";
 		return xml;
 	}
 
-	public static String xmlDepartamento(Departamento depto) {
+	public static String xmlDepartamento(DepartamentoModel depto) {
 		return	"<departamento>"
 					+ "<id>" + depto.getId() + "</id>"
 					+ "<id-campi>" + depto.getIdCampi() + "</id-campi>"

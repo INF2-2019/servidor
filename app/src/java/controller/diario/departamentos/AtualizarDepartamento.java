@@ -8,8 +8,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.diario.departamentos.Departamento;
+import model.diario.DepartamentoModel;
 import repository.diario.DepartamentoRepository;
+import utils.Headers;
 
 @WebServlet(name = "AtualizarDepartamento", urlPatterns = "/diario/departamentos/AtualizarDepartamento")
 public class AtualizarDepartamento extends HttpServlet {
@@ -17,8 +18,7 @@ public class AtualizarDepartamento extends HttpServlet {
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		response.setContentType("text/xml;charset=UTF-8");
-		response.addHeader("Access-Control-Allow-Origin", "*");
+		Headers.XMLHeaders(response);
 
 		try(PrintWriter out = response.getWriter()) {
 
@@ -26,7 +26,7 @@ public class AtualizarDepartamento extends HttpServlet {
 				int id = Integer.parseInt(request.getParameter("id"));
 				int idCampi = Integer.parseInt(request.getParameter("id-campi"));
 				String nome = request.getParameter("nome");
-				Departamento depto = new Departamento(id, idCampi, nome);
+				DepartamentoModel depto = new DepartamentoModel(id, idCampi, nome);
 				DepartamentoRepository.atualiza(depto);
 			} catch(SQLException | NumberFormatException ex) {
 				out.println("<erro>" + ex + "</erro>");

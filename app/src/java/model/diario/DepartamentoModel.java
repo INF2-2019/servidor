@@ -1,15 +1,17 @@
-package model.diario.departamentos;
+package model.diario;
 
-public class Departamento {
+import model.Model;
+
+public class DepartamentoModel extends Model {
 	
 	int id, idCampi;
 	String nome;
 	
-	public Departamento() {
+	public DepartamentoModel() {
 		this(0, 0, "");
 	}
 
-	public Departamento(int id, int idCampi, String nome) {
+	public DepartamentoModel(int id, int idCampi, String nome) {
 		this.id = id;
 		this.idCampi = idCampi;
 		this.nome = nome;

@@ -9,9 +9,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.diario.departamentos.Departamento;
+import model.diario.DepartamentoModel;
 import repository.diario.DepartamentoRepository;
-import view.diario.DepartamentoView;
+import utils.Headers;
+import views.diario.departamentos.DepartamentoView;
 
 @WebServlet(name = "ConsultarDepartamentos", urlPatterns = "/diario/departamentos/ConsultarDepartamentos")
 public class ConsultarDepartamentos extends HttpServlet {
@@ -19,13 +20,12 @@ public class ConsultarDepartamentos extends HttpServlet {
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		response.setContentType("text/xml;charset=UTF-8");
-		response.addHeader("Access-Control-Allow-Origin", "*");
+		Headers.XMLHeaders(response);
 
 		try(PrintWriter out = response.getWriter()) {
 
 			try {
-				List<Departamento> deptos = DepartamentoRepository.consulta();
+				List<DepartamentoModel> deptos = DepartamentoRepository.consulta();
 				String xml = DepartamentoView.xmlDepartamentos(deptos);
 				out.println(xml);
 			} catch(SQLException ex) {
