@@ -52,9 +52,7 @@ public class CursoRepository {
 		}
 		sql += " ORDER BY `id`";
 
-		PreparedStatement ps = con.prepareStatement(sql);
-		System.out.println(ps);
-		ResultSet resultadoBusca = ps.executeQuery();
+		ResultSet resultadoBusca = con.prepareCall(sql).executeQuery();
 
 		// Itera por cada item do resultado e adiciona nos resultados
 		while(resultadoBusca.next()){
@@ -83,21 +81,21 @@ public class CursoRepository {
 		if(valores.size() != 4)
 			return false;
 
-		int id_depto = 0;
+		int idDepto = 0;
 
 		if (valores.containsKey("id-depto"))
-			id_depto = Integer.parseUnsignedInt(valores.get("id-depto"));
+			idDepto = Integer.parseUnsignedInt(valores.get("id-depto"));
 
-		int horas_total = 0;
+		int horasTotal = 0;
 
 		if (valores.containsKey("horas-total"))
-			horas_total = Integer.parseUnsignedInt(valores.get("horas-total"));
+			horasTotal = Integer.parseUnsignedInt(valores.get("horas-total"));
 
 		PreparedStatement ps = con.prepareStatement("INSERT INTO `cursos` (`id-depto`, `nome`, `horas-total`, `modalidade`) VALUES (?, ?, ?, ?)");
 
-		ps.setInt(1, id_depto);
+		ps.setInt(1, idDepto);
 		ps.setString(2, valores.get("nome"));
-		ps.setInt(3, horas_total);
+		ps.setInt(3, horasTotal);
 		ps.setString(4, valores.get("modalidade"));
 
 		int sucesso = ps.executeUpdate();

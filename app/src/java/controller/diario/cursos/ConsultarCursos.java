@@ -7,7 +7,9 @@ import utils.Headers;
 import views.RenderException;
 import views.View;
 import views.diario.cursos.CursoConsultaView;
+import views.utils.ErroView;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,9 +25,11 @@ import java.util.Set;
 @WebServlet(name = "ConsultarCursos", urlPatterns = "/diario/cursos/consultar")
 public class ConsultarCursos extends HttpServlet {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response){
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 			Headers.XMLHeaders(response);
 			Connection conexao = ConnectionFactory.getDiario();
+
+			PrintWriter out = response.getWriter();
 
 			if(conexao == null){
 				System.err.println("Falha ao conectar ao bd"); // Adicionar XML de erro
@@ -38,18 +42,32 @@ public class ConsultarCursos extends HttpServlet {
 			Map<String, String> filtros = definirFiltros(request); // criando um Map para armazenar os filtros de maneira pratica
 
 			try {
-				PrintWriter out = response.getWriter();
 				resultado = cursoRep.consultar(filtros); // Executa consulta
 				View cursoConsultaView = new CursoConsultaView(resultado);
 				cursoConsultaView.render(out);
 			} catch(NumberFormatException excecaoFormatoErrado) {
+				response.setStatus(400);
 				System.err.println("Número inteiro inválido para o parâmetro. Erro: "+excecaoFormatoErrado.toString());
+
+				View erroView = new ErroView(excecaoFormatoErrado);
+				try {
+					erroView.render(out);
+				} catch (RenderException e) {
+					response.setStatus(500);
+					throw new ServletException(e);
+				}
 			} catch(SQLException excecaoSQL) {
+				response.setStatus(400);
 				System.err.println("Busca SQL inválida. Erro: "+excecaoSQL.toString());
-			} catch (IOException e) {
-				System.err.println("Não foi possível mostrar o resultado, erro ao pegar Writer. Erro: "+e.toString());
-			}catch (RenderException e){
-				System.err.println("Não foi possível criar documento ou XML string com o resultado. Erro: "+ e.toString());
+
+				View erroView = new ErroView(excecaoSQL);
+				try {
+					erroView.render(out);
+				} catch (RenderException e) {
+					throw new ServletException(e);
+				}
+			} catch (RenderException e){
+				throw new ServletException(e);
 			}
 
 			try	{

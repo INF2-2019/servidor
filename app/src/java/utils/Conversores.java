@@ -13,7 +13,7 @@ import java.io.StringWriter;
 
 public class Conversores {
 
-    public static String converterDocumentEmXMLString(Document doc) throws TransformerException {
+    public static String documentParaXMLString(Document doc) throws TransformerException {
 		DOMSource dom = new DOMSource(doc);
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer transformador = tf.newTransformer();
