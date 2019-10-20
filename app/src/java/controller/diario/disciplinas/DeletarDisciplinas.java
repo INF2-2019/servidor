@@ -28,7 +28,6 @@ public class DeletarDisciplinas extends HttpServlet {
 
      protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-           System.out.println("AAAAA");
         Connection conexao = ConnectionFactory.getDiario();
         DisciplinaRepository DisciplinaRep = new DisciplinaRepository(conexao);
         Map<String, String> filtros = new HashMap<String, String>();
@@ -46,7 +45,7 @@ public class DeletarDisciplinas extends HttpServlet {
                 try{
                     DisciplinaRep.DeletarDisciplina(filtros);
                 }catch(SQLException excecaoSQL){
-		   System.out.println(excecaoSQL.toString());
+		
                 }
        
     }
