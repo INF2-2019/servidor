@@ -44,7 +44,8 @@ public class CursoConsultaView extends View<Set<CursoModel>> {
 
 		// Adiciona um elemento criado para cada um dos elementos do Set "cursos" ao resultado
 		for (CursoModel curso : cursos) {
-			resultado.appendChild(criarElementoDocument(documento, curso)); // para cada curso, adiciona um ELemento
+			if(curso != null)
+				resultado.appendChild(criarElementoDocument(documento, curso)); // para cada curso, adiciona um ELemento
 		}
 
 		documento.appendChild(resultado);

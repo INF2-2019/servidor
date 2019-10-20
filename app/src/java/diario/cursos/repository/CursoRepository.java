@@ -61,6 +61,23 @@ public class CursoRepository {
 		return cursosResultado;
 	}
 
+	public CursoModel consultarId(String idStr) throws NumberFormatException, SQLException {
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM `cursos` WHERE `id` = ?");
+		// Se id não for um inteiro sem sinal, joga a exceção NumberFormatException
+		int id = Integer.parseUnsignedInt(idStr);
+
+		ps.setInt(1, id);
+
+		ResultSet resultado = ps.executeQuery();
+
+		if(resultado.next()){
+			return resultSetParaCurso(resultado);
+		}
+
+		return null;
+
+	}
+
 	public boolean deletar(String idStr) throws NumberFormatException, SQLException {
 		PreparedStatement ps = con.prepareStatement("DELETE FROM `cursos` WHERE `id` = ?");
 		// Se id não for um inteiro sem sinal, joga a exceção NumberFormatException

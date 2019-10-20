@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -31,8 +32,15 @@ public class ConsultarCursos extends HttpServlet {
 
 			PrintWriter out = response.getWriter();
 
+			// checa se a conexao foi feita
 			if(conexao == null){
-				System.err.println("Falha ao conectar ao bd"); // Adicionar XML de erro
+				System.err.println("Falha ao conectar ao bd");
+				View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
+				try {
+					erroView.render(out);
+				} catch (RenderException e) {
+					throw new ServletException(e);
+				}
 				return;
 			}
 
@@ -41,7 +49,12 @@ public class ConsultarCursos extends HttpServlet {
 			Set<CursoModel> resultado;
 
 			try {
-				resultado = cursoRep.consultar(definirFiltros(request));
+				if(request.getParameterMap().containsKey("id")){
+					resultado = new HashSet<>();
+					resultado.add(cursoRep.consultarId(request.getParameter("id")));
+				} else {
+					resultado = cursoRep.consultar(definirFiltros(request));
+				}
 				View cursoConsultaView = new CursoConsultaView(resultado);
 				cursoConsultaView.render(out);
 			} catch(NumberFormatException excecaoFormatoErrado) {
@@ -52,7 +65,6 @@ public class ConsultarCursos extends HttpServlet {
 				try {
 					erroView.render(out);
 				} catch (RenderException e) {
-					response.setStatus(500);
 					throw new ServletException(e);
 				}
 			} catch(SQLException excecaoSQL) {
