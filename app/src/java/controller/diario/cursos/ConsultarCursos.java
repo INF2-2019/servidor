@@ -56,6 +56,11 @@ public class ConsultarCursos extends HttpServlet {
 			} catch(SQLException erro) {
 				System.err.println("Erro ao fechar banco de dados. Erro: "+erro.toString());
 			}
+			resultado = cursoRep.consultar(filtros); // Executa consulta
+			String xmlRetorno = CursoView.setParaXML(resultado); // Transforma em XML
+
+			response.getWriter().print(xmlRetorno);
+
     }
 
     private Map<String, String> definirFiltros(HttpServletRequest req) {
