@@ -23,30 +23,13 @@ public class DisciplinaRepository {
     public DisciplinaRepository(Connection con){
         this.con = con;
     }
-     public void DeletarDisciplina(Map<String, String> filtro) throws SQLException{
+    public void DeletarDisciplina(String id) throws SQLException{
         String sql;
-        Set<DisciplinaModel> cursosResultado = new HashSet<>();
-        boolean jaAdicionado = false;
-        sql = "DELETE FROM `disciplinas` WHERE ";
-         if (filtro.containsKey("id-turma")) {
-             System.out.println(filtro.get("id-turma"));
-                Integer.parseUnsignedInt(filtro.get("id-turma"));
-            }
-            if (filtro.containsKey("horas")) {
-               
-                Integer.parseUnsignedInt(filtro.get("carga-horaria-min"));
-            }
-           for(Map.Entry<String,String> filtros : filtro.entrySet()){
-               if(jaAdicionado){
-                    sql += "AND (`" + filtros.getKey() + "` = '" + filtros.getValue() + "') ";
-               }else{
-                   sql += "(`" + filtros.getKey() + "` = '" + filtros.getValue() + "') ";
-                   jaAdicionado = true;
-               }
-           }
-           PreparedStatement stat =  con.prepareStatement(sql);
-           stat.executeUpdate();
-}
+        Integer.parseUnsignedInt(id);
+        sql = "DELETE FROM `disciplinas` WHERE `id`="+id;
+        PreparedStatement stat =  con.prepareStatement(sql);
+        stat.executeUpdate();
+    }
 }
 
 

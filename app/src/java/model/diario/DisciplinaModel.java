@@ -2,44 +2,40 @@
 
 package model.diario;
 
-
 public class DisciplinaModel {
-    private static final int ID_INDEFINIDO = -1;
-	private int id, id_turmas, carga_horaria_min;
+    private static final int IdIndefinido = -1;
+	private int id, idTurmas, cargaHorariaMin;
 	private String nome;
 
-    public DisciplinaModel(int id_turmas, int carga_horaria_min, String nome) {
-        this.id = ID_INDEFINIDO;
-        this.id_turmas = id_turmas;
-        this.carga_horaria_min = carga_horaria_min;
-        this.nome = nome;
-    }
-
-    public DisciplinaModel(int id, int id_turmas, int carga_horaria_min, String nome) {
+    public DisciplinaModel(int id,int idTurmas, int cargaHorariaMin, String nome) {
         this.id = id;
-        this.id_turmas = id_turmas;
-        this.carga_horaria_min = carga_horaria_min;
+        this.idTurmas = idTurmas;
+        this.cargaHorariaMin = cargaHorariaMin;
         this.nome = nome;
     }
 
+    public DisciplinaModel(int idTurmas, int cargaHorariaMin, String nome) {
+        this(IdIndefinido, idTurmas,cargaHorariaMin,nome);
+    }
+    
     public int getId() {
         return id;
     }
-     
-    public int getId_turmas() {
-        return id_turmas;
+    
+    public int getIdTurmas() {
+        return idTurmas;
     }
 
-    public void setId_turmas(int id_turmas) {
-        this.id_turmas = id_turmas;
+    public void setIdTurmas(int idTurmas) {
+        this.idTurmas = idTurmas;
     }
 
-    public int getCarga_horaria_min() {
-        return carga_horaria_min;
+    public int getCargaHorariaMin() {
+        return cargaHorariaMin;
     }
 
-    public void setCarga_horaria_min(int carga_horaria_min) {
-        this.carga_horaria_min = carga_horaria_min;
+    public void setCargaHorariaMin(int cargaHorariaMin) {
+        this.cargaHorariaMin = cargaHorariaMin;
     }
 
     public String getNome() {
@@ -49,5 +45,4 @@ public class DisciplinaModel {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    
 }
