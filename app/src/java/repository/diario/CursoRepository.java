@@ -18,10 +18,9 @@ public class CursoRepository {
 	}
 
 	public Set<CursoModel> consultar(Map<String, String> filtros) throws NumberFormatException, SQLException {
-		// Base da query SQL
-		String sql;
 		Set<CursoModel> cursosResultado = new LinkedHashSet<>();
 		boolean jaAdicionado = false;
+		String sql;
 
 		if(filtros.isEmpty()) {
 			sql = "SELECT * FROM `cursos`";

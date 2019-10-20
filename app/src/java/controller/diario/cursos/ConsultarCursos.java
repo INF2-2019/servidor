@@ -19,6 +19,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,10 +40,9 @@ public class ConsultarCursos extends HttpServlet {
 			CursoRepository cursoRep = new CursoRepository(conexao);
 
 			Set<CursoModel> resultado;
-			Map<String, String> filtros = definirFiltros(request); // criando um Map para armazenar os filtros de maneira pratica
 
 			try {
-				resultado = cursoRep.consultar(filtros); // Executa consulta
+				resultado = cursoRep.consultar(definirFiltros(request));
 				View cursoConsultaView = new CursoConsultaView(resultado);
 				cursoConsultaView.render(out);
 			} catch(NumberFormatException excecaoFormatoErrado) {
