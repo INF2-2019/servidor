@@ -13,7 +13,6 @@ import java.io.StringWriter;
 
 public class Conversores {
 
-<<<<<<< HEAD
     public static String converterDocumentEmXMLString(Document doc) throws TransformerException {
 		DOMSource dom = new DOMSource(doc);
 		TransformerFactory tf = TransformerFactory.newInstance();
@@ -26,27 +25,6 @@ public class Conversores {
 
 		StringWriter escreveLinhas = new StringWriter();
 		StreamResult resultado = new StreamResult(escreveLinhas);
-=======
-    public static String converterDocumentEmXMLString(Document doc) {
-    	try {
-			DOMSource dom = new DOMSource(doc);
-			TransformerFactory tf = TransformerFactory.newInstance();
-			Transformer transformador = tf.newTransformer();
-
-			transformador.setOutputProperty(OutputKeys.METHOD, "xml");
-			transformador.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-
-			StringWriter escreveLinhas = new StringWriter();
-			StreamResult resultado = new StreamResult(escreveLinhas);
-
-			transformador.transform(dom, resultado);
-			return escreveLinhas.toString();
-		} catch (TransformerException e){
-    		return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
-				"\n<Erro><info>Não foi possível converter XML requerido em String.<info></Erro>";
-		}
-    }
->>>>>>> cursos
 
 		transformador.transform(dom, resultado);
 		return escreveLinhas.toString();
