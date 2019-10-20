@@ -35,28 +35,8 @@ public class InserirCursos extends HttpServlet {
 				System.out.println("Não foi inserido.");
 		} catch (NumberFormatException excecaoFormatoErrado) {
 			System.err.println("Número inteiro inválido para o parâmetro. Erro: "+excecaoFormatoErrado.toString());
-
-			try {
-				String xmlErro = Conversores.converterDocumentEmXMLString(CursoView.criarErroXML(excecaoFormatoErrado));
-				response.getWriter().print(xmlErro);
-			} catch (IOException e) {
-				System.err.println("Não foi possível retornar XML à página. Erro: "+e.toString());
-			} catch (ParserConfigurationException e) {
-				System.err.println("Não foi possível criar XML de erro. Erro: "+e.toString());
-			}
-
 		} catch (SQLException excecaoSQL) {
 			System.err.println("Busca SQL inválida. Erro: "+excecaoSQL.toString());
-
-			try {
-				String xmlErro = Conversores.converterDocumentEmXMLString(CursoView.criarErroXML(excecaoSQL));
-				response.getWriter().print(xmlErro);
-			} catch (IOException e) {
-				System.err.println("Não foi possível retornar XML à página. Erro: "+e.toString());
-			} catch (ParserConfigurationException e) {
-				System.err.println("Não foi possível criar XML de erro. Erro: "+e.toString());
-			}
-
 		}
     }
 }
