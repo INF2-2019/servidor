@@ -1,5 +1,7 @@
 package model.diario;
 
+import model.Model;
+
 /**
  * <h1>Professor</h1>
  * Classe que representa um professor dentro da aplicação, com todos os dados
@@ -10,9 +12,7 @@ package model.diario;
  * @version 1.0
  * @since 2019-10-20
  */
-public class Professor {
-
-	private final static int INVALID_ID = -1;
+public class Professor extends Model {
 
 	// SIAPE: número composto por 9 dígitos, que identifica os servidores ativos e aposentados no Serviço Público Federal.
 	private int idSiape;
@@ -23,12 +23,7 @@ public class Professor {
 	private char titulacao;
 
 	public Professor(int idDepto, String nome, String senha, String email, char titulacao) {
-		this.idSiape = INVALID_ID;
-		this.idDepto = idDepto;
-		this.nome = nome;
-		this.senha = senha;
-		this.email = email;
-		this.titulacao = titulacao;
+		this(ID_INDEFINIDO, idDepto, nome, senha, email, titulacao);
 	}
 
 	public Professor(int idSiape, int idDepto, String nome, String senha, String email, char titulacao) {
