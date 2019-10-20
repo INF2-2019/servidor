@@ -3,10 +3,15 @@ package controller.diario.cursos;
 import model.diario.CursoModel;
 import repository.diario.CursoRepository;
 import utils.ConnectionFactory;
+<<<<<<< refs/remotes/origin/master
 import utils.Headers;
 import views.RenderException;
 import views.View;
 import views.diario.cursos.CursoConsultaView;
+=======
+import utils.Conversores;
+import view.diario.cursos.CursoView;
+>>>>>>> Adicionado XML de erro
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -61,6 +66,7 @@ public class ConsultarCursos extends HttpServlet {
 
 			response.getWriter().print(xmlRetorno);
 
+<<<<<<< refs/remotes/origin/master
     }
 
     private Map<String, String> definirFiltros(HttpServletRequest req) {
@@ -69,6 +75,56 @@ public class ConsultarCursos extends HttpServlet {
 		// definir os valores do map condicionalmente, conforme a requisição
 		if (req.getParameter("departamento") != null) {
 			filtros.put("id-depto", req.getParameter("departamento"));
+=======
+		} catch (NumberFormatException excecaoFormatoErrado) {
+			System.err.println("Número inteiro inválido para o parâmetro. Erro: "+excecaoFormatoErrado.toString());
+
+			try {
+				String xmlErro = Conversores.converterDocumentEmXMLString(CursoView.criarErroXML(excecaoFormatoErrado));
+				response.getWriter().print(xmlErro);
+			} catch (IOException e) {
+				System.err.println("Não foi possível retornar XML à página. Erro: "+e.toString());
+			} catch (ParserConfigurationException e) {
+				System.err.println("Não foi possível criar XML de erro. Erro: "+e.toString());
+			}
+
+		} catch (SQLException excecaoSQL) {
+			System.err.println("Busca SQL inválida. Erro: "+excecaoSQL.toString());
+
+			try {
+				String xmlErro = Conversores.converterDocumentEmXMLString(CursoView.criarErroXML(excecaoSQL));
+				response.getWriter().print(xmlErro);
+			} catch (IOException e) {
+				System.err.println("Não foi possível retornar XML à página. Erro: "+e.toString());
+			} catch (ParserConfigurationException e) {
+				System.err.println("Não foi possível criar XML de erro. Erro: "+e.toString());
+			}
+
+		} catch (IOException e) {
+			System.err.println("Não foi possível mostrar o resultado, erro ao pegar Writer. Erro: "+e.toString());
+
+			try {
+				String xmlErro = Conversores.converterDocumentEmXMLString(CursoView.criarErroXML(e));
+				response.getWriter().print(xmlErro);
+			} catch (IOException ex) {
+				System.err.println("Não foi possível retornar XML à página. Erro: "+ex.toString());
+			} catch (ParserConfigurationException ex) {
+				System.err.println("Não foi possível criar XML de erro. Erro: "+ex.toString());
+			}
+
+		} catch (TransformerException | ParserConfigurationException e) {
+			System.err.println("Não foi possível criar documento ou XML string com o resultado. Erro: "+e.toString());
+
+			try {
+				String xmlErro = Conversores.converterDocumentEmXMLString(CursoView.criarErroXML(e));
+				response.getWriter().print(xmlErro);
+			} catch (IOException ex) {
+				System.err.println("Não foi possível retornar XML à página. Erro: "+ex.toString());
+			} catch (ParserConfigurationException ex) {
+				System.err.println("Não foi possível criar XML de erro. Erro: "+ex.toString());
+			}
+
+>>>>>>> Adicionado XML de erro
 		}
 
 		if (req.getParameter("nome") != null) {

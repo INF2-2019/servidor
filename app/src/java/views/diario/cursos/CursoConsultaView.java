@@ -10,7 +10,12 @@ import views.View;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+<<<<<<< refs/remotes/origin/master:app/src/java/views/diario/cursos/CursoConsultaView.java
 import java.io.PrintWriter;
+=======
+import javax.xml.transform.TransformerException;
+import java.sql.SQLException;
+>>>>>>> Adicionado XML de erro:app/src/java/view/diario/cursos/CursoView.java
 import java.util.Set;
 
 public class CursoConsultaView extends View<Set<CursoModel>> {
@@ -56,26 +61,74 @@ public class CursoConsultaView extends View<Set<CursoModel>> {
 
 		// Adiciona tags da classe
 		Element id = documento.createElement("id");
-		Element id_depto = documento.createElement("id-depto");
+		Element idDepto = documento.createElement("id-depto");
 		Element nome = documento.createElement("nome");
-		Element horas_total = documento.createElement("horas-total");
+		Element horasTotal = documento.createElement("horas-total");
 		Element modalidade = documento.createElement("modalidade");
 
 		// Adiciona conteúdo das tags
 		id.appendChild(documento.createTextNode(""+c.getId())); // o "" no início serve para passar como String
+<<<<<<< refs/remotes/origin/master:app/src/java/views/diario/cursos/CursoConsultaView.java
 		id_depto.appendChild(documento.createTextNode(""+c.getIdDepto()));
 		nome.appendChild(documento.createTextNode(c.getNome()));
 		horas_total.appendChild(documento.createTextNode(""+c.getHorasTotal()));
+=======
+		idDepto.appendChild(documento.createTextNode(""+c.getIdDepto()));
+		nome.appendChild(documento.createTextNode(c.getNome()));
+		horasTotal.appendChild(documento.createTextNode(""+c.getHorasTotal()));
+>>>>>>> Adicionado XML de erro:app/src/java/view/diario/cursos/CursoView.java
 		modalidade.appendChild(documento.createTextNode(c.getModalidade()));
 
 		// Adiciona no "elemento raiz"
 		elemento.appendChild(id);
-		elemento.appendChild(id_depto);
+		elemento.appendChild(idDepto);
 		elemento.appendChild(nome);
-		elemento.appendChild(horas_total);
+		elemento.appendChild(horasTotal);
 		elemento.appendChild(modalidade);
 
 		return elemento;
 	}
+
+	public static Document criarErroXML(SQLException excecao) throws ParserConfigurationException {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder construtor = dbf.newDocumentBuilder();
+		Document documento = construtor.newDocument();
+
+		Element erro = documento.createElement("Erro");
+		Element status = documento.createElement("status");
+		Element info = documento.createElement("informacao");
+
+		status.appendChild(documento.createTextNode(""+excecao.getErrorCode()));
+		info.appendChild(documento.createTextNode(excecao.getMessage()));
+		erro.appendChild(status);
+		erro.appendChild(info);
+
+		documento.appendChild(erro);
+
+		return documento;
+	}
+
+	public static Document criarErroXML(Exception excecao) throws ParserConfigurationException {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder construtor = dbf.newDocumentBuilder();
+		Document documento = construtor.newDocument();
+
+		Element erro = documento.createElement("Erro");
+		Element status = documento.createElement("status");
+		Element info = documento.createElement("informacao");
+
+		status.appendChild(documento.createTextNode(""+excecao.getLocalizedMessage()));
+		info.appendChild(documento.createTextNode(excecao.toString()));
+		erro.appendChild(status);
+		erro.appendChild(info);
+
+		documento.appendChild(erro);
+
+		return documento;
+	}
+
+	/*public static Document criarSucessoXML() {
+
+	}*/
 
 }
