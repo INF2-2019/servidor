@@ -21,7 +21,7 @@ public class DeletarCursos extends HttpServlet {
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		response.addHeader("Content-Type", "text/xml; charset=utf-8");
 
-		Map<String, String> filtros = definirFiltros(request);
+		Map<String, String> filtros = cursoRep.definirMap(request);
 
 		try {
 			boolean sucesso = cursoRep.deletar(filtros);
@@ -36,26 +36,4 @@ public class DeletarCursos extends HttpServlet {
 		}
 	}
 
-	private Map<String, String> definirFiltros(HttpServletRequest req) {
-		Map<String, String> filtros = new HashMap<>();
-
-		// definir os valores do map condicionalmente, conforme a requisição
-		if (req.getParameter("departamento") != null) {
-			filtros.put("id-depto", req.getParameter("departamento"));
-		}
-
-		if (req.getParameter("nome") != null) {
-			filtros.put("nome", req.getParameter("nome"));
-		}
-
-		if (req.getParameter("horas") != null) {
-			filtros.put("horas-total", req.getParameter("horas"));
-		}
-
-		if (req.getParameter("modalidade") != null) {
-			filtros.put("modalidade", req.getParameter("modalidade"));
-		}
-
-		return filtros;
-	}
 }

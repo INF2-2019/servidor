@@ -29,7 +29,7 @@ public class ConsultarCursos extends HttpServlet {
 		response.addHeader("Content-Type", "text/xml; charset=utf-8");
 
 		Set<CursoModel> resultado;
-		Map<String, String> filtros = definirFiltros(request); // criando um Map para armazenar os filtros de maneira pratica
+		Map<String, String> filtros = cursoRep.definirMap(request); // criando um Map para armazenar os filtros de maneira pratica
 
 		try {
 
@@ -54,28 +54,4 @@ public class ConsultarCursos extends HttpServlet {
 			System.err.println("Erro ao fechar banco de dados. Erro: "+erro.toString());
 		}
     }
-
-    private Map<String, String> definirFiltros(HttpServletRequest req) {
-    	Map<String, String> filtros = new HashMap<>();
-
-		// definir os valores do map condicionalmente, conforme a requisição
-		if (req.getParameter("departamento") != null) {
-			filtros.put("id-depto", req.getParameter("departamento"));
-		}
-
-		if (req.getParameter("nome") != null) {
-			filtros.put("nome", req.getParameter("nome"));
-		}
-
-		if (req.getParameter("horas") != null) {
-			filtros.put("horas-total", req.getParameter("horas"));
-		}
-
-		if (req.getParameter("modalidade") != null) {
-			filtros.put("modalidade", req.getParameter("modalidade"));
-		}
-
-		return filtros;
-	}
-
 }
