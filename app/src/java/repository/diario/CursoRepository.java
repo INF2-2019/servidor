@@ -17,7 +17,7 @@ public class CursoRepository {
 		this.con = conexao;
 	}
 
-	public Set<Curso> realizarBusca(Map<String, String> filtros) throws NumberFormatException, SQLException {
+	public Set<Curso> consultar(Map<String, String> filtros) throws NumberFormatException, SQLException {
 		// Base da query SQL
 		String sql;
 		Set<Curso> cursosResultado = new HashSet<>();

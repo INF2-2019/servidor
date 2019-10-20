@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "Atualizar", urlPatterns = "/diario/cursos/atualizar")
-public class Atualizar extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) {}
+@WebServlet(name = "Inserir", urlPatterns = "/diario/cursos/inserir")
+public class InserirCursos extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response){}
 }

@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-@WebServlet(name = "Consultar", urlPatterns = "/diario/cursos/consultar")
-public class Consultar extends HttpServlet {
+@WebServlet(name = "ConsultarCursos", urlPatterns = "/diario/cursos/consultar")
+public class ConsultarCursos extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response){
 		Connection conexao = ConnectionFactory.getDiario();
@@ -29,31 +29,15 @@ public class Consultar extends HttpServlet {
 		response.addHeader("Content-type", "utf-8");
 
 		Set<Curso> resultado;
-		Map<String, String> filtros = new HashMap<>(); // criando um Map para armazenar os filtros de maneira pratica
-
-		// definir os valores do map condicionalmente, conforme a requisição
-		if (request.getParameter("departamento") != null) {
-			filtros.put("id-depto", request.getParameter("departamento"));
-		}
-
-		if (request.getParameter("nome") != null) {
-			filtros.put("nome", request.getParameter("nome"));
-		}
-
-		if (request.getParameter("horas") != null) {
-			filtros.put("horas-total", request.getParameter("horas"));
-		}
-
-		if (request.getParameter("modalidade") != null) {
-			filtros.put("modalidade", request.getParameter("modalidade"));
-		}
+		Map<String, String> filtros = definirFiltros(request); // criando um Map para armazenar os filtros de maneira pratica
 
 		try {
-			resultado = cursoRep.realizarBusca(filtros);
-			String xmlRetorno = CursoView.converterCursoParaXML(resultado);
+
+			resultado = cursoRep.consultar(filtros); // Executa consulta
+			String xmlRetorno = CursoView.converterCursoParaXML(resultado); // Transforma em XML
 
 			response.getWriter().print(xmlRetorno);
-			System.out.println(resultado);
+
 		} catch(NumberFormatException excecaoFormatoErrado) {
 			System.err.println("Número inteiro inválido para o parâmetro. Erro: "+excecaoFormatoErrado.toString());
 		} catch(SQLException excecaoSQL) {
@@ -70,5 +54,28 @@ public class Consultar extends HttpServlet {
 			System.err.println("Erro ao fechar banco de dados. Erro: "+erro.toString());
 		}
     }
+
+    private Map<String, String> definirFiltros(HttpServletRequest req) {
+    	Map<String, String> filtros = new HashMap<>();
+
+		// definir os valores do map condicionalmente, conforme a requisição
+		if (req.getParameter("departamento") != null) {
+			filtros.put("id-depto", req.getParameter("departamento"));
+		}
+
+		if (req.getParameter("nome") != null) {
+			filtros.put("nome", req.getParameter("nome"));
+		}
+
+		if (req.getParameter("horas") != null) {
+			filtros.put("horas-total", req.getParameter("horas"));
+		}
+
+		if (req.getParameter("modalidade") != null) {
+			filtros.put("modalidade", req.getParameter("modalidade"));
+		}
+
+		return filtros;
+	}
 
 }
