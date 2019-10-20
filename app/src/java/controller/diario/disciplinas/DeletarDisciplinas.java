@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import repository.diario.DisciplinaRepository;
 import utils.ConnectionFactory;
+import utils.Headers;
 
 /**
  *
@@ -28,8 +29,7 @@ public class DeletarDisciplinas extends HttpServlet {
         Connection conexao = ConnectionFactory.getDiario();
         DisciplinaRepository DisciplinaRep = new DisciplinaRepository(conexao);
         
-        response.addHeader("Access-Control-Allow-Origin", "*");
-	response.addHeader("Content-Type", "text/xml; charset=utf-8");
+        Headers.XMLHeaders(response);
         
         
         String id = request.getParameter("id");
