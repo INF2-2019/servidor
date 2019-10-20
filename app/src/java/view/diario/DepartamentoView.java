@@ -4,7 +4,7 @@ import java.util.List;
 import model.diario.departamentos.Departamento;
 
 public class DepartamentoView {
-	
+
 	public static String xmlDepartamentos(List<Departamento> deptos) {
 		String xml = "<departamentos>";
 		for(Departamento depto : deptos) {
@@ -13,7 +13,7 @@ public class DepartamentoView {
 		xml += "</departamentos>";
 		return xml;
 	}
-	
+
 	public static String xmlDepartamento(Departamento depto) {
 		return	"<departamento>"
 					+ "<id>" + depto.getId() + "</id>"
@@ -21,5 +21,5 @@ public class DepartamentoView {
 					+ "<nome>" + depto.getNome() + "</nome>"
 				+ "</departamento>";
 	}
-	
+
 }
