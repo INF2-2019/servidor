@@ -1,4 +1,4 @@
-package view.diario.cursos;
+package views.diario.cursos;
 
 import model.diario.CursoModel;
 import org.w3c.dom.Document;

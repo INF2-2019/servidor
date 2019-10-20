@@ -14,18 +14,18 @@ A estrutura que você deve ver é fundamentalmente essa.
 │   ├── conf
 │   │   └── MANIFEST.MF
 │   └── java
-│       ├── controller
+│       ├── controllers
 │       │   ├── biblioteca
 │       │   └── diario
-│       ├── model
+│       ├── models
 │       │   ├── biblioteca
 │       │   └── diario
-│       ├── repository
+│       ├── repositories
 │       │   ├── biblioteca
 │       │   └── diario
 │       ├── utils
 │       │   └── ConnectionFactory.java
-│       └── view
+│       └── views
 │           ├── biblioteca
 │           └── diario
 └── web
@@ -42,29 +42,29 @@ No nosso caso teremos também: os repositórios que são classes especializadas 
 
 Notem que em todas, exceto na utils, são separadas as partes de diário e biblioteca.
 
-#### `controller`
+#### `controllers`
 
 Nesse pacote ficam os controladores da aplicação.
 
-Esses controladores são geralmente servlets que gerenciam a requisição e invoca as demais partes de acordo com a necessidade. Esses servlets devem estar bem distribuídos, sendo separados em sub pastas de acordo com a área de cada um. Por exemplo, um controlador responsável pela inserção de um aluno no diario teria o nome completo (pacote + nome da classe): `controller.diario.aluno.InsereAluno` e seria responsável somente pela inserção de alunos.
+Esses controladores são geralmente servlets que gerenciam a requisição e invoca as demais partes de acordo com a necessidade. Esses servlets devem estar bem distribuídos, sendo separados em sub pastas de acordo com a área de cada um. Por exemplo, um controlador responsável pela inserção de um aluno no diario teria o nome completo (pacote + nome da classe): `controllers.diario.aluno.InsereAluno` e seria responsável somente pela inserção de alunos.
 
-#### `model`
+#### `models`
 
 Nesse pacote ficam os modelos da aplicação.
 
-Esses modelos são a estrutura dos dados da aplicação, neles são isolados os dados, operações e regras de negócio de cada item. Normalmente são semelhante ao esquema de uma tabela no banco de dados. Um exemplo de modelo de aluno teria o nome completo (pacote + nome da classe): `model.diario.AlunoModel`. Nele teriam todos os dados que um Aluno possui e todas as operações que devem ser realizadas sobre um Aluno.
+Esses modelos são a estrutura dos dados da aplicação, neles são isolados os dados, operações e regras de negócio de cada item. Normalmente são semelhante ao esquema de uma tabela no banco de dados. Um exemplo de modelo de aluno teria o nome completo (pacote + nome da classe): `models.diario.AlunoModel`. Nele teriam todos os dados que um Aluno possui e todas as operações que devem ser realizadas sobre um Aluno.
 
-#### `view`
+#### `views`
 
 Nesse pacote ficam todas as visualizações da aplicação.
 
-Visualizações são a forma de representar dados específicos a serem enviados ao cliente. Uma view irá, no nosso caso, produzir um XML de acordo com a estrutura nela definida e os dados passados pelo controlador. Um exemplo de uma view de alunos teria o nome completo (pacote + nome da classe): `view.diario.AlunoView`. E teria métodos para gerar um XML adequado para as necessidades do controlador. Por exemplo, gerar um xml com uma lista de todos Alunos que foram recebidos como parâmetro.
+Visualizações são a forma de representar dados específicos a serem enviados ao cliente. Uma view irá, no nosso caso, produzir um XML de acordo com a estrutura nela definida e os dados passados pelo controlador. Um exemplo de uma view de alunos teria o nome completo (pacote + nome da classe): `views.diario.AlunoView`. E teria métodos para gerar um XML adequado para as necessidades do controlador. Por exemplo, gerar um xml com uma lista de todos Alunos que foram recebidos como parâmetro.
 
-#### `repository`
+#### `repositories`
 
 Nesse pacote ficam todas as classes de operações com o banco de dados da aplicação.
 
-Um repositório terá métodos para executar operações no banco de dados que estejam relacionados com um modelo "vinculado". Por exemplo um repositório de alunos teria métodos para adicionar, obter, editar e deletar alunos no banco de dados. Um exemplo de um repositório de alunos teria o nome completo (pacote + nome da classe): `repository.diario.AlunosRepository`.
+Um repositório terá métodos para executar operações no banco de dados que estejam relacionados com um modelo "vinculado". Por exemplo um repositório de alunos teria métodos para adicionar, obter, editar e deletar alunos no banco de dados. Um exemplo de um repositório de alunos teria o nome completo (pacote + nome da classe): `repositories.diario.AlunosRepository`.
 
 #### `utils`
 
