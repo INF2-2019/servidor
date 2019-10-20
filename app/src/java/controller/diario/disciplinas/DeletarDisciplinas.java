@@ -13,9 +13,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.w3c.dom.Document;
 import repository.diario.DisciplinaRepository;
 import utils.ConnectionFactory;
 import utils.Headers;
+import views.RenderException;
+import views.View;
+import views.diario.cursos.CursoConsultaView;
+
+import views.sucesso.SucessoView;
 
 /**
  *
@@ -31,13 +37,18 @@ public class DeletarDisciplinas extends HttpServlet {
         
         Headers.XMLHeaders(response);
         
-        
+         System.out.println("AAA");
         String id = request.getParameter("id");
             try{
-                DisciplinaRep.DeletarDisciplina(id);
+                PrintWriter out = response.getWriter();
+                DisciplinaRep.Deletar(id);
+                View Sucesso = new SucessoView("deletado");
+                Sucesso.render(out);
             } catch (SQLException ex) {
-                     System.out.println(ex.toString());
-            }
+                
+         } catch (RenderException ex) {
+             Logger.getLogger(DeletarDisciplinas.class.getName()).log(Level.SEVERE, null, ex);
+         }
                
     }
 

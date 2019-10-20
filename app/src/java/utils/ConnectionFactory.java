@@ -1,9 +1,5 @@
 package utils;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> dev-s1
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;

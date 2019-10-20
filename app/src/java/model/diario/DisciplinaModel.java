@@ -6,7 +6,7 @@ public class DisciplinaModel extends Model {
 	private int id, idTurmas, cargaHorariaMin;
 	private String nome;
 
-    public DisciplinaModel(int id,int idTurmas, int cargaHorariaMin, String nome) {
+    public DisciplinaModel(int id,int idTurmas, String nome,int cargaHorariaMin) {
         this.id = id;
         this.idTurmas = idTurmas;
         this.cargaHorariaMin = cargaHorariaMin;
@@ -14,7 +14,7 @@ public class DisciplinaModel extends Model {
     }
 
     public DisciplinaModel(int idTurmas, int cargaHorariaMin, String nome) {
-        this(ID_INDEFINIDO, idTurmas,cargaHorariaMin,nome);
+        this(ID_INDEFINIDO, idTurmas,nome,cargaHorariaMin);
     }
     
     public int getId() {
@@ -45,4 +45,5 @@ public class DisciplinaModel extends Model {
         this.nome = nome;
     }
 }
+
 
