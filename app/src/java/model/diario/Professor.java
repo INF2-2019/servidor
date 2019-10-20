@@ -9,8 +9,6 @@ import model.Model;
  *
  * @author Jônata Novais Cirqueira
  * @author Nikolas Victor Mota
- * @version 1.0
- * @since 2019-10-20
  */
 public class Professor extends Model {
 
