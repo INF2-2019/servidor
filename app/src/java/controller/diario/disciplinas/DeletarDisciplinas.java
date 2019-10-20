@@ -28,6 +28,11 @@ public class DeletarDisciplinas extends HttpServlet {
             throws ServletException, IOException {
         Connection conexao = ConnectionFactory.getDiario();
         DisciplinaRepository DisciplinaRep = new DisciplinaRepository(conexao);
+        
+        response.addHeader("Access-Control-Allow-Origin", "*");
+	response.addHeader("Content-Type", "text/xml; charset=utf-8");
+        
+        
         String id = request.getParameter("id");
             try{
                 DisciplinaRep.DeletarDisciplina(id);
