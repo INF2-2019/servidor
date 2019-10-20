@@ -1,10 +1,8 @@
 package utils;
 
-import com.sun.tools.internal.ws.processor.generator.CustomExceptionGenerator;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.PortUnreachableException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
