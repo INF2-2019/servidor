@@ -64,13 +64,13 @@ Traduções:
 
 ## `autores`
 
-| COLUMN_NAME  | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE                                                                        | COLUMN_KEY | EXTRA |
-| ------------ | ---------------- | -------------- | ----------- | ---------------------------------------------------------------------------------- | ---------- | ----- |
-| id-obra      | 1                | `-`            | NO          | int(11)                                                                            | `-`        | `-`   |
-| nome         | 2                | `-`            | NO          | varchar(255)                                                                       | `-`        | `-`   |
-| sobrenome    | 3                | `-`            | NO          | varchar(255)                                                                       | `-`        | `-`   |
-| ordem        | 4                | `-`            | NO          | int(11)                                                                            | `-`        | `-`   |
-| qualificacao | 5                | `-`            | NO          | enum('PRINCIPAL','SECUNDATRIO','ORGANIZADOR','COORDENADOR','COMPILADOR','DIRETOR') | `-`        | `-`   |
+| COLUMN_NAME  | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE                                                                       | COLUMN_KEY | EXTRA |
+| ------------ | ---------------- | -------------- | ----------- | --------------------------------------------------------------------------------- | ---------- | ----- |
+| id-obra      | 1                | `-`            | NO          | int(11)                                                                           | `-`        | `-`   |
+| nome         | 2                | `-`            | NO          | varchar(255)                                                                      | `-`        | `-`   |
+| sobrenome    | 3                | `-`            | NO          | varchar(255)                                                                      | `-`        | `-`   |
+| ordem        | 4                | `-`            | NO          | int(11)                                                                           | `-`        | `-`   |
+| qualificacao | 5                | `-`            | NO          | enum('PRINCIPAL','SECUNDARIO','ORGANIZADOR','COORDENADOR','COMPILADOR','DIRETOR') | `-`        | `-`   |
 
 ## `descartes`
 
