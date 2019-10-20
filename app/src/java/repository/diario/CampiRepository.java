@@ -39,7 +39,7 @@ public class CampiRepository {
 		
 
 
-		PreparedStatement ps = con.prepareStatement("INSERT INTO `cursos` (`nome`, `cidade`, `uf`) VALUES (?, ?, ?, ?)");
+		PreparedStatement ps = con.prepareStatement("INSERT INTO `campi` (`nome`, `cidade`, `uf`) VALUES (?, ?, ?, ?)");
 
 		ps.setString(1, nome);
 		ps.setString(2, cidade);

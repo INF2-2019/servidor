@@ -21,8 +21,8 @@ import utils.Headers;
  *
  * @author User
  */
-@WebServlet(name = "DeletarCampi", urlPatterns = {"/diario/campi/deletar"})
-public class DeletarCampi extends HttpServlet {
+@WebServlet(name = "InserirCampi", urlPatterns = {"/diario/campi/inserir"})
+public class InserirCampi extends HttpServlet {
 
      protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -32,12 +32,14 @@ public class DeletarCampi extends HttpServlet {
         Headers.XMLHeaders(response);
         
         
-        String id = request.getParameter("id");
+        String nome = request.getParameter("nome");
+        String cidade = request.getParameter("cidade");
+        String uf = request.getParameter("uf");
             try{
-                if(Rep.deletarCampi(id))
-                    System.out.println("Deletado!");
+                if(Rep.inserirCampi(nome, cidade, uf))
+                    System.out.println("Inserido!");
                 else
-                    System.out.println("Não foi possível deletar");
+                    System.out.println("Não foi possível inserir");
             } catch (SQLException ex) {
                      System.out.println(ex.toString());
             }
