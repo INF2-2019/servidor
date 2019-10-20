@@ -7,7 +7,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class CursoRepository {
 	private Connection con;
@@ -19,7 +22,7 @@ public class CursoRepository {
 	public Set<CursoModel> consultar(Map<String, String> filtros) throws NumberFormatException, SQLException {
 		// Base da query SQL
 		String sql;
-		Set<CursoModel> cursosResultado = new HashSet<>();
+		Set<CursoModel> cursosResultado = new LinkedHashSet<>();
 		boolean jaAdicionado = false;
 
 		if(filtros.isEmpty()) {
