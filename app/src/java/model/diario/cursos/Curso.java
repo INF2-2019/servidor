@@ -1,4 +1,4 @@
-package model.diario.curso;
+package model.diario.cursos;
 
 public class Curso {
 	private static final int ID_INDEFINIDO = -1;
