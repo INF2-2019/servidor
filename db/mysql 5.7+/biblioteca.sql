@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `autores` (
   `ordem` INT NOT NULL,
   `qualificacao` ENUM(
     'PRINCIPAL', 
-    'SECUNDATRIO', 
+    'SECUNDARIO', 
     'ORGANIZADOR', 
     'COORDENADOR', 
     'COMPILADOR', 

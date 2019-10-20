@@ -12,23 +12,34 @@ Traduções:
 - COLUMN_KEY: Tipo de chave da coluna
 - EXTRA: Atributos extras
 
-## `alunos`
+## `admin`
 
 | COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA |
 | ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | ----- |
 | id          | 1                | `-`            | NO          | int(11)      | PRI        | `-`   |
 | nome        | 2                | `-`            | NO          | varchar(255) | `-`        | `-`   |
-| sexo        | 3                | `-`            | NO          | varchar(255) | `-`        | `-`   |
-| nascimento  | 4                | `-`            | NO          | varchar(255) | `-`        | `-`   |
-| logradouro  | 5                | `-`            | NO          | varchar(255) | `-`        | `-`   |
-| numero      | 6                | `-`            | NO          | int(11)      | `-`        | `-`   |
-| complemento | 7                | `-`            | NO          | varchar(255) | `-`        | `-`   |
-| bairro      | 8                | `-`            | NO          | varchar(255) | `-`        | `-`   |
-| cidade      | 9                | `-`            | NO          | varchar(255) | `-`        | `-`   |
-| cep         | 10               | `-`            | NO          | int(11)      | `-`        | `-`   |
-| uf          | 11               | `-`            | NO          | varchar(255) | `-`        | `-`   |
-| email       | 12               | `-`            | NO          | varchar(255) | UNI        | `-`   |
-| foto        | 13               | `-`            | NO          | text         | `-`        | `-`   |
+| usuario     | 3                | `-`            | NO          | varchar(255) | `-`        | `-`   |
+| email       | 4                | `-`            | NO          | varchar(255) | UNI        | `-`   |
+| senha       | 5                | `-`            | NO          | varchar(255) | `-`        | `-`   |
+
+## `alunos`
+
+| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE   | COLUMN_KEY | EXTRA |
+| ----------- | ---------------- | -------------- | ----------- | ------------- | ---------- | ----- |
+| id          | 1                | `-`            | NO          | int(11)       | PRI        | `-`   |
+| nome        | 2                | `-`            | NO          | varchar(255)  | `-`        | `-`   |
+| email       | 3                | `-`            | NO          | varchar(255)  | UNI        | `-`   |
+| senha       | 4                | `-`            | NO          | varchar(255)  | `-`        | `-`   |
+| sexo        | 5                | `-`            | NO          | enum('M','F') | `-`        | `-`   |
+| nascimento  | 6                | `-`            | NO          | date          | `-`        | `-`   |
+| logradouro  | 7                | `-`            | NO          | varchar(255)  | `-`        | `-`   |
+| numero      | 8                | `-`            | NO          | int(11)       | `-`        | `-`   |
+| complemento | 9                | `-`            | YES         | varchar(255)  | `-`        | `-`   |
+| bairro      | 10               | `-`            | NO          | varchar(255)  | `-`        | `-`   |
+| cidade      | 11               | `-`            | NO          | varchar(255)  | `-`        | `-`   |
+| cep         | 12               | `-`            | NO          | int(11)       | `-`        | `-`   |
+| uf          | 13               | `-`            | NO          | varchar(255)  | `-`        | `-`   |
+| foto        | 14               | `-`            | NO          | text          | `-`        | `-`   |
 
 ## `atividades`
 
@@ -101,7 +112,8 @@ Traduções:
 | COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          |
 | ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- |
 | id          | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment |
-| valor       | 2                | `-`            | NO          | decimal(3,2) | `-`        | `-`            |
+| ano         | 2                | `-`            | NO          | int(11)      | `-`        | `-`            |
+| valor       | 3                | `-`            | NO          | decimal(3,2) | `-`        | `-`            |
 
 ## `matriculas`
 
@@ -122,12 +134,14 @@ Traduções:
 
 ## `professores`
 
-| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA |
-| ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | ----- |
-| id          | 1                | `-`            | NO          | int(11)      | PRI        | `-`   |
-| id-depto    | 2                | `-`            | NO          | int(11)      | `-`        | `-`   |
-| nome        | 3                | `-`            | NO          | varchar(255) | `-`        | `-`   |
-| titulacao   | 4                | `-`            | NO          | varchar(255) | `-`        | `-`   |
+| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE           | COLUMN_KEY | EXTRA |
+| ----------- | ---------------- | -------------- | ----------- | --------------------- | ---------- | ----- |
+| id          | 1                | `-`            | NO          | int(11)               | PRI        | `-`   |
+| id-depto    | 2                | `-`            | NO          | int(11)               | `-`        | `-`   |
+| nome        | 3                | `-`            | NO          | varchar(255)          | `-`        | `-`   |
+| senha       | 4                | `-`            | NO          | varchar(255)          | `-`        | `-`   |
+| email       | 5                | `-`            | NO          | varchar(255)          | UNI        | `-`   |
+| titulacao   | 6                | `-`            | NO          | enum('M','D','E','G') | `-`        | `-`   |
 
 ## `turmas`
 
