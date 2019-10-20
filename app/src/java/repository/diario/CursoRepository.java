@@ -23,7 +23,7 @@ public class CursoRepository {
 		Set<CursoModel> cursosResultado = new HashSet<>();
 		boolean jaAdicionado = false;
 
-		if(filtros.isEmpty()){
+		if(filtros.isEmpty()) {
 			sql = "SELECT * FROM `cursos`";
 		} else {
 			sql = "SELECT * FROM `cursos` WHERE ";
@@ -60,6 +60,34 @@ public class CursoRepository {
 		}
 
 		return cursosResultado;
+	}
+
+	public boolean deletar(Map<String, String> filtros) throws NumberFormatException, SQLException {
+		String sql = "DELETE FROM `cursos` WHERE ";
+		boolean jaAdicionado = false;
+
+		if (filtros.containsKey("id-depto"))
+			Integer.parseUnsignedInt(filtros.get("id-depto"));
+
+
+		if (filtros.containsKey("horas"))
+			Integer.parseUnsignedInt(filtros.get("horas"));
+
+		for (Map.Entry<String, String> filtro : filtros.entrySet()) {
+			if (jaAdicionado) {
+				sql += "AND (`" + filtro.getKey() + "` = '" + filtro.getValue() + "') ";
+			} else {
+				sql += "(`" + filtro.getKey() + "` = '" + filtro.getValue() + "') ";
+				jaAdicionado = true;
+			}
+		}
+
+		PreparedStatement ps = con.prepareStatement(sql);
+		int sucesso = ps.executeUpdate();
+
+		// Se deletou algo, retorna true, senão retorna false
+		return sucesso != 0;
+
 	}
 
 	private CursoModel converterResultSetParaCurso(ResultSet res) throws SQLException {

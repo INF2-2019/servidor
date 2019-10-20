@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +23,17 @@ public class DeletarCursos extends HttpServlet {
 
 		Map<String, String> filtros = definirFiltros(request);
 
-
+		try {
+			boolean sucesso = cursoRep.deletar(filtros);
+			if(sucesso)
+				System.out.println("Deletado.");
+			else
+				System.out.println("Não deletado.");
+		} catch (NumberFormatException excecaoFormatoErrado) {
+			System.err.println("Número inteiro inválido para o parâmetro. Erro: "+excecaoFormatoErrado.toString());
+		} catch (SQLException excecaoSQL) {
+			System.err.println("Busca SQL inválida. Erro: "+excecaoSQL.toString());
+		}
 	}
 
 	private Map<String, String> definirFiltros(HttpServletRequest req) {

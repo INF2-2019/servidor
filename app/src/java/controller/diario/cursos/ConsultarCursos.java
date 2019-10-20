@@ -38,9 +38,9 @@ public class ConsultarCursos extends HttpServlet {
 
 			response.getWriter().print(xmlRetorno);
 
-		} catch(NumberFormatException excecaoFormatoErrado) {
+		} catch (NumberFormatException excecaoFormatoErrado) {
 			System.err.println("Número inteiro inválido para o parâmetro. Erro: "+excecaoFormatoErrado.toString());
-		} catch(SQLException excecaoSQL) {
+		} catch (SQLException excecaoSQL) {
 			System.err.println("Busca SQL inválida. Erro: "+excecaoSQL.toString());
 		} catch (IOException e) {
 			System.err.println("Não foi possível mostrar o resultado, erro ao pegar Writer. Erro: "+e.toString());
