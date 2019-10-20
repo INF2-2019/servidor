@@ -1,6 +1,5 @@
 package utils;
 
-import com.sun.tools.internal.ws.processor.generator.CustomExceptionGenerator;
 
 import java.io.IOException;
 import java.io.InputStream;
