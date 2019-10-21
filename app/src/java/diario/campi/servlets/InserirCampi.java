@@ -1,4 +1,4 @@
-package controller.diario.campi;
+package diario.campi.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,7 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import repository.diario.CampiRepository;
+import diario.campi.repository.*;
 import utils.ConnectionFactory;
 import utils.Headers;
 

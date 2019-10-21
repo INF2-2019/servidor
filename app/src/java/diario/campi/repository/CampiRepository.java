@@ -1,4 +1,4 @@
-package repository.diario;
+package diario.campi.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
-import model.diario.CampiModel;
+import diario.campi.model.*;
 
 /**
  *

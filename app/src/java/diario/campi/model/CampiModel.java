@@ -1,6 +1,5 @@
-package model.diario;
+package diario.campi.model;
 
-import model.Model;
 
 public class CampiModel extends Model {
 	private int id;
