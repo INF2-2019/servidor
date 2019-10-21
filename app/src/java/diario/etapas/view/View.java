@@ -1,5 +1,6 @@
-package views;
+package diario.etapas.view;
 
+import diario.etapas.RenderException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 

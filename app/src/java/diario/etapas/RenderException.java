@@ -1,4 +1,4 @@
-package views;
+package diario.etapas;
 
 public class RenderException extends Exception{
 	public RenderException() {

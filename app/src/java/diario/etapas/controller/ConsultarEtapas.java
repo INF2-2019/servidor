@@ -18,8 +18,8 @@ import diario.etapas.model.EtapasModel;
 import diario.etapas.repository.EtapasRepository;
 import utils.ConnectionFactory;
 import utils.Headers;
-import views.RenderException;
-import views.View;
+import diario.etapas.RenderException;
+import diario.etapas.view.View;
 import diario.etapas.view.EtapasConsultaView;
 import diario.etapas.view.ErroView;
 
