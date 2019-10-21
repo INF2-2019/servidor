@@ -22,7 +22,7 @@ public class AtualizarProfessor extends HttpServlet {
 	private static final String[] params = {"id", "id-depto", "nome", "senha", "email", "titulacao"};
 
 	@Override
-	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
+	protected void doPost(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws IOException {
 
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
