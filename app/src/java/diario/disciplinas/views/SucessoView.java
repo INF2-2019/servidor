@@ -25,8 +25,6 @@ public class SucessoView extends View<String> {
         Document SucessoemDocument;
         try {
             SucessoemDocument = SucessoParaDocument(data);
-            System.out.println(data);
-            System.out.println(SucessoemDocument);
             writer.write(Conversores.converterDocumentEmXMLString(SucessoemDocument));
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(SucessoView.class.getName()).log(Level.SEVERE, null, ex);

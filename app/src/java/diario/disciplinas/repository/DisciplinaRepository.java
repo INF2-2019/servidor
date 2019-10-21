@@ -29,8 +29,7 @@ public class DisciplinaRepository {
         stat.executeUpdate();
     }
     public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException {
-		// Tem que ter os 4 valores a serem inseridos no BD
-                System.out.println(valores.size());
+		// Tem que ter os 3 valores a serem inseridos no BD
 		if(valores.size() != 3)
 			return false;
                 
