@@ -60,7 +60,7 @@ public class ConsultarCursos extends HttpServlet {
 			} catch(NumberFormatException excecaoFormatoErrado) {
 				response.setStatus(400);
 				System.err.println("Número inteiro inválido para o parâmetro. Erro: "+excecaoFormatoErrado.toString());
-
+                                
 				View erroView = new ErroView(excecaoFormatoErrado);
 				try {
 					erroView.render(out);
@@ -93,19 +93,19 @@ public class ConsultarCursos extends HttpServlet {
 		Map<String, String> dados = new LinkedHashMap<>();
 
 		// definir os valores do map condicionalmente, conforme a requisição
-		if (req.getParameter("departamento") != null) {
+		if (req.getParameterMap().containsKey("departamento")) {
 			dados.put("id-depto", req.getParameter("departamento"));
 		}
 
-		if (req.getParameter("nome") != null) {
+		if (req.getParameterMap().containsKey("nome")) {
 			dados.put("nome", req.getParameter("nome"));
 		}
 
-		if (req.getParameter("horas") != null) {
+		if (req.getParameterMap().containsKey("horas")) {
 			dados.put("horas-total", req.getParameter("horas"));
 		}
 
-		if (req.getParameter("modalidade") != null) {
+		if (req.getParameterMap().containsKey("modalidade")) {
 			dados.put("modalidade", req.getParameter("modalidade"));
 		}
 

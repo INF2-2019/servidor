@@ -17,43 +17,50 @@ public class CursoRepository {
 
 	public Set<CursoModel> consultar(Map<String, String> filtros) throws NumberFormatException, SQLException {
 		Set<CursoModel> cursosResultado = new LinkedHashSet<>();
-		boolean jaAdicionado = false;
-		String sql;
+		String sql = "SELECT * FROM `cursos`";
+                int idDepto = -1, horasTotal = -1;
+                
+                if (filtros.containsKey("id-depto")) {
+                        // Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
+                        idDepto = Integer.parseUnsignedInt(filtros.get("id-depto"));
+                }
 
-		if(filtros.isEmpty()) {
-			sql = "SELECT * FROM `cursos`";
-		} else {
-			sql = "SELECT * FROM `cursos` WHERE ";
-
-			if (filtros.containsKey("id-depto")) {
-				// Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
-				// não preciso usar o valor do parse se der certo
-				Integer.parseUnsignedInt(filtros.get("id-depto"));
-			}
-
-			if (filtros.containsKey("horas-total")) {
-				// Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
-				// não preciso usar o valor do parse se der certo
-				Integer.parseUnsignedInt(filtros.get("horas-total"));
-			}
-
-			// Montar a query SQL com base nos filtros passados no Map
-			for (Map.Entry<String, String> filtro : filtros.entrySet()) {
-				if (jaAdicionado) {
-					sql += "AND (`" + filtro.getKey() + "` = '" + filtro.getValue() + "') ";
-				} else {
-					sql += "(`" + filtro.getKey() + "` = '" + filtro.getValue() + "') ";
-					jaAdicionado = true;
-				}
-			}
-		}
-		sql += " ORDER BY `id`";
-
-		ResultSet resultadoBusca = con.prepareCall(sql).executeQuery();
-
+                if (filtros.containsKey("horas-total")) {
+                        // Se lançar a exceção NumberFormatException, o valor não é um inteiro sem 
+                        horasTotal = Integer.parseUnsignedInt(filtros.get("horas-total"));
+                }
+                
+                ResultSet resultadoBusca = con.prepareCall(sql).executeQuery();
+                
 		// Itera por cada item do resultado e adiciona nos resultados
+                boolean adicionar;
 		while(resultadoBusca.next()){
-			cursosResultado.add(resultSetParaCurso(resultadoBusca));
+                        adicionar = true;
+                        
+                        CursoModel curso = resultSetParaCurso(resultadoBusca);
+			if(filtros.containsKey("id-depto")){
+                            if(idDepto != curso.getIdDepto()){
+                                adicionar = false;
+                            }
+                        }
+                        if(filtros.containsKey("nome")){
+                            if(!filtros.get("nome").equals(curso.getNome())){
+                                adicionar = false;
+                            }
+                        }
+                        if(filtros.containsKey("horas-total")){
+                            if(horasTotal != curso.getHorasTotal()){
+                                adicionar = false;
+                            }
+                        }
+                        if(filtros.containsKey("modalidade")){
+                            if(!filtros.get("modalidade").equals(curso.getModalidade())){
+                                adicionar = false;
+                            }
+                        }
+                        
+                        if(adicionar)
+                            cursosResultado.add(curso);
 		}
 
 		return cursosResultado;

@@ -88,27 +88,27 @@ public class AtualizarCursos extends HttpServlet {
 		Map<String, String> dados = new LinkedHashMap<>();
 		boolean temPeloMenosUm = false;
 
-		if(req.getParameter("id") != null)
+		if(req.getParameterMap().containsKey("id"))
 			dados.put("id", req.getParameter("id"));
 		else
 			return null;
 
-		if (req.getParameter("departamento") != null)
+		if (req.getParameterMap().containsKey("departamento"))
 			dados.put("id-depto", req.getParameter("departamento"));
 		else
 			temPeloMenosUm = true;
 
-		if (req.getParameter("nome") != null)
+		if (req.getParameterMap().containsKey("nome"))
 			dados.put("nome", req.getParameter("nome"));
 		else
 			temPeloMenosUm = true;
 
-		if (req.getParameter("horas") != null)
+		if (req.getParameterMap().containsKey("horas"))
 			dados.put("horas-total", req.getParameter("horas"));
 		else
 			temPeloMenosUm = true;
 
-		if (req.getParameter("modalidade") != null)
+		if (req.getParameterMap().containsKey("modalidade"))
 			dados.put("modalidade", req.getParameter("modalidade"));
 		else
 			temPeloMenosUm = true;
