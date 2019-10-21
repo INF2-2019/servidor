@@ -18,7 +18,7 @@
 ```xml
 
 <info>
-	<erro>True/false</erro>
+	<erro>true/false</erro>
 	<mensagem></mensagem>
 </info>
 <professores>
@@ -39,7 +39,7 @@
 
 --------------------------------
 
-## Parâmetros
+## Parâmetros em cada operação
 
 - **Inserção:** Todos os parâmetros devem ser preenchidos
 
