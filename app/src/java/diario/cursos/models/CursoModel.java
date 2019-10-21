@@ -1,5 +1,7 @@
 package diario.cursos.models;
 
+import java.util.Map;
+
 public class CursoModel extends Model {
 	private int id, idDepto, horasTotal;
 	private String nome, modalidade;
@@ -16,6 +18,33 @@ public class CursoModel extends Model {
 		this.setNome(nome);
 		this.setHorasTotal(horasTotal);
 		this.setModalidade(modalidade);
+	}
+
+	public Object[] retornarValoresRestantes(Map<String, String> parametros) {
+		Object[] retorno = new Object[5];
+		retorno[0] = id;
+
+		if(!parametros.containsKey("id-depto"))
+			retorno[1] = idDepto;
+		else
+			retorno[1] = parametros.get("id-depto");
+
+		if(!parametros.containsKey("nome"))
+			retorno[2] = nome;
+		else
+			retorno[2] = parametros.get("nome");
+
+		if(!parametros.containsKey("horas-total"))
+			retorno[3] = horasTotal;
+		else
+			retorno[3] = parametros.get("horas-total");
+
+		if(!parametros.containsKey("modalidade"))
+			retorno[4] = modalidade;
+		else
+			retorno[4] = parametros.get("modalidade");
+
+		return retorno;
 	}
 
 	public int getId(){

@@ -6,9 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CursoRepository {
 	private Connection con;
@@ -120,21 +118,42 @@ public class CursoRepository {
 
 	}
 
-	public boolean atualizarPorId(Map<String, String> parametros) throws NumberFormatException, SQLException{
-		int id = Integer.parseUnsignedInt(parametros.get("id"));
-		int idDepto = Integer.parseUnsignedInt(parametros.get("id-depto"));
-		int horasTotal = Integer.parseUnsignedInt(parametros.get("horas-total"));
+	public boolean atualizarPorId(Map<String, Object> parametros) throws NumberFormatException, SQLException{
+		int id = Integer.parseUnsignedInt(parametros.get("id").toString());
+		int idDepto = Integer.parseUnsignedInt(parametros.get("id-depto").toString());
+		int horasTotal = Integer.parseUnsignedInt(parametros.get("horas-total").toString());
 
 		PreparedStatement ps = con.prepareStatement("UPDATE `cursos` SET `id-depto` = ?, `nome` = ?, `horas-total` = ?, `modalidade` = ? WHERE `id` = ?");
 		ps.setInt(1, idDepto);
-		ps.setString(2, parametros.get("nome"));
+		ps.setString(2, (String) parametros.get("nome"));
 		ps.setInt(3, horasTotal);
-		ps.setString(4, parametros.get("modalidade"));
+		ps.setString(4, (String) parametros.get("modalidade"));
 		ps.setInt(5, id);
 
 		int sucesso = ps.executeUpdate();
 
 		return sucesso != 0;
+	}
+
+	public boolean atualizar(Map<String, String> parametros) throws NumberFormatException, SQLException{
+		int id = Integer.parseUnsignedInt(parametros.get("id"));
+
+		if(parametros.containsKey("id-depto"))
+			Integer.parseUnsignedInt(parametros.get("id-depto"));
+
+		if(parametros.containsKey("horas-total"))
+			Integer.parseUnsignedInt(parametros.get("horas-total"));
+
+		CursoModel curso = consultarId(Integer.toString(id));
+		Object[] vals = curso.retornarValoresRestantes(parametros);
+		String[] keys = {"id", "id-depto", "nome", "horas-total", "modalidade"};
+		Map<String, Object> valores = new LinkedHashMap<>();
+
+		for(int i=0; i<keys.length; i++) {
+			valores.put(keys[i], vals[i]);
+		}
+
+		return atualizarPorId(valores);
 	}
 
 	private CursoModel resultSetParaCurso(ResultSet res) throws SQLException {

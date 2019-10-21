@@ -44,7 +44,7 @@ public class AtualizarCursos extends HttpServlet {
 		CursoRepository cursoRep = new CursoRepository(conexao);
 
 		Map<String, String> parametros = definirParametros(request);
-		// Testa se todos parâmetros foram inseridos
+		// Testa se todos parâmetros necessários foram inseridos
 		if(parametros == null){
 			response.setStatus(400);
 			View erroView = new ErroView(new Exception("Parâmetros incorretos para a operação de atualização."));
@@ -56,7 +56,7 @@ public class AtualizarCursos extends HttpServlet {
 		}
 
 		try {
-			cursoRep.atualizarPorId(parametros);
+			cursoRep.atualizar(parametros);
 			View sucessoView = new SucessoView("Atualizado com sucesso.");
 			sucessoView.render(out);
 		} catch (NumberFormatException excecaoFormatoErrado) {
@@ -86,6 +86,7 @@ public class AtualizarCursos extends HttpServlet {
 
 	public Map<String, String> definirParametros(HttpServletRequest req) {
 		Map<String, String> dados = new LinkedHashMap<>();
+		boolean temPeloMenosUm = false;
 
 		if(req.getParameter("id") != null)
 			dados.put("id", req.getParameter("id"));
@@ -95,22 +96,24 @@ public class AtualizarCursos extends HttpServlet {
 		if (req.getParameter("departamento") != null)
 			dados.put("id-depto", req.getParameter("departamento"));
 		else
-			return null;
+			temPeloMenosUm = true;
 
 		if (req.getParameter("nome") != null)
 			dados.put("nome", req.getParameter("nome"));
 		else
-			return null;
+			temPeloMenosUm = true;
 
 		if (req.getParameter("horas") != null)
 			dados.put("horas-total", req.getParameter("horas"));
 		else
-			return null;
+			temPeloMenosUm = true;
 
 		if (req.getParameter("modalidade") != null)
 			dados.put("modalidade", req.getParameter("modalidade"));
 		else
-			return null;
+			temPeloMenosUm = true;
+
+		if(!temPeloMenosUm) return null;
 
 		return dados;
 	}
