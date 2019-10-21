@@ -1,4 +1,3 @@
-
 package diario.disciplinas.views;
 
 public class RenderException extends Exception{
