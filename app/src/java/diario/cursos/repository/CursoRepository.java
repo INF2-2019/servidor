@@ -17,7 +17,7 @@ public class CursoRepository {
 
 	public Set<CursoModel> consultar(Map<String, String> filtros) throws NumberFormatException, SQLException {
 		Set<CursoModel> cursosResultado = new LinkedHashSet<>();
-		String sql = "SELECT * FROM `cursos`";
+		String sql = "SELECT * FROM `cursos` ORDER BY `id`";
                 int idDepto = -1, horasTotal = -1;
                 
                 if (filtros.containsKey("id-depto")) {
