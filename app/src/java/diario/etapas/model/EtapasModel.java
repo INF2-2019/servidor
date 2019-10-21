@@ -19,23 +19,25 @@ public class EtapasModel extends Model {
 	this.setAno(ano);
 	this.setValor(valor);
     }
-    
+
     public Object[] retornarValoresRestantes(Map<String, String> parametros) {
-		Object[] retorno = new Object[3];
-		retorno[0] = id;
+	Object[] retorno = new Object[3];
+	retorno[0] = id;
 
-		if(!parametros.containsKey("ano"))
-			retorno[1] = ano;
-		else
-			retorno[1] = parametros.get("ano");
-
-		if(!parametros.containsKey("valor"))
-			retorno[2] = valor;
-		else
-			retorno[2] = parametros.get("valor");
-
-		return retorno;
+	if (!parametros.containsKey("ano")) {
+	    retorno[1] = ano;
+	} else {
+	    retorno[1] = parametros.get("ano");
 	}
+
+	if (!parametros.containsKey("valor")) {
+	    retorno[2] = valor;
+	} else {
+	    retorno[2] = parametros.get("valor");
+	}
+
+	return retorno;
+    }
 
     public void setId(int id) {
 	this.id = id;

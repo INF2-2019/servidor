@@ -50,7 +50,7 @@ public class ConsultarEtapas extends HttpServlet {
 	    response.setStatus(400);
 	    System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
 
-	    View erroView = new ErroView(excecaoFormatoErrado);
+	    ErroView erroView = new ErroView(excecaoFormatoErrado);
 	    try {
 		erroView.render(out);
 	    } catch (RenderException e) {
@@ -61,7 +61,7 @@ public class ConsultarEtapas extends HttpServlet {
 	    response.setStatus(400);
 	    System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
-	    View erroView = new ErroView(excecaoSQL);
+	    ErroView erroView = new ErroView(excecaoSQL);
 	    try {
 		erroView.render(out);
 	    } catch (RenderException e) {

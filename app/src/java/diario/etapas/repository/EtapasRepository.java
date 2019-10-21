@@ -104,30 +104,24 @@ public class EtapasRepository {
 
     public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException {
         // Tem que ter os 3 valores a serem inseridos no BD (id, ano e valor)
-        if (valores.size() != 3) {
+        if (valores.size() != 2) {
             return false;
         }
-
-        int id = 0;
-        if (valores.containsKey("id")) {
-            id = Integer.parseUnsignedInt(valores.get("id"));
-        }
-
+        
         int ano = 0;
         if (valores.containsKey("ano")) {
-            ano = Integer.parseUnsignedInt(valores.get("ano"));
+            ano = Integer.parseInt(valores.get("ano"));
         }
 
-        int valor = 0;
+        double valor = 0;
         if (valores.containsKey("valor")) {
-            valor = Integer.parseUnsignedInt(valores.get("valor"));
+            valor = Double.parseDouble(valores.get("valor"));
         }
 
-        PreparedStatement ps = con.prepareStatement("INSERT INTO `etapas` (`id`, `ano`, `valor`) VALUES (?, ?, ?)");
+        PreparedStatement ps = con.prepareStatement("INSERT INTO `etapas` (`ano`, `valor`) VALUES (?, ?)");
 
-        ps.setInt(1, id);
-        ps.setInt(2, ano);
-        ps.setInt(3, valor);
+        ps.setInt(1, ano);
+        ps.setDouble(2, valor);
 
         int sucesso = ps.executeUpdate();
 

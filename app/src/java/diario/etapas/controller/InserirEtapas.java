@@ -24,7 +24,7 @@ import java.util.Map;
 @WebServlet(name = "InserirEtapas", urlPatterns = "/diario/etapas/inserir")
 public class InserirEtapas extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	Connection conexao = ConnectionFactory.getDiario();
 	EtapasRepository etapasRep = new EtapasRepository(conexao);
 
