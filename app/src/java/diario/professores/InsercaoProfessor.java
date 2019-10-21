@@ -1,5 +1,7 @@
 package diario.professores;
 
+import utils.ConnectionFactory;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -8,7 +10,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.ConnectionFactory;
 
 @WebServlet(name = "inserir", urlPatterns = "/diario/professores/inserir")
 /**
@@ -23,7 +24,7 @@ public class InsercaoProfessor extends HttpServlet {
 	private static final String[] params = {"id", "id-depto", "nome", "senha", "email", "titulacao"};
 
 	@Override
-	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
+	protected void doPost(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws ServletException, IOException {
 
 		try {
@@ -41,7 +42,6 @@ public class InsercaoProfessor extends HttpServlet {
 		resposta.setContentType("text/xml;charset=UTF-8");
 
 		PrintWriter saida = resposta.getWriter();
-		saida.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?");
 		try {
 
 			String id = requisicao.getParameter(params[0]),
@@ -58,19 +58,14 @@ public class InsercaoProfessor extends HttpServlet {
 			ConnectionFactory.getDiario().createStatement().executeUpdate(clausulaSql);
 
 			saida.println("<info>");
-			saida.println("	 <mensagem>");
-			saida.println("    Registro inserido com sucesso.");
-			saida.println("  </mensagem>");
+			saida.println("  <erro>false</erro>");
+			saida.println("	 <mensagem>Registro inserido com sucesso</mensagem>");
 			saida.println("</info>");
 
 		} catch (Exception e) {
 			saida.println("<info>");
-			saida.println("  <mensagem>");
-			saida.println("    Houve um erro de execução.");
-			saida.println("  </mensagem>");
-			saida.println("  <erro>");
-			saida.println(e.getMessage());
-			saida.println("  </erro>");
+			saida.println("  <erro> true </erro>");
+			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
 			saida.println("</info>");
 		}
 
