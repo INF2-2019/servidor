@@ -47,4 +47,4 @@
 
 - **Remoção:** Apenas o parâmetro 'id' é obrigatório, os outros serão ignorados
 
-- **Consulta:** Deve-se enviar um parâmetro chamado 'condicao' cujo valor deve ser uma condição SQL (inciando com "WHERE")
+- **Consulta:** Deve-se enviar um parâmetro chamado 'condicao' cujo valor deve ser uma condição SQL (inciando com "WHERE" ou vazia para não filtrar)
