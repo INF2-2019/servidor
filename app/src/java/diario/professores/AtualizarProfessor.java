@@ -2,6 +2,8 @@ package diario.professores;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Map;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,21 +24,25 @@ public class AtualizarProfessor extends HttpServlet {
 	private static final String[] params = {"id", "id-depto", "nome", "senha", "email", "titulacao"};
 
 	@Override
-	protected void doPost(HttpServletRequest requisicao, HttpServletResponse resposta)
+	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws IOException {
 
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
 		resposta.setContentType("text/xml;charset=UTF-8");
 
 		PrintWriter saida = resposta.getWriter();
-		try {
+		saida.println("<root>");
+		try (Connection conexao = ConnectionFactory.getDiario()) {
+
+			if (conexao == null) {
+				throw new SQLException("Impossível se conectar ao banco de dados");
+			}
 
 			// Alterando apenas parâmetros enviados
 			int id = -1;
 			Map<String, String[]> camposAtualizados = requisicao.getParameterMap();
 			String sqlQuery = "UPDATE `professores` SET ";
 			for (Map.Entry<String, String[]> iterador : camposAtualizados.entrySet()) {
-
 				// Confere se é um parâmetro válido
 				boolean valido = false;
 				for (String param : params) {
@@ -54,12 +60,13 @@ public class AtualizarProfessor extends HttpServlet {
 					continue;
 				}
 
-				sqlQuery += "`" + iterador.getKey() + "` = '" + iterador.getValue()[0] + "' ";
-
+				sqlQuery += "`" + iterador.getKey() + "` = '" + iterador.getValue()[0] + "',";
 			}
-			sqlQuery += "WHERE `id` = '" + id + "'";
+			sqlQuery = sqlQuery.substring(0, sqlQuery.length() - 1); // Remove a última vírgula
+			sqlQuery += "WHERE `id` = " + id + "";
 
-			ConnectionFactory.getDiario().createStatement().executeUpdate(sqlQuery);
+			conexao.createStatement().executeUpdate(sqlQuery);
+			conexao.close();
 
 			saida.println("<info>");
 			saida.println("  <erro>false</erro>");
@@ -73,6 +80,8 @@ public class AtualizarProfessor extends HttpServlet {
 			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
 			saida.println("</info>");
 
+		} finally {
+			saida.println("</root>");
 		}
 
 	}

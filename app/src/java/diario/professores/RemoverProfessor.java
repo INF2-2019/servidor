@@ -5,36 +5,26 @@ import utils.ConnectionFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "inserir", urlPatterns = "/diario/professores/inserir")
+@WebServlet(name = "deletar", urlPatterns = "/diario/professores/deletar")
 /**
- * <h1> Servlet de Inserção de Professor</h1>
- * Servlet para a requisição de indlusão de registro na tabela 'professores'
+ * <h1>Servlet de Remoção de Professor</h1>
+ * Servlet dedicado para deletar registros na tablea 'professores'
  *
  * @author Jonata Novais Cirqueira
  * @author Nikolas Victor Mota
  */
-public class InsercaoProfessor extends HttpServlet {
-
-	private static final String[] params = {"id", "id-depto", "nome", "senha", "email", "titulacao"};
+public class RemoverProfessor extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws IOException {
-
-		// Validação dos parâmetros
-		for (String param : params) {
-			if (requisicao.getParameter(param) == null) {
-				resposta.setStatus(400);
-				return;
-			}
-		}
 
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
 		resposta.setContentType("text/xml;charset=UTF-8");
@@ -47,30 +37,31 @@ public class InsercaoProfessor extends HttpServlet {
 				throw new SQLException("Impossível se conectar ao banco de dados");
 			}
 
-			String id = requisicao.getParameter(params[0]),
-					idDepto = requisicao.getParameter(params[1]),
-					nome = requisicao.getParameter(params[2]),
-					senha = requisicao.getParameter(params[3]),
-					email = requisicao.getParameter(params[4]),
-					titulacao = requisicao.getParameter(params[5]).toUpperCase();
+			String id = requisicao.getParameter("id");
+			if (id == null) {
+				throw new ExcecaoParametrosIncorretos("O parâmetro 'id' é obrigatório para deletar registros");
+			}
 
-			String clausulaSql = "INSERT INTO `professores` VALUES ("
-					+ id + ", " + idDepto + ", '" + nome + "', '" + senha + "', '"
-					+ email + "', '" + titulacao + "')";
+			ResultSet rs = conexao.createStatement().executeQuery("SELECT * FROM `professores` WHERE `id` = " + id);
+			if (!rs.first()) {
+				throw new ExcecaoParametrosIncorretos("O registro a ser deletado não existe");
+			}
 
-			conexao.createStatement().executeUpdate(clausulaSql);
+			conexao.createStatement().executeUpdate("DELETE FROM `professores` WHERE `id` = " + id);
 			conexao.close();
 
 			saida.println("<info>");
 			saida.println("  <erro>false</erro>");
-			saida.println("	 <mensagem>Registro inserido com sucesso</mensagem>");
+			saida.println("  <mensagem>Registro deletado com sucesso</mensagem>");
 			saida.println("</info>");
 
 		} catch (Exception e) {
+
 			saida.println("<info>");
 			saida.println("  <erro>true</erro>");
 			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
 			saida.println("</info>");
+
 		} finally {
 			saida.println("</root>");
 		}
@@ -79,7 +70,7 @@ public class InsercaoProfessor extends HttpServlet {
 
 	@Override
 	public String getServletInfo() {
-		return "Servlet dedicado à inserção de registro de professores no BD";
+		return "Servlet dedicado para deletar registros na tablea 'professores'";
 	}
 
 }
