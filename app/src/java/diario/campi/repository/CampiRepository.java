@@ -58,12 +58,30 @@ public class CampiRepository {
     
     public boolean alterarCampi(String id, String nome, String cidade, String uf) throws NumberFormatException, SQLException, TransformerException, ParserConfigurationException {
             
-            
-                       
+                int adcs = 0;
+                String query = "UPDATE campi SET";
+                if (!"".equals(nome)) {
+                    query += " nome='"+nome+"'";
+                    adcs++;
+                }
+                if (!"".equals(cidade)) {
+                   if (adcs > 0) 
+                    query += ",";
+                   query += " cidade='"+cidade+"'";
+                  adcs++;
+                }
+                if (!"".equals(uf)) {
+                   if (adcs > 0) 
+                    query += ",";
+                   query += " uf='"+uf+"'";
+                }
+                    
+                query += " WHERE `id` = "+id+"";
+                
 
                 
-                PreparedStatement ps = con.prepareStatement("UPDATE campi SET nome = '"+nome+"', cidade='"+cidade+"', uf='"+uf+"'   WHERE `id` = '"+id+"' ");
-               
+                
+                PreparedStatement ps = con.prepareStatement(query);    
                 
 
 		int sucesso = ps.executeUpdate();
