@@ -38,8 +38,10 @@ public class DeletarEtapas extends HttpServlet {
 
 	try {
 	    boolean sucesso = etapasRep.deletar(idParam);
+            if(sucesso){
 	    View sucessoView = new SucessoView("Deletado com sucesso!");
 	    sucessoView.render(out);
+            }
 	} catch (NumberFormatException excecaoFormatoErrado) {
 	    response.setStatus(400);
 	    System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());

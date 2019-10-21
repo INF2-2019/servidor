@@ -136,8 +136,11 @@ public class EtapasRepository {
         int ano = Integer.parseUnsignedInt(parametros.get("ano").toString());
         double valor = Double.parseDouble(parametros.get("valor").toString());
 
-        PreparedStatement ps = con.prepareStatement("UPDATE `etapas` SET `ano` = " + ano + ", `valor` = " + valor + " WHERE `id` = " + id);
-
+        PreparedStatement ps = con.prepareStatement("UPDATE `etapas` SET `ano` = ?, `valor` = ? WHERE `id` = ?");
+		ps.setInt(1, ano);
+		ps.setDouble(2, valor);
+                ps.setInt(3, id);
+                
         int sucesso = ps.executeUpdate();
 
         return sucesso != 0;

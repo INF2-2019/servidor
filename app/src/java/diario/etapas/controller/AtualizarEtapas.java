@@ -34,6 +34,12 @@ public class AtualizarEtapas extends HttpServlet {
 
 	if (conexao == null) {
 	    System.err.println("Falha ao conectar ao bd"); // Adicionar XML de erro
+            View erroView = new ErroView(new Exception("Falha ao conectar ao banco de dados"));
+	    try {
+		erroView.render(out);
+	    } catch (RenderException e) {
+		throw new ServletException(e);
+	    }
 	    return;
 	}
 
@@ -50,7 +56,6 @@ public class AtualizarEtapas extends HttpServlet {
 	} catch (NumberFormatException excecaoFormatoErrado) {
 	    response.setStatus(400);
 	    System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
-            System.out.println("gdsfsdrg");
 	    View erroView = new ErroView(excecaoFormatoErrado);
 	    try {
 		erroView.render(out);
@@ -61,7 +66,6 @@ public class AtualizarEtapas extends HttpServlet {
 	    response.setStatus(400);
 	    System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
-            System.out.println("notebook");
 	    View erroView = new ErroView(excecaoSQL);
 	    try {
 		erroView.render(out);
@@ -71,19 +75,14 @@ public class AtualizarEtapas extends HttpServlet {
 	} catch (NullPointerException excecaoSemId){
             response.setStatus(400);
 	    System.err.println("Busca SQL inválida. Erro: " + excecaoSemId.toString());
-            System.out.println("trap");
 
 	    View erroView = new ErroView(excecaoSemId);
 	    try {
 		erroView.render(out);
 	    } catch (RenderException e) {
-                
-                System.out.println("nike");
 		throw new ServletException(e);
 	    }
         } catch (RenderException e) {
-            
-                System.out.println("nie");
 	    throw new ServletException(e);
 	}
 
