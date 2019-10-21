@@ -23,7 +23,7 @@ import utils.Headers;
  *
  * @author hiiam
  */
-@WebServlet(name = "AlterarEtapas", urlPatterns = "/diario/etapas/alterar")
+@WebServlet(name = "AtualizarEtapas", urlPatterns = "/diario/etapas/atualizar")
 public class AtualizarEtapas extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -41,24 +41,16 @@ public class AtualizarEtapas extends HttpServlet {
 
 	Map<String, String> parametros = definirParametros(request);
 
-	if (parametros == null) {
-	    response.setStatus(400);
-	    View erroView = new ErroView(new Exception("Parâmetros incorretos para a operação de atualização."));
-	    try {
-		erroView.render(out);
-	    } catch (RenderException e) {
-		throw new ServletException(e);
-	    }
-	}
+	
 
 	try {
 	    rep.atualizar(parametros);
 	    View sucessoView = new SucessoView("Atualizado com sucesso.");
-	    sucessoView.render(out);
+            sucessoView.render(out);  
 	} catch (NumberFormatException excecaoFormatoErrado) {
 	    response.setStatus(400);
 	    System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
-
+            System.out.println("gdsfsdrg");
 	    View erroView = new ErroView(excecaoFormatoErrado);
 	    try {
 		erroView.render(out);
@@ -69,13 +61,29 @@ public class AtualizarEtapas extends HttpServlet {
 	    response.setStatus(400);
 	    System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
+            System.out.println("notebook");
 	    View erroView = new ErroView(excecaoSQL);
 	    try {
 		erroView.render(out);
 	    } catch (RenderException e) {
 		throw new ServletException(e);
 	    }
-	} catch (RenderException e) {
+	} catch (NullPointerException excecaoSemId){
+            response.setStatus(400);
+	    System.err.println("Busca SQL inválida. Erro: " + excecaoSemId.toString());
+            System.out.println("trap");
+
+	    View erroView = new ErroView(excecaoSemId);
+	    try {
+		erroView.render(out);
+	    } catch (RenderException e) {
+                
+                System.out.println("nike");
+		throw new ServletException(e);
+	    }
+        } catch (RenderException e) {
+            
+                System.out.println("nie");
 	    throw new ServletException(e);
 	}
 

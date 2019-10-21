@@ -1,6 +1,8 @@
 package diario.etapas.repository;
 
 import diario.etapas.model.EtapasModel;
+import diario.etapas.view.ErroView;
+import diario.etapas.view.View;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -141,7 +143,7 @@ public class EtapasRepository {
         return sucesso != 0;
     }
 
-    public boolean atualizar(Map<String, String> parametros) throws NumberFormatException, SQLException {
+    public boolean atualizar(Map<String, String> parametros) throws NumberFormatException, SQLException, NullPointerException {
         int id = Integer.parseUnsignedInt(parametros.get("id"));
 
         if (parametros.containsKey("ano")) {
