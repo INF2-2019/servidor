@@ -21,11 +21,13 @@ import utils.Headers;
 import diario.etapas.RenderException;
 import diario.etapas.view.View;
 import diario.etapas.view.EtapasConsultaView;
-import diario.etapas.view.ErroView;
+import diario.etapas.view.ErroFormatView;
+import diario.etapas.view.ErroSqlView;
 
 @WebServlet(name = "ConsultarEtapas", urlPatterns = "/diario/etapas/consultar")
 public class ConsultarEtapas extends HttpServlet {
 
+    // método doGet será alterado para doPost quando for terminado o front-end
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	Headers.XMLHeaders(response);
 	Connection conexao = ConnectionFactory.getDiario();
@@ -41,8 +43,8 @@ public class ConsultarEtapas extends HttpServlet {
 
 	Set<EtapasModel> resultado;
 	Map<String, String> filtros = definirFiltros(request); // criando um Map para armazenar os filtros de maneira pratica
-        
-        System.out.println(filtros.toString());
+
+	System.out.println(filtros.toString());
 
 	try {
 	    resultado = etapasRep.consultar(filtros); // Executa consulta
@@ -52,7 +54,7 @@ public class ConsultarEtapas extends HttpServlet {
 	    response.setStatus(400);
 	    System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
 
-	    ErroView erroView = new ErroView(excecaoFormatoErrado);
+	    View erroView = new ErroFormatView(excecaoFormatoErrado);
 	    try {
 		erroView.render(out);
 	    } catch (RenderException e) {
@@ -63,7 +65,7 @@ public class ConsultarEtapas extends HttpServlet {
 	    response.setStatus(400);
 	    System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
-	    ErroView erroView = new ErroView(excecaoSQL);
+	    View erroView = new ErroSqlView(excecaoSQL);
 	    try {
 		erroView.render(out);
 	    } catch (RenderException e) {
@@ -85,11 +87,10 @@ public class ConsultarEtapas extends HttpServlet {
 	Map<String, String> dados = new LinkedHashMap<>();
 
 	// definir os valores do map condicionalmente, conforme a requisição
-        if (req.getParameter("id") != null) {
+	if (req.getParameter("id") != null) {
 	    dados.put("id", req.getParameter("id"));
 	}
 
-        
 	if (req.getParameter("ano") != null) {
 	    dados.put("ano", req.getParameter("ano"));
 	}
