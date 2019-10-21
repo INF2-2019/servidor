@@ -10,7 +10,6 @@ import diario.Disciplinas.views.SucessoView;
 import diario.cursos.view.ErroView;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

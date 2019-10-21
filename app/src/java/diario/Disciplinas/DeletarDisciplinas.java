@@ -34,7 +34,7 @@ public class DeletarDisciplinas extends HttpServlet {
 
      protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Headers.XMLHeaders(response);
+                Headers.XMLHeaders(response);
 		Connection conexao = ConnectionFactory.getDiario();
 
 		PrintWriter out = response.getWriter();

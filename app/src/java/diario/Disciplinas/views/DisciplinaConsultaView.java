@@ -30,7 +30,6 @@ public class DisciplinaConsultaView extends View<Set<DisciplinaModel>> {
     public void render(PrintWriter writer) throws RenderException {
        try{
 		Document cursosEmDocument = DisciplinaParaDocument(data);
-                System.out.println("aaaa");
 			writer.write(Conversores.converterDocumentEmXMLString(cursosEmDocument));
 		}catch (Exception ex){
 			throw new RenderException(ex);
