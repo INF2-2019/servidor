@@ -20,7 +20,8 @@ import java.sql.SQLException;
 
 @WebServlet(name = "Deletar", urlPatterns = "/diario/cursos/deletar")
 public class DeletarCursos extends HttpServlet {
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Headers.XMLHeaders(response);
 		Connection conexao = ConnectionFactory.getDiario();
 

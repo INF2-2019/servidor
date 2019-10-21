@@ -1,6 +1,7 @@
 package diario.cursos.view;
 
-public class RenderException extends Exception{
+public class RenderException extends Exception {
+
 	public RenderException() {
 	}
 

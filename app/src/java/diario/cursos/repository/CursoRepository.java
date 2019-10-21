@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class CursoRepository {
+
 	private Connection con;
 
 	public CursoRepository(Connection conexao) {
@@ -18,49 +19,50 @@ public class CursoRepository {
 	public Set<CursoModel> consultar(Map<String, String> filtros) throws NumberFormatException, SQLException {
 		Set<CursoModel> cursosResultado = new LinkedHashSet<>();
 		String sql = "SELECT * FROM `cursos` ORDER BY `id`";
-                int idDepto = -1, horasTotal = -1;
-                
-                if (filtros.containsKey("id-depto")) {
-                        // Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
-                        idDepto = Integer.parseUnsignedInt(filtros.get("id-depto"));
-                }
+		int idDepto = -1, horasTotal = -1;
 
-                if (filtros.containsKey("horas-total")) {
-                        // Se lançar a exceção NumberFormatException, o valor não é um inteiro sem 
-                        horasTotal = Integer.parseUnsignedInt(filtros.get("horas-total"));
-                }
-                
-                ResultSet resultadoBusca = con.prepareCall(sql).executeQuery();
-                
+		if (filtros.containsKey("id-depto")) {
+			// Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
+			idDepto = Integer.parseUnsignedInt(filtros.get("id-depto"));
+		}
+
+		if (filtros.containsKey("horas-total")) {
+			// Se lançar a exceção NumberFormatException, o valor não é um inteiro sem
+			horasTotal = Integer.parseUnsignedInt(filtros.get("horas-total"));
+		}
+
+		ResultSet resultadoBusca = con.prepareCall(sql).executeQuery();
+
 		// Itera por cada item do resultado e adiciona nos resultados
-                boolean adicionar;
-		while(resultadoBusca.next()){
-                        adicionar = true;
-                        
-                        CursoModel curso = resultSetParaCurso(resultadoBusca);
-			if(filtros.containsKey("id-depto")){
-                            if(idDepto != curso.getIdDepto()){
-                                adicionar = false;
-                            }
-                        }
-                        if(filtros.containsKey("nome")){
-                            if(!filtros.get("nome").equals(curso.getNome())){
-                                adicionar = false;
-                            }
-                        }
-                        if(filtros.containsKey("horas-total")){
-                            if(horasTotal != curso.getHorasTotal()){
-                                adicionar = false;
-                            }
-                        }
-                        if(filtros.containsKey("modalidade")){
-                            if(!filtros.get("modalidade").equals(curso.getModalidade())){
-                                adicionar = false;
-                            }
-                        }
-                        
-                        if(adicionar)
-                            cursosResultado.add(curso);
+		boolean adicionar;
+		while (resultadoBusca.next()) {
+			adicionar = true;
+
+			CursoModel curso = resultSetParaCurso(resultadoBusca);
+			if (filtros.containsKey("id-depto")) {
+				if (idDepto != curso.getIdDepto()) {
+					adicionar = false;
+				}
+			}
+			if (filtros.containsKey("nome")) {
+				if (!filtros.get("nome").equals(curso.getNome())) {
+					adicionar = false;
+				}
+			}
+			if (filtros.containsKey("horas-total")) {
+				if (horasTotal != curso.getHorasTotal()) {
+					adicionar = false;
+				}
+			}
+			if (filtros.containsKey("modalidade")) {
+				if (!filtros.get("modalidade").equals(curso.getModalidade())) {
+					adicionar = false;
+				}
+			}
+
+			if (adicionar) {
+				cursosResultado.add(curso);
+			}
 		}
 
 		return cursosResultado;
@@ -75,7 +77,7 @@ public class CursoRepository {
 
 		ResultSet resultado = ps.executeQuery();
 
-		if(resultado.next()){
+		if (resultado.next()) {
 			return resultSetParaCurso(resultado);
 		}
 
@@ -99,18 +101,21 @@ public class CursoRepository {
 
 	public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException {
 		// Tem que ter os 4 valores a serem inseridos no BD
-		if(valores.size() != 4)
+		if (valores.size() != 4) {
 			return false;
+		}
 
 		int idDepto = 0;
 
-		if (valores.containsKey("id-depto"))
+		if (valores.containsKey("id-depto")) {
 			idDepto = Integer.parseUnsignedInt(valores.get("id-depto"));
+		}
 
 		int horasTotal = 0;
 
-		if (valores.containsKey("horas-total"))
+		if (valores.containsKey("horas-total")) {
 			horasTotal = Integer.parseUnsignedInt(valores.get("horas-total"));
+		}
 
 		PreparedStatement ps = con.prepareStatement("INSERT INTO `cursos` (`id-depto`, `nome`, `horas-total`, `modalidade`) VALUES (?, ?, ?, ?)");
 
@@ -125,7 +130,7 @@ public class CursoRepository {
 
 	}
 
-	public boolean atualizarPorId(Map<String, Object> parametros) throws NumberFormatException, SQLException{
+	public boolean atualizarPorId(Map<String, Object> parametros) throws NumberFormatException, SQLException {
 		int id = Integer.parseUnsignedInt(parametros.get("id").toString());
 		int idDepto = Integer.parseUnsignedInt(parametros.get("id-depto").toString());
 		int horasTotal = Integer.parseUnsignedInt(parametros.get("horas-total").toString());
@@ -142,21 +147,23 @@ public class CursoRepository {
 		return sucesso != 0;
 	}
 
-	public boolean atualizar(Map<String, String> parametros) throws NumberFormatException, SQLException{
+	public boolean atualizar(Map<String, String> parametros) throws NumberFormatException, SQLException {
 		int id = Integer.parseUnsignedInt(parametros.get("id"));
 
-		if(parametros.containsKey("id-depto"))
+		if (parametros.containsKey("id-depto")) {
 			Integer.parseUnsignedInt(parametros.get("id-depto"));
+		}
 
-		if(parametros.containsKey("horas-total"))
+		if (parametros.containsKey("horas-total")) {
 			Integer.parseUnsignedInt(parametros.get("horas-total"));
+		}
 
 		CursoModel curso = consultarId(Integer.toString(id));
 		Object[] vals = curso.retornarValoresRestantes(parametros);
 		String[] keys = {"id", "id-depto", "nome", "horas-total", "modalidade"};
 		Map<String, Object> valores = new LinkedHashMap<>();
 
-		for(int i=0; i<keys.length; i++) {
+		for (int i = 0; i < keys.length; i++) {
 			valores.put(keys[i], vals[i]);
 		}
 

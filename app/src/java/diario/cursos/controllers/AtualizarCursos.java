@@ -23,14 +23,14 @@ import java.util.Map;
 @WebServlet(name = "AtualizarCursos", urlPatterns = "/diario/cursos/atualizar")
 public class AtualizarCursos extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Headers.XMLHeaders(response);
 		Connection conexao = ConnectionFactory.getDiario();
 
 		PrintWriter out = response.getWriter();
 
 		// checa se a conexao foi feita
-		if(conexao == null){
+		if (conexao == null) {
 			System.err.println("Falha ao conectar ao bd");
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {
@@ -45,7 +45,7 @@ public class AtualizarCursos extends HttpServlet {
 
 		Map<String, String> parametros = definirParametros(request);
 		// Testa se todos parâmetros necessários foram inseridos
-		if(parametros == null){
+		if (parametros == null) {
 			response.setStatus(400);
 			View erroView = new ErroView(new Exception("Parâmetros incorretos para a operação de atualização."));
 			try {
@@ -88,32 +88,39 @@ public class AtualizarCursos extends HttpServlet {
 		Map<String, String> dados = new LinkedHashMap<>();
 		boolean temPeloMenosUm = false;
 
-		if(req.getParameterMap().containsKey("id"))
+		if (req.getParameterMap().containsKey("id")) {
 			dados.put("id", req.getParameter("id"));
-		else
+		} else {
 			return null;
+		}
 
-		if (req.getParameterMap().containsKey("departamento"))
+		if (req.getParameterMap().containsKey("departamento")) {
 			dados.put("id-depto", req.getParameter("departamento"));
-		else
+		} else {
 			temPeloMenosUm = true;
+		}
 
-		if (req.getParameterMap().containsKey("nome"))
+		if (req.getParameterMap().containsKey("nome")) {
 			dados.put("nome", req.getParameter("nome"));
-		else
+		} else {
 			temPeloMenosUm = true;
+		}
 
-		if (req.getParameterMap().containsKey("horas"))
+		if (req.getParameterMap().containsKey("horas")) {
 			dados.put("horas-total", req.getParameter("horas"));
-		else
+		} else {
 			temPeloMenosUm = true;
+		}
 
-		if (req.getParameterMap().containsKey("modalidade"))
+		if (req.getParameterMap().containsKey("modalidade")) {
 			dados.put("modalidade", req.getParameter("modalidade"));
-		else
+		} else {
 			temPeloMenosUm = true;
+		}
 
-		if(!temPeloMenosUm) return null;
+		if (!temPeloMenosUm) {
+			return null;
+		}
 
 		return dados;
 	}

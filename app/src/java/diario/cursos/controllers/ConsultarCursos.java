@@ -26,68 +26,68 @@ import java.util.Set;
 @WebServlet(name = "ConsultarCursos", urlPatterns = "/diario/cursos/consultar")
 public class ConsultarCursos extends HttpServlet {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-			Headers.XMLHeaders(response);
-			Connection conexao = ConnectionFactory.getDiario();
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Headers.XMLHeaders(response);
+		Connection conexao = ConnectionFactory.getDiario();
 
-			PrintWriter out = response.getWriter();
+		PrintWriter out = response.getWriter();
 
-			// checa se a conexao foi feita
-			if(conexao == null){
-				System.err.println("Falha ao conectar ao bd");
-				View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
-				try {
-					erroView.render(out);
-				} catch (RenderException e) {
-					throw new ServletException(e);
-				}
-				return;
+		// checa se a conexao foi feita
+		if (conexao == null) {
+			System.err.println("Falha ao conectar ao bd");
+			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
 			}
+			return;
+		}
 
 		CursoRepository cursoRep = new CursoRepository(conexao);
 
-			Set<CursoModel> resultado;
+		Set<CursoModel> resultado;
 
+		try {
+			if (request.getParameterMap().containsKey("id")) {
+				resultado = new HashSet<>();
+				resultado.add(cursoRep.consultarId(request.getParameter("id")));
+			} else {
+				resultado = cursoRep.consultar(definirFiltros(request));
+			}
+			View cursoConsultaView = new CursoConsultaView(resultado);
+			cursoConsultaView.render(out);
+		} catch (NumberFormatException excecaoFormatoErrado) {
+			response.setStatus(400);
+			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+
+			View erroView = new ErroView(excecaoFormatoErrado);
 			try {
-				if(request.getParameterMap().containsKey("id")){
-					resultado = new HashSet<>();
-					resultado.add(cursoRep.consultarId(request.getParameter("id")));
-				} else {
-					resultado = cursoRep.consultar(definirFiltros(request));
-				}
-				View cursoConsultaView = new CursoConsultaView(resultado);
-				cursoConsultaView.render(out);
-			} catch(NumberFormatException excecaoFormatoErrado) {
-				response.setStatus(400);
-				System.err.println("Número inteiro inválido para o parâmetro. Erro: "+excecaoFormatoErrado.toString());
-                                
-				View erroView = new ErroView(excecaoFormatoErrado);
-				try {
-					erroView.render(out);
-				} catch (RenderException e) {
-					throw new ServletException(e);
-				}
-			} catch(SQLException excecaoSQL) {
-				response.setStatus(400);
-				System.err.println("Busca SQL inválida. Erro: "+excecaoSQL.toString());
-
-				View erroView = new ErroView(excecaoSQL);
-				try {
-					erroView.render(out);
-				} catch (RenderException e) {
-					throw new ServletException(e);
-				}
-			} catch (RenderException e){
+				erroView.render(out);
+			} catch (RenderException e) {
 				throw new ServletException(e);
 			}
+		} catch (SQLException excecaoSQL) {
+			response.setStatus(400);
+			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
-			try	{
-				conexao.close();
-			} catch(SQLException erro) {
-				System.err.println("Erro ao fechar banco de dados. Erro: "+erro.toString());
+			View erroView = new ErroView(excecaoSQL);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
 			}
+		} catch (RenderException e) {
+			throw new ServletException(e);
+		}
 
-    }
+		try {
+			conexao.close();
+		} catch (SQLException erro) {
+			System.err.println("Erro ao fechar banco de dados. Erro: " + erro.toString());
+		}
+
+	}
 
 	public Map<String, String> definirFiltros(HttpServletRequest req) {
 		Map<String, String> dados = new LinkedHashMap<>();

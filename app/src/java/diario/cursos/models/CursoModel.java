@@ -3,15 +3,16 @@ package diario.cursos.models;
 import java.util.Map;
 
 public class CursoModel extends Model {
+
 	private int id, idDepto, horasTotal;
 	private String nome, modalidade;
 
-	public CursoModel(int idDepto, String nome, int horasTotal, String modalidade){
+	public CursoModel(int idDepto, String nome, int horasTotal, String modalidade) {
 		// Para evitar repetição, reaproveitamento do construtor completo
 		this(ID_INDEFINIDO, idDepto, nome, horasTotal, modalidade);
 	}
 
-	public CursoModel(int id, int idDepto, String nome, int horasTotal, String modalidade){
+	public CursoModel(int id, int idDepto, String nome, int horasTotal, String modalidade) {
 		// Usar setters para validar os dados de maneira isolada
 		this.setId(id);
 		this.setIdDepto(idDepto);
@@ -24,30 +25,34 @@ public class CursoModel extends Model {
 		Object[] retorno = new Object[5];
 		retorno[0] = id;
 
-		if(!parametros.containsKey("id-depto"))
+		if (!parametros.containsKey("id-depto")) {
 			retorno[1] = idDepto;
-		else
+		} else {
 			retorno[1] = parametros.get("id-depto");
+		}
 
-		if(!parametros.containsKey("nome"))
+		if (!parametros.containsKey("nome")) {
 			retorno[2] = nome;
-		else
+		} else {
 			retorno[2] = parametros.get("nome");
+		}
 
-		if(!parametros.containsKey("horas-total"))
+		if (!parametros.containsKey("horas-total")) {
 			retorno[3] = horasTotal;
-		else
+		} else {
 			retorno[3] = parametros.get("horas-total");
+		}
 
-		if(!parametros.containsKey("modalidade"))
+		if (!parametros.containsKey("modalidade")) {
 			retorno[4] = modalidade;
-		else
+		} else {
 			retorno[4] = parametros.get("modalidade");
+		}
 
 		return retorno;
 	}
 
-	public int getId(){
+	public int getId() {
 		return id;
 	}
 

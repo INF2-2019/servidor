@@ -20,9 +20,9 @@ public class CursoConsultaView extends View<Set<CursoModel>> {
 
 	@Override
 	public void render(PrintWriter writer) throws RenderException {
-		try{
+		try {
 			writer.write(setParaXML(data));
-		}catch (Exception ex){
+		} catch (Exception ex) {
 			throw new RenderException(ex);
 		}
 	}
@@ -44,8 +44,9 @@ public class CursoConsultaView extends View<Set<CursoModel>> {
 
 		// Adiciona um elemento criado para cada um dos elementos do Set "cursos" ao resultado
 		for (CursoModel curso : cursos) {
-			if(curso != null)
+			if (curso != null) {
 				resultado.appendChild(criarElementoDocument(documento, curso)); // para cada curso, adiciona um ELemento
+			}
 		}
 
 		documento.appendChild(resultado);
@@ -85,5 +86,4 @@ public class CursoConsultaView extends View<Set<CursoModel>> {
 
 	/*public static Document criarSucessoXML() {
 	}*/
-
 }

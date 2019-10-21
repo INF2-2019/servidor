@@ -22,7 +22,8 @@ import java.util.Map;
 
 @WebServlet(name = "Inserir", urlPatterns = "/diario/cursos/inserir")
 public class InserirCursos extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Headers.XMLHeaders(response);
 		Connection conexao = ConnectionFactory.getDiario();
 

@@ -17,7 +17,7 @@ public class ErroView extends View {
 	}
 
 	@Override
-	public void render(PrintWriter writer) throws RenderException{
+	public void render(PrintWriter writer) throws RenderException {
 		try {
 			writer.write(Conversores.converterDocumentEmXMLString(criarErroXML((Exception) data)));
 		} catch (ParserConfigurationException | TransformerException ex) {
