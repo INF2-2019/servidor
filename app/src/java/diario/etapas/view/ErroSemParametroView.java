@@ -5,15 +5,15 @@ import org.w3c.dom.Element;
 import utils.Conversores;
 import diario.etapas.RenderException;
 
+import java.io.PrintWriter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import java.io.PrintWriter;
 
-public class ErroView extends View {
+public class ErroSemParametroView extends View {
 
-    public ErroView(Exception excecao) {
+    public ErroSemParametroView(Exception excecao) {
 	super(excecao);
     }
 
@@ -34,12 +34,11 @@ public class ErroView extends View {
 	Element erro = documento.createElement("erro");
 	Element msg = documento.createElement("mensagem");
 
-	msg.appendChild(documento.createTextNode("Os parâmetros inseridos são inválidos."));
+	msg.appendChild(documento.createTextNode("Erro: algum parâmetro não foi inserido"));
 	erro.appendChild(msg);
 
 	documento.appendChild(erro);
 
 	return documento;
     }
-
 }
