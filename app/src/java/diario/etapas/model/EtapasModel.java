@@ -1,11 +1,12 @@
-package model.diario;
+package diario.etapas.model;
 
-import model.Model;
+import diario.etapas.Model;
+import java.util.Map;
 
 public class EtapasModel extends Model {
 
-    private int id, Ano;
-    private double Valor;
+    private int id, ano;
+    private double valor;
 
     public EtapasModel(int ano, double valor) {
 	// Para evitar repetição, reaproveitamento do construtor completo
@@ -18,17 +19,34 @@ public class EtapasModel extends Model {
 	this.setAno(ano);
 	this.setValor(valor);
     }
+    
+    public Object[] retornarValoresRestantes(Map<String, String> parametros) {
+		Object[] retorno = new Object[3];
+		retorno[0] = id;
+
+		if(!parametros.containsKey("ano"))
+			retorno[1] = ano;
+		else
+			retorno[1] = parametros.get("ano");
+
+		if(!parametros.containsKey("valor"))
+			retorno[2] = valor;
+		else
+			retorno[2] = parametros.get("valor");
+
+		return retorno;
+	}
 
     public void setId(int id) {
 	this.id = id;
     }
 
     public void setAno(int ano) {
-	this.Ano = ano;
+	this.ano = ano;
     }
 
     public void setValor(double valor) {
-	this.Valor = valor;
+	this.valor = valor;
     }
 
     public int getId() {
@@ -36,10 +54,10 @@ public class EtapasModel extends Model {
     }
 
     public int getAno() {
-	return Ano;
+	return ano;
     }
 
     public double getValor() {
-	return Valor;
+	return valor;
     }
 }

@@ -1,4 +1,4 @@
-package views.utils;
+package diario.etapas.view;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -21,7 +21,7 @@ public class SucessoView extends View {
 	@Override
 	public void render(PrintWriter writer) throws RenderException {
 		try {
-			writer.write(Conversores.documentParaXMLString(criarSucessoXML((String) data)));
+			writer.write(Conversores.converterDocumentEmXMLString(criarSucessoXML((String) data)));
 		} catch (TransformerException | ParserConfigurationException e) {
 			throw new RenderException(e);
 		}

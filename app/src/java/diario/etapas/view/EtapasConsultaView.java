@@ -1,6 +1,6 @@
-package views.diario.etapas;
+package diario.etapas.view;
 
-import model.diario.EtapasModel;
+import diario.etapas.model.EtapasModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Conversores;
@@ -32,7 +32,7 @@ public class EtapasConsultaView extends View<Set<EtapasModel>> {
     public static String setParaXML(Set<EtapasModel> etapas) throws TransformerException, ParserConfigurationException {
 	// Converte para Document e então retorna como String
 	Document etapasEmDocument = etapaParaDocument(etapas);
-	return Conversores.documentParaXMLString(etapasEmDocument);
+	return Conversores.converterDocumentEmXMLString(etapasEmDocument);
     }
 
     private static Document etapaParaDocument(Set<EtapasModel> etapas) throws ParserConfigurationException {

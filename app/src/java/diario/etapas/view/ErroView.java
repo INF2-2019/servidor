@@ -1,4 +1,4 @@
-package views.utils;
+package diario.etapas.view;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -21,7 +21,7 @@ public class ErroView extends View {
 	@Override
 	public void render(PrintWriter writer) throws RenderException{
 		try {
-			writer.write(Conversores.documentParaXMLString(criarErroXML((Exception) data)));
+			writer.write(Conversores.converterDocumentEmXMLString(criarErroXML((Exception) data)));
 		} catch (ParserConfigurationException | TransformerException ex) {
 			throw new RenderException(ex);
 		}

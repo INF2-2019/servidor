@@ -1,4 +1,4 @@
-package controller.diario.etapas;
+package diario.etapas.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,14 +14,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.diario.EtapasModel;
-import repository.diario.EtapasRepository;
+import diario.etapas.model.EtapasModel;
+import diario.etapas.repository.EtapasRepository;
 import utils.ConnectionFactory;
 import utils.Headers;
 import views.RenderException;
 import views.View;
-import views.diario.etapas.EtapasConsultaView;
-import views.utils.ErroView;
+import diario.etapas.view.EtapasConsultaView;
+import diario.etapas.view.ErroView;
 
 @WebServlet(name = "ConsultarEtapas", urlPatterns = "/diario/etapas/consultar")
 public class ConsultarEtapas extends HttpServlet {

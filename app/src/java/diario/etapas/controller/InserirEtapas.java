@@ -1,12 +1,12 @@
-package controller.diario.etapas;
+package diario.etapas.controller;
 
-import repository.diario.EtapasRepository;
+import diario.etapas.repository.EtapasRepository;
 import utils.ConnectionFactory;
 import utils.Headers;
 import views.RenderException;
 import views.View;
-import views.utils.ErroView;
-import views.utils.SucessoView;
+import diario.etapas.view.ErroView;
+import diario.etapas.view.SucessoView;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
