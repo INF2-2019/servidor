@@ -1,4 +1,4 @@
-package model.diario;
+package diario.Disciplinas.model;
 
 import model.Model;
 

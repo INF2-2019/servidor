@@ -1,4 +1,4 @@
-package controller.diario.disciplinas;
+package biblioteca.emprestimos;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,39 +14,65 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import repository.diario.DisciplinaRepository;
+import diario.Disciplinas.Repository.DisciplinaRepository;
 import utils.ConnectionFactory;
 import utils.Headers;
 import views.RenderException;
 import views.View;
-import views.diario.sucesso.SucessoView;
+import diario.Disciplinas.views.SucessoView;
+import diario.cursos.view.ErroView;
 
 /**
  *
  * @author User
  */
 @WebServlet(name = "InserirDisciplinas", urlPatterns = {"/diario/disciplinas/inserir"})
-public class InserirDisciplinas extends HttpServlet {
-protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+public class InserirEmprestimos extends HttpServlet {
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		Connection conexao = ConnectionFactory.getDiario();
 		DisciplinaRepository disciplinaRep = new DisciplinaRepository(conexao);
-
+                
 		Headers.XMLHeaders(response);
+                PrintWriter out = response.getWriter();
+
+		if (conexao == null) {
+				View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+			return;
+		}
 		Map<String, String> dados = definirMap(request);
 
 		try {
-                    PrintWriter out = response.getWriter();
-                    disciplinaRep.inserir(dados);
-                View Sucesso = new SucessoView("inserido");
-                Sucesso.render(out);
-			
+			disciplinaRep.inserir(dados);
+			View sucessoView = new SucessoView("Inserido com sucesso.");
+			sucessoView.render(out);
 		} catch (NumberFormatException excecaoFormatoErrado) {
-			System.err.println("Número inteiro inválido para o parâmetro. Erro: "+excecaoFormatoErrado.toString());
+			response.setStatus(400);
+			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+
+			View erroView = new ErroView(excecaoFormatoErrado);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
 		} catch (SQLException excecaoSQL) {
-			System.err.println("Busca SQL inválida. Erro: "+excecaoSQL.toString());
-		} catch (RenderException ex) {
-        Logger.getLogger(InserirDisciplinas.class.getName()).log(Level.SEVERE, null, ex);
-    }
+			response.setStatus(400);
+			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+
+			View erroView = new ErroView(excecaoSQL);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+		} catch (RenderException e) {
+			throw new ServletException(e);
+		}
     }
 
 	  public Map<String, String> definirMap(HttpServletRequest req) {
@@ -69,9 +95,4 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 	}
 
 }
-
-
-
-
-
 

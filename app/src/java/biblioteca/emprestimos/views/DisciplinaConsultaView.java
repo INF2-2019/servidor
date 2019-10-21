@@ -3,15 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package views.diario.disciplinas;
+package diario.Disciplinas.views;
 
 import java.io.PrintWriter;
 import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import model.diario.CursoModel;
-import model.diario.DisciplinaModel;
+import diario.Disciplinas.model.DisciplinaModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Conversores;
@@ -31,6 +30,7 @@ public class DisciplinaConsultaView extends View<Set<DisciplinaModel>> {
     public void render(PrintWriter writer) throws RenderException {
        try{
 		Document cursosEmDocument = DisciplinaParaDocument(data);
+                System.out.println("aaaa");
 			writer.write(Conversores.converterDocumentEmXMLString(cursosEmDocument));
 		}catch (Exception ex){
 			throw new RenderException(ex);
