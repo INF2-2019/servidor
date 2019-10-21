@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `emprestimos` (
   `data-emprestimo` DATE NOT NULL,
   `data-prev-devol` DATE NOT NULL,
   `data-devolucao` DATE NOT NULL,
-  `multa` DECIMAL(5,2) NOT NULL,
+  `multa` DECIMAL(7,2) NOT NULL,
   PRIMARY KEY (id)
 );
 
