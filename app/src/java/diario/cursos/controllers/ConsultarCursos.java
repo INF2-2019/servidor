@@ -44,7 +44,7 @@ public class ConsultarCursos extends HttpServlet {
 				return;
 			}
 
-			CursoRepository cursoRep = new CursoRepository(conexao);
+		CursoRepository cursoRep = new CursoRepository(conexao);
 
 			Set<CursoModel> resultado;
 

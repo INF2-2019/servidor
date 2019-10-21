@@ -120,6 +120,23 @@ public class CursoRepository {
 
 	}
 
+	public boolean atualizarPorId(Map<String, String> parametros) throws NumberFormatException, SQLException{
+		int id = Integer.parseUnsignedInt(parametros.get("id"));
+		int idDepto = Integer.parseUnsignedInt(parametros.get("id-depto"));
+		int horasTotal = Integer.parseUnsignedInt(parametros.get("horas-total"));
+
+		PreparedStatement ps = con.prepareStatement("UPDATE `cursos` SET `id-depto` = ?, `nome` = ?, `horas-total` = ?, `modalidade` = ? WHERE `id` = ?");
+		ps.setInt(1, idDepto);
+		ps.setString(2, parametros.get("nome"));
+		ps.setInt(3, horasTotal);
+		ps.setString(4, parametros.get("modalidade"));
+		ps.setInt(5, id);
+
+		int sucesso = ps.executeUpdate();
+
+		return sucesso != 0;
+	}
+
 	private CursoModel resultSetParaCurso(ResultSet res) throws SQLException {
 		int id = res.getInt("id");
 		int id_depto = res.getInt("id-depto");
