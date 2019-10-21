@@ -1,4 +1,9 @@
-package controller.diario.disciplinas;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package diario.disciplinas;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,21 +19,21 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import diario.Disciplinas.Repository.DisciplinaRepository;
+import diario.disciplinas.repository.DisciplinaRepository;
 import utils.ConnectionFactory;
 import utils.Headers;
-import views.RenderException;
-import views.View;
-import diario.Disciplinas.views.SucessoView;
-import diario.cursos.view.ErroView;
-
+import diario.disciplinas.views.RenderException;
+import diario.disciplinas.views.View;
+import diario.disciplinas.views.SucessoView;
+import diario.disciplinas.views.ErroView;
 /**
  *
  * @author User
  */
 @WebServlet(name = "InserirDisciplinas", urlPatterns = {"/diario/disciplinas/inserir"})
 public class InserirDisciplinas extends HttpServlet {
-protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		Connection conexao = ConnectionFactory.getDiario();
 		DisciplinaRepository disciplinaRep = new DisciplinaRepository(conexao);
                 
@@ -95,4 +100,3 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 	}
 
 }
-

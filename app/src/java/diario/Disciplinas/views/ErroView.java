@@ -1,5 +1,9 @@
-package diario.cursos.view;
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package diario.disciplinas.views;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Conversores;
@@ -9,8 +13,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.PrintWriter;
-import views.RenderException;
-import views.View;
+import diario.disciplinas.views.RenderException;
+import diario.disciplinas.views.View;
 
 public class ErroView extends View {
 

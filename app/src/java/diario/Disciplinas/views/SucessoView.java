@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package diario.Disciplinas.views;
+package diario.disciplinas.views;
 
 import java.io.PrintWriter;
 import java.util.Set;
@@ -17,13 +17,8 @@ import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Conversores;
-import views.RenderException;
-import views.View;
-
-/**
- *
- * @author User
- */
+import diario.disciplinas.views.RenderException;
+import diario.disciplinas.views.View;
 public class SucessoView extends View<String> {
 
     public SucessoView(String mensagem) {

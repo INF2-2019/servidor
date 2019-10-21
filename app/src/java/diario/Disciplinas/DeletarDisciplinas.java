@@ -1,29 +1,23 @@
-package diario.Disciplinas;
+
+package diario.disciplinas;
+
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.w3c.dom.Document;
-import diario.Disciplinas.Repository.DisciplinaRepository;
+import diario.disciplinas.repository.DisciplinaRepository;
 import utils.ConnectionFactory;
 import utils.Headers;
-import views.RenderException;
-import views.View;
-import diario.Disciplinas.views.SucessoView;
-
-
-import diario.Disciplinas.views.DisciplinaConsultaView;
-import diario.cursos.view.ErroView;
+import diario.disciplinas.views.RenderException;
+import diario.disciplinas.views.View;
+import diario.disciplinas.views.SucessoView;
+import diario.disciplinas.views.ErroView;
 
 /**
  *
@@ -32,9 +26,9 @@ import diario.cursos.view.ErroView;
 @WebServlet(name = "DeletarDisciplinas", urlPatterns = {"/diario/disciplinas/deletar"})
 public class DeletarDisciplinas extends HttpServlet {
 
-     protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-                Headers.XMLHeaders(response);
+        Headers.XMLHeaders(response);
 		Connection conexao = ConnectionFactory.getDiario();
 
 		PrintWriter out = response.getWriter();
@@ -77,7 +71,3 @@ public class DeletarDisciplinas extends HttpServlet {
 	}
                
     }
-
-
-
-

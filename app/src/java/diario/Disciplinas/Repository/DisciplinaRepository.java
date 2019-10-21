@@ -1,4 +1,5 @@
-package diario.Disciplinas.Repository;
+
+package diario.disciplinas.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,13 +11,9 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
-import diario.Disciplinas.model.DisciplinaModel;
+import diario.disciplinas.model.DisciplinaModel;
 import java.util.SortedMap;
 
-/**
- *
- * @author User
- */
 public class DisciplinaRepository {
     private Connection con;
     
@@ -147,4 +144,3 @@ public class DisciplinaRepository {
 
 	}
 }
-

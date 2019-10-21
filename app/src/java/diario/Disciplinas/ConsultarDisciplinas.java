@@ -26,14 +26,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import diario.Disciplinas.model.DisciplinaModel;
-import diario.Disciplinas.Repository.DisciplinaRepository;
+import diario.disciplinas.model.DisciplinaModel;
+import diario.disciplinas.repository.DisciplinaRepository;
 import utils.ConnectionFactory;
 import utils.Headers;
-import views.RenderException;
-import views.View;
-import diario.Disciplinas.views.DisciplinaConsultaView;
-import diario.cursos.view.ErroView;
+import diario.disciplinas.views.RenderException;
+import diario.disciplinas.views.View;
+import diario.disciplinas.views.DisciplinaConsultaView;
+import diario.disciplinas.views.ErroView;
 import java.util.HashSet;
 import utils.Headers;
 /**
@@ -43,7 +43,6 @@ import utils.Headers;
 @WebServlet(name = "ConsultarDisciplinas", urlPatterns = {"/diario/disciplinas/consultar"})
 public class ConsultarDisciplinas extends HttpServlet {
 
-  
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Headers.XMLHeaders(response);
@@ -124,5 +123,3 @@ public class ConsultarDisciplinas extends HttpServlet {
 		return dados;
 	}
 }
-
-   

@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package diario.Disciplinas;
+package diario.disciplinas;
 
-import diario.Disciplinas.Repository.DisciplinaRepository;
-import diario.Disciplinas.views.SucessoView;
-import diario.cursos.view.ErroView;
+import diario.disciplinas.repository.DisciplinaRepository; 
+import diario.disciplinas.views.SucessoView;
 import java.io.IOException;
 import java.io.PrintWriter;
+import static java.lang.System.out;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,8 +27,10 @@ import utils.ConnectionFactory;
 import utils.Headers;
 import java.util.SortedMap; 
 import java.util.TreeMap; 
-import views.RenderException;
-import views.View;
+import diario.disciplinas.views.RenderException;
+import diario.disciplinas.views.View;
+import diario.disciplinas.views.ErroView;
+
 
 /**
  *
@@ -36,7 +38,7 @@ import views.View;
  */
 @WebServlet(name = "AtualizarDisciplinas", urlPatterns = {"/diario/disciplinas/atualizar"})
 public class AtualizarDisciplinas extends HttpServlet {
-    protected void doPost(HttpServletRequest req, HttpServletResponse res)
+protected void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
                         Headers.XMLHeaders(res);
 			Connection con = ConnectionFactory.getDiario();

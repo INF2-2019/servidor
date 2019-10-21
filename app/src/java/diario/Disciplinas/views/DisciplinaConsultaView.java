@@ -1,26 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package diario.Disciplinas.views;
+
+package diario.disciplinas.views;
 
 import java.io.PrintWriter;
 import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import diario.Disciplinas.model.DisciplinaModel;
+import diario.disciplinas.model.DisciplinaModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Conversores;
-import views.RenderException;
-import views.View;
-
-/**
- *
- * @author User
- */
+import diario.disciplinas.views.RenderException;
+import diario.disciplinas.views.View;
+ 
 public class DisciplinaConsultaView extends View<Set<DisciplinaModel>> {
 
     public DisciplinaConsultaView(Set<DisciplinaModel> DisciplinaModel) {
@@ -30,6 +22,7 @@ public class DisciplinaConsultaView extends View<Set<DisciplinaModel>> {
     public void render(PrintWriter writer) throws RenderException {
        try{
 		Document cursosEmDocument = DisciplinaParaDocument(data);
+                System.out.println("aaaa");
 			writer.write(Conversores.converterDocumentEmXMLString(cursosEmDocument));
 		}catch (Exception ex){
 			throw new RenderException(ex);
