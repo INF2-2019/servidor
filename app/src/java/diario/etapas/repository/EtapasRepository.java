@@ -103,7 +103,7 @@ public class EtapasRepository {
     }
 
     public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException {
-        // Tem que ter os 3 valores a serem inseridos no BD (id, ano e valor)
+        // Tem que ter os 2 valores a serem inseridos no BD (id, ano e valor)
         if (valores.size() != 2) {
             return false;
         }

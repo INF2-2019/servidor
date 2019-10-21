@@ -6,6 +6,7 @@ import utils.Headers;
 import diario.etapas.RenderException;
 import diario.etapas.view.View;
 import diario.etapas.view.ErroView;
+import diario.etapas.view.EtapasConsultaView;
 import diario.etapas.view.SucessoView;
 
 import javax.servlet.Servlet;
@@ -20,6 +21,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "InserirEtapas", urlPatterns = "/diario/etapas/inserir")
 public class InserirEtapas extends HttpServlet {
@@ -40,9 +43,12 @@ public class InserirEtapas extends HttpServlet {
 
 	Map<String, String> dados = definirFiltros(request);
 
+        //inserindo dados
 	try {
 	    if (etapasRep.inserir(dados)) {
 		System.out.println("Inserido com sucesso!");
+                View sucessoView = new SucessoView("Inserido com sucesso.");
+                sucessoView.render(out);
 	    } else {
 		System.out.println("Não foi inserido.");
 	    }
@@ -67,7 +73,9 @@ public class InserirEtapas extends HttpServlet {
 	    } catch (RenderException e) {
 		throw new ServletException(e);
 	    }
-	}
+	} catch (RenderException ex) {
+            throw new ServletException(ex);
+        }
     }
 
     public Map<String, String> definirFiltros(HttpServletRequest req) {

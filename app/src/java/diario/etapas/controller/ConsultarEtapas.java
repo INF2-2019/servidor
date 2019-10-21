@@ -41,6 +41,8 @@ public class ConsultarEtapas extends HttpServlet {
 
 	Set<EtapasModel> resultado;
 	Map<String, String> filtros = definirFiltros(request); // criando um Map para armazenar os filtros de maneira pratica
+        
+        System.out.println(filtros.toString());
 
 	try {
 	    resultado = etapasRep.consultar(filtros); // Executa consulta
@@ -83,6 +85,11 @@ public class ConsultarEtapas extends HttpServlet {
 	Map<String, String> dados = new LinkedHashMap<>();
 
 	// definir os valores do map condicionalmente, conforme a requisição
+        if (req.getParameter("id") != null) {
+	    dados.put("id", req.getParameter("id"));
+	}
+
+        
 	if (req.getParameter("ano") != null) {
 	    dados.put("ano", req.getParameter("ano"));
 	}
