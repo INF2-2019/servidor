@@ -17,23 +17,25 @@
 
 ```xml
 
-<info>
-	<erro>true/false</erro>
-	<mensagem></mensagem>
-</info>
-<professores>
-	<professor>
-		<id></id>
-		<id-depto></id-depto>
-		<nome></nome>
-		<senha></senha>
-		<email></email>
-		<titulacao></tirulacao>
-	</professor>
-	
-	<!-- ... -->
-	
-</professores>
+<root>
+	<info>
+		<erro>true/false</erro>
+		<mensagem></mensagem>
+	</info>
+	<professores>
+		<professor>
+			<id></id>
+			<id-depto></id-depto>
+			<nome></nome>
+			<senha></senha>
+			<email></email>
+			<titulacao></tirulacao>
+		</professor>
+
+		<!-- ... -->
+
+	</professores>
+</root>
 
 ```
 
