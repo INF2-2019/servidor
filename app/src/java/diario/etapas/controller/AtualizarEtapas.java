@@ -57,13 +57,11 @@ public class AtualizarEtapas extends HttpServlet {
 
 	    try {
 		erroView.render(out);
-		System.out.println("dsokpsdapkodas");
 	    } catch (RenderException e) {
 		throw new ServletException(e);
 	    }
 
 	} else {
-	    System.out.println("gesso");
 	    try {
 		rep.atualizar(parametros);
 		View sucessoView = new SucessoView("Atualizado com sucesso.");
