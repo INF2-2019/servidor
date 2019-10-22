@@ -7,12 +7,13 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.PreparedStatement;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "consultar", urlPatterns = "/diario/professores/consultar")
+@WebServlet(name = "ConsultarProfessores", urlPatterns = "/diario/professores/consultar")
 /**
  * <h1>Servlet de Consulta de Professores</h1>
  * Servlet dedicado a retornar os registros da tabela 'professores'
@@ -27,9 +28,9 @@ public class ConsultarProfessor extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws IOException {
-		String sqlQuery = "abobora";
+
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
-		resposta.setContentType("text/xml;charset=UTF-8");
+		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
 
 		PrintWriter saida = resposta.getWriter();
 		saida.println("<root>");
@@ -39,8 +40,7 @@ public class ConsultarProfessor extends HttpServlet {
 				throw new SQLException("Impossível se conectar ao banco de dados");
 			}
 
-			String condicao = requisicao.getParameter("condicao");
-			sqlQuery = "SELECT * FROM `professores`" + (condicao == null ? "" : condicao);
+			String sqlQuery = "SELECT * FROM `professores`";
 			ResultSet rs = conexao.createStatement().executeQuery(sqlQuery);
 
 			saida.println("<info>");
@@ -63,7 +63,6 @@ public class ConsultarProfessor extends HttpServlet {
 			saida.println("<info>");
 			saida.println("  <erro>true</erro>");
 			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
-			saida.println("  <mensagem>" + sqlQuery + "</mensagem>");
 			saida.println("</info>");
 
 		} finally {
