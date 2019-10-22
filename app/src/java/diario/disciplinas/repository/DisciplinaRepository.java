@@ -4,12 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
 import diario.disciplinas.model.DisciplinaModel;
 import java.util.SortedMap;
 

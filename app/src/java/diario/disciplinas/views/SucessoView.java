@@ -1,9 +1,6 @@
 package diario.disciplinas.views;
 
 import java.io.PrintWriter;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -12,40 +9,38 @@ import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Conversores;
-import diario.disciplinas.views.RenderException;
-import diario.disciplinas.views.View;
 
 public class SucessoView extends View<String> {
 
     public SucessoView(String mensagem) {
-        super(mensagem);
+	super(mensagem);
     }
 
     @Override
     public void render(PrintWriter writer) throws RenderException {
-        Document SucessoemDocument;
-        try {
-            SucessoemDocument = SucessoParaDocument(data);
-            writer.write(Conversores.converterDocumentEmXMLString(SucessoemDocument));
-        } catch (ParserConfigurationException ex) {
-            System.err.println("Não foi possivel fazer a conversão. Erro: " + ex.toString());
-        } catch (TransformerException ex) {
-            System.err.println("Não foi possivel fazer a conversão. Erro: " + ex.toString());
-        }
+	Document SucessoemDocument;
+	try {
+	    SucessoemDocument = SucessoParaDocument(data);
+	    writer.write(Conversores.converterDocumentEmXMLString(SucessoemDocument));
+	} catch (ParserConfigurationException ex) {
+	    System.err.println("Não foi possivel fazer a conversão. Erro: " + ex.toString());
+	} catch (TransformerException ex) {
+	    System.err.println("Não foi possivel fazer a conversão. Erro: " + ex.toString());
+	}
     }
 
     private Document SucessoParaDocument(String data) throws ParserConfigurationException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder construtor = dbf.newDocumentBuilder();
-        Document documento = construtor.newDocument();
+	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	DocumentBuilder construtor = dbf.newDocumentBuilder();
+	Document documento = construtor.newDocument();
 
-        // Cria o elemento raiz "Resultado"
-        Element sucesso = documento.createElement("sucesso");
-        Element informacao = documento.createElement("informacao");
-        informacao.appendChild(documento.createTextNode(data));
-        sucesso.appendChild(informacao);
-        documento.appendChild(sucesso);
-        return documento;
+	// Cria o elemento raiz "Resultado"
+	Element sucesso = documento.createElement("sucesso");
+	Element informacao = documento.createElement("informacao");
+	informacao.appendChild(documento.createTextNode(data));
+	sucesso.appendChild(informacao);
+	documento.appendChild(sucesso);
+	return documento;
     }
 
 }

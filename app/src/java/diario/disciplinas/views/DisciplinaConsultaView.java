@@ -9,8 +9,6 @@ import diario.disciplinas.model.DisciplinaModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Conversores;
-import diario.disciplinas.views.RenderException;
-import diario.disciplinas.views.View;
 
 public class DisciplinaConsultaView extends View<Set<DisciplinaModel>> {
 
@@ -21,7 +19,7 @@ public class DisciplinaConsultaView extends View<Set<DisciplinaModel>> {
     @Override
     public void render(PrintWriter writer) throws RenderException {
 	try {
-	    Document cursosEmDocument = DisciplinaParaDocument(data);
+	    Document cursosEmDocument = disciplinaParaDocument(data);
 	    writer.write(Conversores.converterDocumentEmXMLString(cursosEmDocument));
 	} catch (Exception ex) {
 	    throw new RenderException(ex);
