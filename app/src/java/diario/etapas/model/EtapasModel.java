@@ -3,7 +3,7 @@ package diario.etapas.model;
 import diario.etapas.Model;
 import java.util.Map;
 
-public class EtapasModel extends Model {
+public final class EtapasModel extends Model {
 
     private int id, ano;
     private double valor;

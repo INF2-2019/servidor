@@ -23,6 +23,7 @@ import java.sql.SQLException;
 public class DeletarEtapas extends HttpServlet {
 
     // método doGet será alterado para doPost quando for terminado o front-end
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	Headers.XMLHeaders(response);
 	Connection conexao = ConnectionFactory.getDiario();

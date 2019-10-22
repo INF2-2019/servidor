@@ -7,10 +7,8 @@ import diario.etapas.RenderException;
 import diario.etapas.view.View;
 import diario.etapas.view.ErroFormatView;
 import diario.etapas.view.ErroSqlView;
-import diario.etapas.view.EtapasConsultaView;
 import diario.etapas.view.SucessoView;
 
-import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,8 +20,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @WebServlet(name = "InserirEtapas", urlPatterns = "/diario/etapas/inserir")
 public class InserirEtapas extends HttpServlet {
