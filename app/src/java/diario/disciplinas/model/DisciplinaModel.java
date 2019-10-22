@@ -1,13 +1,13 @@
 package diario.disciplinas.model;
 
-
 import diario.disciplinas.model.Model;
 
 public class DisciplinaModel extends Model {
-	private int id, idTurmas, cargaHorariaMin;
-	private String nome;
 
-    public DisciplinaModel(int id,int idTurmas, String nome,int cargaHorariaMin) {
+    private int id, idTurmas, cargaHorariaMin;
+    private String nome;
+
+    public DisciplinaModel(int id, int idTurmas, String nome, int cargaHorariaMin) {
         this.id = id;
         this.idTurmas = idTurmas;
         this.cargaHorariaMin = cargaHorariaMin;
@@ -15,13 +15,13 @@ public class DisciplinaModel extends Model {
     }
 
     public DisciplinaModel(int idTurmas, int cargaHorariaMin, String nome) {
-        this(ID_INDEFINIDO, idTurmas,nome,cargaHorariaMin);
+        this(ID_INDEFINIDO, idTurmas, nome, cargaHorariaMin);
     }
-    
+
     public int getId() {
         return id;
     }
-    
+
     public int getIdTurmas() {
         return idTurmas;
     }

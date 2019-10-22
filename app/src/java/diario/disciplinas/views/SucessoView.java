@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import utils.Conversores;
 import diario.disciplinas.views.RenderException;
 import diario.disciplinas.views.View;
+
 public class SucessoView extends View<String> {
 
     public SucessoView(String mensagem) {
@@ -27,24 +28,24 @@ public class SucessoView extends View<String> {
             SucessoemDocument = SucessoParaDocument(data);
             writer.write(Conversores.converterDocumentEmXMLString(SucessoemDocument));
         } catch (ParserConfigurationException ex) {
-            Logger.getLogger(SucessoView.class.getName()).log(Level.SEVERE, null, ex);
+           System.err.println("Não foi possivel fazer a conversão. Erro: " + ex.toString());
         } catch (TransformerException ex) {
-            Logger.getLogger(SucessoView.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Não foi possivel fazer a conversão. Erro: " + ex.toString());
         }
     }
 
     private Document SucessoParaDocument(String data) throws ParserConfigurationException {
-      DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder construtor = dbf.newDocumentBuilder();
-		Document documento = construtor.newDocument();
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder construtor = dbf.newDocumentBuilder();
+        Document documento = construtor.newDocument();
 
-		// Cria o elemento raiz "Resultado"
-		Element sucesso = documento.createElement("sucesso");
-                Element informacao = documento.createElement("informacao");
-                informacao.appendChild(documento.createTextNode(data));
-                sucesso.appendChild(informacao);
-                documento.appendChild(sucesso);
+        // Cria o elemento raiz "Resultado"
+        Element sucesso = documento.createElement("sucesso");
+        Element informacao = documento.createElement("informacao");
+        informacao.appendChild(documento.createTextNode(data));
+        sucesso.appendChild(informacao);
+        documento.appendChild(sucesso);
         return documento;
     }
-    
+
 }

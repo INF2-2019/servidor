@@ -1,22 +1,23 @@
 package diario.disciplinas.views;
 
-public class RenderException extends Exception{
-	public RenderException() {
-	}
+public class RenderException extends Exception {
 
-	public RenderException(String message) {
-		super(message);
-	}
+    public RenderException() {
+    }
 
-	public RenderException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public RenderException(String message) {
+        super(message);
+    }
 
-	public RenderException(Throwable cause) {
-		super(cause);
-	}
+    public RenderException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public RenderException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
+    public RenderException(Throwable cause) {
+        super(cause);
+    }
+
+    public RenderException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }
