@@ -72,7 +72,7 @@ public class InserirDisciplinas extends HttpServlet {
 
     public Map<String, String> definirMap(HttpServletRequest req) {
         Map<String, String> dados = new LinkedHashMap<>();
-        // definir os valores do map condicionalmente, conforme a requisição
+       
         if (req.getParameter("turma") != null) {
             dados.put("id-turmas", req.getParameter("turma"));
         }
