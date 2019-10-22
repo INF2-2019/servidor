@@ -5,6 +5,7 @@ import utils.ConnectionFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "deletar", urlPatterns = "/diario/professores/deletar")
+@WebServlet(name = "DeletarProfessores", urlPatterns = "/diario/professores/deletar")
 /**
  * <h1>Servlet de Remoção de Professor</h1>
  * Servlet dedicado para deletar registros na tablea 'professores'
@@ -27,7 +28,7 @@ public class RemoverProfessor extends HttpServlet {
 			throws IOException {
 
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
-		resposta.setContentType("text/xml;charset=UTF-8");
+		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
 
 		PrintWriter saida = resposta.getWriter();
 		saida.println("<root>");
@@ -42,12 +43,10 @@ public class RemoverProfessor extends HttpServlet {
 				throw new ExcecaoParametrosIncorretos("O parâmetro 'id' é obrigatório para deletar registros");
 			}
 
-			ResultSet rs = conexao.createStatement().executeQuery("SELECT * FROM `professores` WHERE `id` = " + id);
-			if (!rs.first()) {
-				throw new ExcecaoParametrosIncorretos("O registro a ser deletado não existe");
-			}
-
-			conexao.createStatement().executeUpdate("DELETE FROM `professores` WHERE `id` = " + id);
+			PreparedStatement ps = conexao.prepareStatement("DELETE FROM `professores` WHERE `id` = ?");
+			ps.setInt(1, Integer.parseInt(id));
+			ps.execute();
+			ps.close();
 			conexao.close();
 
 			saida.println("<info>");

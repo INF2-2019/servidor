@@ -45,8 +45,8 @@
 
 - **Inserção:** Todos os parâmetros devem ser preenchidos
 
-- **Atualização:** Apenas o parâmetro 'id' é obrigatório, os outros serão atualizados
+- **Atualização:** Todos os parâmetros devem ser preenchidos
 
-- **Remoção:** Apenas o parâmetro 'id' é obrigatório, os outros serão ignorados
+- **Remoção:** Apenas o parâmetro 'id' é obrigatório, outros serão ignorados
 
-- **Consulta:** Deve-se enviar um parâmetro chamado 'condicao' cujo valor deve ser uma condição SQL (inciando com "WHERE" ou vazia para não filtrar)
+- **Consulta:** Sem parâmetros, sempre retorna todos os professores
