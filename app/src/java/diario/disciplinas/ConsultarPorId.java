@@ -1,4 +1,3 @@
-
 package diario.disciplinas;
 
 import diario.disciplinas.model.DisciplinaModel;
@@ -23,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import utils.ConnectionFactory;
 import utils.Headers;
 
-
 @WebServlet(name = "ConsultarPorId", urlPatterns = {"/diario/disciplinas/consultarporid"})
 public class ConsultarPorId extends HttpServlet {
 
@@ -47,8 +45,21 @@ public class ConsultarPorId extends HttpServlet {
         try {
             resultado = new HashSet<>();
             resultado.add(DisciplinaRep.consultarId(request.getParameter("id")));
+            for (DisciplinaModel disciplina : resultado) {
+                System.out.println(disciplina.getNome());
+                if (disciplina.getNome() == "erro") {
+                    View erroView = new ErroView(new Exception("a disciplina não existe"));
+                    try {
+                        erroView.render(out);
+                    } catch (RenderException e) {
+                        throw new ServletException(e);
+                    }
+                    return;
+                }
+            }
             View DisciplinaConsultaView = new DisciplinaConsultaView(resultado);
             DisciplinaConsultaView.render(out);
+            
         } catch (NumberFormatException excecaoFormatoErrado) {
             response.setStatus(400);
             System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
@@ -73,7 +84,7 @@ public class ConsultarPorId extends HttpServlet {
                 System.err.println("Erro ao fechar banco de dados. Erro: " + erro.toString());
             }
         } catch (RenderException ex) {
-             throw new ServletException(ex);
+            throw new ServletException(ex);
         }
 
     }

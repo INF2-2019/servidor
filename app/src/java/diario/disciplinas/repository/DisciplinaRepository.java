@@ -113,7 +113,6 @@ public class DisciplinaRepository {
         sql += " ORDER BY `id`";
 
         PreparedStatement ps = con.prepareStatement(sql);
-       
         ResultSet resultadoBusca = ps.executeQuery();
 
         // Itera por cada item do resultado e adiciona nos resultados
@@ -145,8 +144,7 @@ public class DisciplinaRepository {
         if (resultado.next()) {
             return resultSetParaDisciplina(resultado);
         }
-
-        return null;
+        return new DisciplinaModel(id,0,"erro",0);
 
     }
 }
