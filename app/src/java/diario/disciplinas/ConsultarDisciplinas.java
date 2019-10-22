@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import utils.Headers;
 
-
 @WebServlet(name = "ConsultarDisciplinas", urlPatterns = {"/diario/disciplinas/consultar"})
 public class ConsultarDisciplinas extends HttpServlet {
 
@@ -44,13 +43,13 @@ public class ConsultarDisciplinas extends HttpServlet {
             return;
         }
 
-        DisciplinaRepository DisciplinaRep = new DisciplinaRepository(conexao);
+        DisciplinaRepository disciplinaRep = new DisciplinaRepository(conexao);
 
         Set<DisciplinaModel> resultado;
         Map<String, String> filtros = definirMap(request); // criando um Map para armazenar os filtros de maneira pratica
         try {
             resultado = new HashSet<>();
-            resultado = DisciplinaRep.consultar(definirMap(request));
+            resultado = disciplinaRep.consultar(definirMap(request));
             View DisciplinaConsultaView = new DisciplinaConsultaView(resultado);
             DisciplinaConsultaView.render(out);
         } catch (NumberFormatException excecaoFormatoErrado) {

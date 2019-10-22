@@ -19,7 +19,6 @@ import diario.disciplinas.views.RenderException;
 import diario.disciplinas.views.View;
 import diario.disciplinas.views.ErroView;
 
-
 @WebServlet(name = "AtualizarDisciplinas", urlPatterns = {"/diario/disciplinas/atualizar"})
 public class AtualizarDisciplinas extends HttpServlet {
 
@@ -38,11 +37,11 @@ public class AtualizarDisciplinas extends HttpServlet {
             return;
         }
 
-        DisciplinaRepository DisciplinaRep = new DisciplinaRepository(con);
+        DisciplinaRepository disciplinaRep = new DisciplinaRepository(con);
         String id = req.getParameter("id");
         SortedMap<String, String> filtros = definirMap(req);
         try {
-            DisciplinaRep.atualizar(filtros, id);
+            disciplinaRep.atualizar(filtros, id);
             View sucessoView = new SucessoView("Atualizado com sucesso.");
             sucessoView.render(out);
         } catch (NumberFormatException excecaoFormatoErrado) {

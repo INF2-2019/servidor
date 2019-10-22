@@ -28,7 +28,7 @@ public class SucessoView extends View<String> {
             SucessoemDocument = SucessoParaDocument(data);
             writer.write(Conversores.converterDocumentEmXMLString(SucessoemDocument));
         } catch (ParserConfigurationException ex) {
-           System.err.println("Não foi possivel fazer a conversão. Erro: " + ex.toString());
+            System.err.println("Não foi possivel fazer a conversão. Erro: " + ex.toString());
         } catch (TransformerException ex) {
             System.err.println("Não foi possivel fazer a conversão. Erro: " + ex.toString());
         }

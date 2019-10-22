@@ -1,6 +1,6 @@
 # Manutenção de Disciplinas
 
- faz as operações de *inserir,deletar,atualizar,consultar* na tabela de Disciplinas do Diario Acadêmico
+com a API é possivel realizar as operações de  inserir,deletar,atualizar,consultar  na tabela de Disciplinas do Diario Acadêmico
 
 ## Como usar
 
@@ -14,14 +14,14 @@ em que `{funcionalidade}` é o recurso a ser usado. Ou seja, pode ser qualquer u
 
 | Operação | Método | Tipo de resposta |
 |----------|--------|------------------|
-| Consultar | `GET` | XML de disciplinas |
-| ConsultarPorId | `GET` | XML de disciplina|
+| Consultar | `GET` | XML de cursos |
+| ConsultarPorId | `GET` | XML de sucesso/erro |
 | Deletar | `GET` | XML de sucesso/erro |
 | Inserir | `POST` | XML de sucesso/erro |
 | Atualizar | `POST` | XML de sucesso/erro |
 
 
-*Estrutura do XML de disciplinas:*
+*Estrutura do XML de cursos:*
 
 ```xml
 <disciplinas>

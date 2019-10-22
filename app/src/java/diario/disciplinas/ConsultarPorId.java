@@ -40,11 +40,11 @@ public class ConsultarPorId extends HttpServlet {
             }
             return;
         }
-        DisciplinaRepository DisciplinaRep = new DisciplinaRepository(conexao);
+        DisciplinaRepository disciplinaRep = new DisciplinaRepository(conexao);
         Set<DisciplinaModel> resultado;
         try {
             resultado = new HashSet<>();
-            resultado.add(DisciplinaRep.consultarId(request.getParameter("id")));
+            resultado.add(disciplinaRep.consultarId(request.getParameter("id")));
             for (DisciplinaModel disciplina : resultado) {
                 System.out.println(disciplina.getNome());
                 if (disciplina.getNome() == "erro") {
@@ -59,7 +59,7 @@ public class ConsultarPorId extends HttpServlet {
             }
             View DisciplinaConsultaView = new DisciplinaConsultaView(resultado);
             DisciplinaConsultaView.render(out);
-            
+
         } catch (NumberFormatException excecaoFormatoErrado) {
             response.setStatus(400);
             System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());

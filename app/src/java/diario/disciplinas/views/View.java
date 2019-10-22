@@ -1,4 +1,3 @@
-
 package diario.disciplinas.views;
 
 import java.io.PrintWriter;
@@ -20,5 +19,5 @@ public abstract class View<D> {
         render(printWriter);
         return data.toString();
     }
-;
+
 }

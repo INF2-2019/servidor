@@ -15,61 +15,56 @@ import diario.disciplinas.views.View;
 public class DisciplinaConsultaView extends View<Set<DisciplinaModel>> {
 
     public DisciplinaConsultaView(Set<DisciplinaModel> DisciplinaModel) {
-        super(DisciplinaModel);
+	super(DisciplinaModel);
     }
 
     @Override
     public void render(PrintWriter writer) throws RenderException {
-        try {
-            Document cursosEmDocument = DisciplinaParaDocument(data);
-            writer.write(Conversores.converterDocumentEmXMLString(cursosEmDocument));
-        } catch (Exception ex) {
-            throw new RenderException(ex);
-        }
+	try {
+	    Document cursosEmDocument = DisciplinaParaDocument(data);
+	    writer.write(Conversores.converterDocumentEmXMLString(cursosEmDocument));
+	} catch (Exception ex) {
+	    throw new RenderException(ex);
+	}
     }
 
-    private Document DisciplinaParaDocument(Set<DisciplinaModel> disciplinas) throws ParserConfigurationException {
-      
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder construtor = dbf.newDocumentBuilder();
-        Document documento = construtor.newDocument();
+    private Document disciplinaParaDocument(Set<DisciplinaModel> disciplinas) throws ParserConfigurationException {
 
-       
-        Element root = documento.createElement("disciplinas");
+	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	DocumentBuilder construtor = dbf.newDocumentBuilder();
+	Document documento = construtor.newDocument();
 
-       
-        for (DisciplinaModel disciplina : disciplinas) {
-            root.appendChild(criarElementoDocument(documento, disciplina)); // para cada curso, adiciona um ELemento
-        }
+	Element root = documento.createElement("disciplinas");
 
-        documento.appendChild(root);
+	for (DisciplinaModel disciplina : disciplinas) {
+	    root.appendChild(criarElementoDocument(documento, disciplina)); // para cada curso, adiciona um ELemento
+	}
 
-        return documento;
+	documento.appendChild(root);
+
+	return documento;
     }
 
     private static Element criarElementoDocument(Document documento, DisciplinaModel c) {
-      
-        Element elemento = documento.createElement("disciplina");
 
-        
-        Element id = documento.createElement("id");
-        Element id_depto = documento.createElement("id-turmas");
-        Element nome = documento.createElement("nome");
-        Element carga_horaria_min = documento.createElement("carga-horaria-min");
+	Element elemento = documento.createElement("disciplina");
 
-     
-        id.appendChild(documento.createTextNode("" + c.getId())); 
-        id_depto.appendChild(documento.createTextNode("" + c.getIdTurmas()));
-        nome.appendChild(documento.createTextNode(c.getNome()));
-        carga_horaria_min.appendChild(documento.createTextNode("" + c.getCargaHorariaMin()));
+	Element id = documento.createElement("id");
+	Element id_depto = documento.createElement("id-turmas");
+	Element nome = documento.createElement("nome");
+	Element carga_horaria_min = documento.createElement("carga-horaria-min");
 
-       
-        elemento.appendChild(id);
-        elemento.appendChild(id_depto);
-        elemento.appendChild(nome);
-        elemento.appendChild(carga_horaria_min);
+	id.appendChild(documento.createTextNode("" + c.getId()));
+	id_depto.appendChild(documento.createTextNode("" + c.getIdTurmas()));
+	nome.appendChild(documento.createTextNode(c.getNome()));
+	carga_horaria_min.appendChild(documento.createTextNode("" + c.getCargaHorariaMin()));
 
-        return elemento;
+	elemento.appendChild(id);
+	elemento.appendChild(id_depto);
+	elemento.appendChild(nome);
+	elemento.appendChild(carga_horaria_min);
+
+	return elemento;
     }
 
 }

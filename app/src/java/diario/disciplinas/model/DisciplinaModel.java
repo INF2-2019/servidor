@@ -1,6 +1,7 @@
 package diario.disciplinas.model;
 
 import diario.disciplinas.model.Model;
+import java.util.Map;
 
 public class DisciplinaModel extends Model {
 
@@ -13,7 +14,32 @@ public class DisciplinaModel extends Model {
         this.cargaHorariaMin = cargaHorariaMin;
         this.nome = nome;
     }
+    public Object[] retornarValoresRestantes(Map<String, String> parametros) {
+		Object[] retorno = new Object[4];
+		retorno[0] = id;
 
+		if (!parametros.containsKey("id-turmas")) {
+			retorno[1] = idTurmas;
+		} else {
+			retorno[1] = parametros.get("id-turmas");
+		}
+
+		if (!parametros.containsKey("nome")) {
+			retorno[2] = nome;
+		} else {
+			retorno[2] = parametros.get("nome");
+		}
+
+		if (!parametros.containsKey("carga-horaria-min")) {
+			retorno[3] = cargaHorariaMin;
+		} else {
+			retorno[3] = parametros.get("horas");
+		}
+
+		
+
+		return retorno;
+	}
     public DisciplinaModel(int idTurmas, int cargaHorariaMin, String nome) {
         this(ID_INDEFINIDO, idTurmas, nome, cargaHorariaMin);
     }

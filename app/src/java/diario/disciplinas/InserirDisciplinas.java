@@ -19,7 +19,6 @@ import diario.disciplinas.views.View;
 import diario.disciplinas.views.SucessoView;
 import diario.disciplinas.views.ErroView;
 
-
 @WebServlet(name = "InserirDisciplinas", urlPatterns = {"/diario/disciplinas/inserir"})
 public class InserirDisciplinas extends HttpServlet {
 
@@ -72,7 +71,7 @@ public class InserirDisciplinas extends HttpServlet {
 
     public Map<String, String> definirMap(HttpServletRequest req) {
         Map<String, String> dados = new LinkedHashMap<>();
-       
+
         if (req.getParameter("turma") != null) {
             dados.put("id-turmas", req.getParameter("turma"));
         }

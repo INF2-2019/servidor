@@ -33,11 +33,11 @@ public class DeletarDisciplinas extends HttpServlet {
             return;
         }
 
-        DisciplinaRepository DisciplinaRep = new DisciplinaRepository(conexao);
+        DisciplinaRepository disciplinaRep = new DisciplinaRepository(conexao);
 
         String id = request.getParameter("id");
         try {
-            DisciplinaRep.Deletar(id);
+            disciplinaRep.deletar(id);
             View sucessoView = new SucessoView("Deletado com sucesso.");
             sucessoView.render(out);
         } catch (NumberFormatException excecaoFormatoErrado) {
