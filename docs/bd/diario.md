@@ -18,7 +18,7 @@ Traduções:
 | ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | ----- | ------------ |
 | id          | 1                | `-`            | NO          | int(11)      | PRI        | `-`   | NEVER        |
 | nome        | 2                | `-`            | NO          | varchar(255) | `-`        | `-`   | NEVER        |
-| usuario     | 3                | `-`            | NO          | varchar(255) | `-`        | `-`   | NEVER        |
+| usuario     | 3                | `-`            | NO          | varchar(255) | UNI        | `-`   | NEVER        |
 | email       | 4                | `-`            | NO          | varchar(255) | UNI        | `-`   | NEVER        |
 | senha       | 5                | `-`            | NO          | varchar(255) | `-`        | `-`   | NEVER        |
 
