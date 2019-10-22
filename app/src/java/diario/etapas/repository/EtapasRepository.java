@@ -1,8 +1,6 @@
 package diario.etapas.repository;
 
 import diario.etapas.model.EtapasModel;
-import diario.etapas.view.ErroFormatView;
-import diario.etapas.view.View;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,52 +18,42 @@ public class EtapasRepository {
 
     public Set<EtapasModel> consultar(Map<String, String> filtros) throws NumberFormatException, SQLException {
 	// Base da query SQL
-	String sql;
+	String sql = "SELECT * FROM `etapas` ORDER BY `id`";
 	Set<EtapasModel> etapasResultado = new LinkedHashSet<>();
-	boolean jaAdicionado = false;
+	int ano = -1, valor = -1;
 
-	if (filtros.isEmpty()) {
-	    sql = "SELECT * FROM `etapas`";
-	} else {
-	    sql = "SELECT * FROM `etapas` WHERE ";
-
-	    if (filtros.containsKey("id")) {
-		// Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
-		// não preciso usar o valor do parse se der certo
-		Integer.parseUnsignedInt(filtros.get("id"));
-	    }
-
-	    if (filtros.containsKey("ano")) {
-		// Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
-		// não preciso usar o valor do parse se der certo
-		Integer.parseUnsignedInt(filtros.get("ano"));
-	    }
-
-	    if (filtros.containsKey("valor")) {
-		double valor = Double.parseDouble(filtros.get("valor"));
-		//Verifica se o valor é negativo, se sim, lança uma exceção
-		if (valor < 0) {
-		    throw new NumberFormatException();
-		}
-	    }
-
-	    // Montar a query SQL com base nos filtros passados no Map
-	    for (Map.Entry<String, String> filtro : filtros.entrySet()) {
-		if (jaAdicionado) {
-		    sql += "AND (`" + filtro.getKey() + "` = '" + filtro.getValue() + "') ";
-		} else {
-		    sql += "(`" + filtro.getKey() + "` = '" + filtro.getValue() + "') ";
-		    jaAdicionado = true;
-		}
-	    }
+	if (filtros.containsKey("ano")) {
+	    // Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
+	    ano = Integer.parseUnsignedInt(filtros.get("ano"));
 	}
-	sql += " ORDER BY `id`";
+
+	if (filtros.containsKey("valor")) {
+	    // Se lançar a exceção NumberFormatException, o valor não é um inteiro sem
+	    valor = Integer.parseUnsignedInt(filtros.get("valor"));
+	}
 
 	ResultSet resultadoBusca = con.prepareCall(sql).executeQuery();
 
 	// Itera por cada item do resultado e adiciona nos resultados
+	boolean adicionar;
 	while (resultadoBusca.next()) {
-	    etapasResultado.add(resultSetParaEtapas(resultadoBusca));
+	    adicionar = true;
+
+	    EtapasModel etapa = resultSetParaEtapas(resultadoBusca);
+	    if (filtros.containsKey("ano")) {
+		if (ano != etapa.getAno()) {
+		    adicionar = false;
+		}
+	    }
+	    if (filtros.containsKey("valor")) {
+		if (!filtros.get("valor").equals(etapa.getValor())) {
+		    adicionar = false;
+		}
+	    }
+
+	    if (adicionar) {
+		etapasResultado.add(etapa);
+	    }
 	}
 
 	return etapasResultado;
