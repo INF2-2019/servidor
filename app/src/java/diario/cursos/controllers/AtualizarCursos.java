@@ -79,6 +79,16 @@ public class AtualizarCursos extends HttpServlet {
 			} catch (RenderException e) {
 				throw new ServletException(e);
 			}
+		} catch (NullPointerException e) {
+			response.setStatus(400);
+			System.err.println("Id inválido. Erro: "+e.toString());
+
+			View erroView = new ErroView(e);
+			try {
+				erroView.render(out);
+			} catch (RenderException ex) {
+				throw new ServletException(ex);
+			}
 		} catch (RenderException e) {
 			throw new ServletException(e);
 		}
