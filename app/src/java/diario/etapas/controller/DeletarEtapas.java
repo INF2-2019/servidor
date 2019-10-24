@@ -22,51 +22,51 @@ import java.sql.SQLException;
 @WebServlet(name = "Deletar", urlPatterns = "/diario/etapas/deletar")
 public class DeletarEtapas extends HttpServlet {
 
-    // método doGet será alterado para doPost quando for terminado o front-end
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	Headers.XMLHeaders(response);
-	Connection conexao = ConnectionFactory.getDiario();
+	// método doGet será alterado para doPost quando for terminado o front-end
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Headers.XMLHeaders(response);
+		Connection conexao = ConnectionFactory.getDiario();
 
-	PrintWriter out = response.getWriter();
+		PrintWriter out = response.getWriter();
 
-	if (conexao == null) {
-	    System.err.println("Falha ao conectar ao bd"); // Adicionar XML de erro
-	    return;
+		if (conexao == null) {
+			System.err.println("Falha ao conectar ao bd"); // Adicionar XML de erro
+			return;
+		}
+
+		EtapasRepository etapasRep = new EtapasRepository(conexao);
+
+		String idParam = request.getParameter("id");
+
+		try {
+			boolean sucesso = etapasRep.deletar(idParam);
+			if (sucesso) {
+				View sucessoView = new SucessoView("Deletado com sucesso!");
+				sucessoView.render(out);
+			}
+		} catch (NumberFormatException excecaoFormatoErrado) {
+			response.setStatus(400);
+			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+
+			View erroView = new ErroFormatView(excecaoFormatoErrado);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+		} catch (SQLException excecaoSQL) {
+			response.setStatus(400);
+			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+
+			View erroView = new ErroSqlView(excecaoSQL);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+		} catch (RenderException e) {
+			throw new ServletException(e);
+		}
 	}
-
-	EtapasRepository etapasRep = new EtapasRepository(conexao);
-
-	String idParam = request.getParameter("id");
-
-	try {
-	    boolean sucesso = etapasRep.deletar(idParam);
-	    if (sucesso) {
-		View sucessoView = new SucessoView("Deletado com sucesso!");
-		sucessoView.render(out);
-	    }
-	} catch (NumberFormatException excecaoFormatoErrado) {
-	    response.setStatus(400);
-	    System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
-
-	    View erroView = new ErroFormatView(excecaoFormatoErrado);
-	    try {
-		erroView.render(out);
-	    } catch (RenderException e) {
-		throw new ServletException(e);
-	    }
-	} catch (SQLException excecaoSQL) {
-	    response.setStatus(400);
-	    System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
-
-	    View erroView = new ErroSqlView(excecaoSQL);
-	    try {
-		erroView.render(out);
-	    } catch (RenderException e) {
-		throw new ServletException(e);
-	    }
-	} catch (RenderException e) {
-	    throw new ServletException(e);
-	}
-    }
 }

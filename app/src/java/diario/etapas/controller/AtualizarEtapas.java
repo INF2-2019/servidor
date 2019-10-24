@@ -26,98 +26,98 @@ import diario.etapas.repository.EtapasRepository;
 @WebServlet(name = "AtualizarEtapas", urlPatterns = "/diario/etapas/atualizar")
 public class AtualizarEtapas extends HttpServlet {
 
-    // método doGet será alterado para doPost quando for terminado o front-end
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	Headers.XMLHeaders(response);
-	Connection conexao = ConnectionFactory.getDiario();
+	// método doGet será alterado para doPost quando for terminado o front-end
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Headers.XMLHeaders(response);
+		Connection conexao = ConnectionFactory.getDiario();
 
-	PrintWriter out = response.getWriter();
+		PrintWriter out = response.getWriter();
 
-	if (conexao == null) {
-	    System.err.println("Falha ao conectar ao bd"); // Adicionar XML de erro
-	    View erroView = new ErroFormatView(new Exception("Falha ao conectar ao banco de dados"));
+		if (conexao == null) {
+			System.err.println("Falha ao conectar ao bd"); // Adicionar XML de erro
+			View erroView = new ErroFormatView(new Exception("Falha ao conectar ao banco de dados"));
 
-	    try {
-		erroView.render(out);
-	    } catch (RenderException e) {
-		throw new ServletException(e);
-	    }
-	    return;
-	}
-
-	EtapasRepository rep = new EtapasRepository(conexao);
-
-	Map<String, String> parametros = definirParametros(request);
-
-	if (parametros == null) {
-	    response.setStatus(400);
-
-	    View erroView = new ErroSemParametroView(new Exception("Erro: algum parâmetro não foi inserido"));
-
-	    try {
-		erroView.render(out);
-	    } catch (RenderException e) {
-		throw new ServletException(e);
-	    }
-
-	} else {
-	    try {
-		rep.atualizar(parametros);
-		View sucessoView = new SucessoView("Atualizado com sucesso.");
-		sucessoView.render(out);
-	    } catch (NumberFormatException excecaoFormatoErrado) {
-		response.setStatus(400);
-		System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
-
-		View erroView = new ErroFormatView(excecaoFormatoErrado);
-
-		try {
-		    erroView.render(out);
-		} catch (RenderException e) {
-		    throw new ServletException(e);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+			return;
 		}
-	    } catch (SQLException excecaoSQL) {
-		response.setStatus(400);
-		System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
-		View erroView = new ErroSqlView(excecaoSQL);
+		EtapasRepository rep = new EtapasRepository(conexao);
 
-		try {
-		    erroView.render(out);
-		} catch (RenderException e) {
-		    throw new ServletException(e);
+		Map<String, String> parametros = definirParametros(request);
+
+		if (parametros == null) {
+			response.setStatus(400);
+
+			View erroView = new ErroSemParametroView(new Exception("Erro: algum parâmetro não foi inserido"));
+
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+
+		} else {
+			try {
+				rep.atualizar(parametros);
+				View sucessoView = new SucessoView("Atualizado com sucesso.");
+				sucessoView.render(out);
+			} catch (NumberFormatException excecaoFormatoErrado) {
+				response.setStatus(400);
+				System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+
+				View erroView = new ErroFormatView(excecaoFormatoErrado);
+
+				try {
+					erroView.render(out);
+				} catch (RenderException e) {
+					throw new ServletException(e);
+				}
+			} catch (SQLException excecaoSQL) {
+				response.setStatus(400);
+				System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+
+				View erroView = new ErroSqlView(excecaoSQL);
+
+				try {
+					erroView.render(out);
+				} catch (RenderException e) {
+					throw new ServletException(e);
+				}
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
 		}
-	    } catch (RenderException e) {
-		throw new ServletException(e);
-	    }
-	}
-    }
-
-    public Map<String, String> definirParametros(HttpServletRequest req) {
-	Map<String, String> dados = new LinkedHashMap<>();
-	boolean temPeloMenosUm = false; // variável que verifica se há um parâmetro além do ID
-
-	if (req.getParameterMap().containsKey("id")) {
-	    dados.put("id", req.getParameter("id"));
-	} else {
-	    return null;
 	}
 
-	if (req.getParameterMap().containsKey("ano")) {
-	    dados.put("ano", req.getParameter("ano"));
-	    temPeloMenosUm = true;
-	}
+	public Map<String, String> definirParametros(HttpServletRequest req) {
+		Map<String, String> dados = new LinkedHashMap<>();
+		boolean temPeloMenosUm = false; // variável que verifica se há um parâmetro além do ID
 
-	if (req.getParameterMap().containsKey("valor")) {
-	    dados.put("valor", req.getParameter("valor"));
-	    temPeloMenosUm = true;
-	}
-	if (!temPeloMenosUm) {
-	    return null;
-	}
+		if (req.getParameterMap().containsKey("id")) {
+			dados.put("id", req.getParameter("id"));
+		} else {
+			return null;
+		}
 
-	return dados;
-    }
+		if (req.getParameterMap().containsKey("ano")) {
+			dados.put("ano", req.getParameter("ano"));
+			temPeloMenosUm = true;
+		}
+
+		if (req.getParameterMap().containsKey("valor")) {
+			dados.put("valor", req.getParameter("valor"));
+			temPeloMenosUm = true;
+		}
+		if (!temPeloMenosUm) {
+			return null;
+		}
+
+		return dados;
+	}
 
 }

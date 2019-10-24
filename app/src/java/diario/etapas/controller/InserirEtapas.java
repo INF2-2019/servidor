@@ -24,69 +24,69 @@ import java.util.Map;
 @WebServlet(name = "InserirEtapas", urlPatterns = "/diario/etapas/inserir")
 public class InserirEtapas extends HttpServlet {
 
-    // método doGet será alterado para doPost quando for terminado o front-end
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	Headers.XMLHeaders(response);
-	Connection conexao = ConnectionFactory.getDiario();
+	// método doGet será alterado para doPost quando for terminado o front-end
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Headers.XMLHeaders(response);
+		Connection conexao = ConnectionFactory.getDiario();
 
-	EtapasRepository etapasRep = new EtapasRepository(conexao);
+		EtapasRepository etapasRep = new EtapasRepository(conexao);
 
-	PrintWriter out = response.getWriter();
+		PrintWriter out = response.getWriter();
 
-	if (conexao == null) {
-	    System.err.println("Falha ao conectar ao bd"); // Adicionar XML de erro
-	    return;
+		if (conexao == null) {
+			System.err.println("Falha ao conectar ao bd"); // Adicionar XML de erro
+			return;
+		}
+
+		Map<String, String> dados = definirFiltros(request);
+
+		//inserindo dados
+		try {
+			if (etapasRep.inserir(dados)) {
+				System.out.println("Inserido com sucesso!");
+				View sucessoView = new SucessoView("Inserido com sucesso.");
+				sucessoView.render(out);
+			} else {
+				System.out.println("Não foi inserido.");
+			}
+		} catch (NumberFormatException excecaoFormatoErrado) {
+			response.setStatus(400);
+			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+
+			View erroView = new ErroFormatView(excecaoFormatoErrado);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+		} catch (SQLException excecaoSQL) {
+			response.setStatus(400);
+			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+
+			View erroView = new ErroSqlView(excecaoSQL);
+
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+		} catch (RenderException ex) {
+			throw new ServletException(ex);
+		}
 	}
 
-	Map<String, String> dados = definirFiltros(request);
+	public Map<String, String> definirFiltros(HttpServletRequest req) {
+		Map<String, String> dados = new LinkedHashMap<>();
 
-	//inserindo dados
-	try {
-	    if (etapasRep.inserir(dados)) {
-		System.out.println("Inserido com sucesso!");
-		View sucessoView = new SucessoView("Inserido com sucesso.");
-		sucessoView.render(out);
-	    } else {
-		System.out.println("Não foi inserido.");
-	    }
-	} catch (NumberFormatException excecaoFormatoErrado) {
-	    response.setStatus(400);
-	    System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+		// definir os valores do map condicionalmente, conforme a requisição
+		if (req.getParameter("ano") != null) {
+			dados.put("ano", req.getParameter("ano"));
+		}
 
-	    View erroView = new ErroFormatView(excecaoFormatoErrado);
-	    try {
-		erroView.render(out);
-	    } catch (RenderException e) {
-		throw new ServletException(e);
-	    }
-	} catch (SQLException excecaoSQL) {
-	    response.setStatus(400);
-	    System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+		if (req.getParameter("valor") != null) {
+			dados.put("valor", req.getParameter("valor"));
+		}
 
-	    View erroView = new ErroSqlView(excecaoSQL);
-
-	    try {
-		erroView.render(out);
-	    } catch (RenderException e) {
-		throw new ServletException(e);
-	    }
-	} catch (RenderException ex) {
-	    throw new ServletException(ex);
+		return dados;
 	}
-    }
-
-    public Map<String, String> definirFiltros(HttpServletRequest req) {
-	Map<String, String> dados = new LinkedHashMap<>();
-
-	// definir os valores do map condicionalmente, conforme a requisição
-	if (req.getParameter("ano") != null) {
-	    dados.put("ano", req.getParameter("ano"));
-	}
-
-	if (req.getParameter("valor") != null) {
-	    dados.put("valor", req.getParameter("valor"));
-	}
-
-	return dados;
-    }
 }

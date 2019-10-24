@@ -13,32 +13,32 @@ import javax.xml.transform.TransformerException;
 
 public class ErroSqlView extends View {
 
-    public ErroSqlView(Exception excecao) {
-	super(excecao);
-    }
-
-    @Override
-    public void render(PrintWriter writer) throws RenderException {
-	try {
-	    writer.write(Conversores.converterDocumentEmXMLString(criarErroXML((Exception) data)));
-	} catch (ParserConfigurationException | TransformerException ex) {
-	    throw new RenderException(ex);
+	public ErroSqlView(Exception excecao) {
+		super(excecao);
 	}
-    }
 
-    private static Document criarErroXML(Exception excecao) throws ParserConfigurationException {
-	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-	DocumentBuilder construtor = dbf.newDocumentBuilder();
-	Document documento = construtor.newDocument();
+	@Override
+	public void render(PrintWriter writer) throws RenderException {
+		try {
+			writer.write(Conversores.converterDocumentEmXMLString(criarErroXML((Exception) data)));
+		} catch (ParserConfigurationException | TransformerException ex) {
+			throw new RenderException(ex);
+		}
+	}
 
-	Element erro = documento.createElement("erro");
-	Element msg = documento.createElement("mensagem");
+	private static Document criarErroXML(Exception excecao) throws ParserConfigurationException {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder construtor = dbf.newDocumentBuilder();
+		Document documento = construtor.newDocument();
 
-	msg.appendChild(documento.createTextNode("Erro: busca SQL inválida"));
-	erro.appendChild(msg);
+		Element erro = documento.createElement("erro");
+		Element msg = documento.createElement("mensagem");
 
-	documento.appendChild(erro);
+		msg.appendChild(documento.createTextNode("Erro: busca SQL inválida"));
+		erro.appendChild(msg);
 
-	return documento;
-    }
+		documento.appendChild(erro);
+
+		return documento;
+	}
 }

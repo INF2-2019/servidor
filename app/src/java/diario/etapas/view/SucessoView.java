@@ -13,32 +13,32 @@ import java.io.PrintWriter;
 
 public class SucessoView extends View {
 
-    public SucessoView(String mensagem) {
-	super(mensagem);
-    }
-
-    @Override
-    public void render(PrintWriter writer) throws RenderException {
-	try {
-	    writer.write(Conversores.converterDocumentEmXMLString(criarSucessoXML((String) data)));
-	} catch (TransformerException | ParserConfigurationException e) {
-	    throw new RenderException(e);
+	public SucessoView(String mensagem) {
+		super(mensagem);
 	}
-    }
 
-    private Document criarSucessoXML(String mensagem) throws ParserConfigurationException {
-	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-	DocumentBuilder construtor = dbf.newDocumentBuilder();
-	Document documento = construtor.newDocument();
+	@Override
+	public void render(PrintWriter writer) throws RenderException {
+		try {
+			writer.write(Conversores.converterDocumentEmXMLString(criarSucessoXML((String) data)));
+		} catch (TransformerException | ParserConfigurationException e) {
+			throw new RenderException(e);
+		}
+	}
 
-	Element sucesso = documento.createElement("sucesso");
-	Element msg = documento.createElement("mensagem");
+	private Document criarSucessoXML(String mensagem) throws ParserConfigurationException {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder construtor = dbf.newDocumentBuilder();
+		Document documento = construtor.newDocument();
 
-	msg.appendChild(documento.createTextNode(mensagem));
-	sucesso.appendChild(msg);
+		Element sucesso = documento.createElement("sucesso");
+		Element msg = documento.createElement("mensagem");
 
-	documento.appendChild(sucesso);
-	return documento;
-    }
+		msg.appendChild(documento.createTextNode(mensagem));
+		sucesso.appendChild(msg);
+
+		documento.appendChild(sucesso);
+		return documento;
+	}
 
 }

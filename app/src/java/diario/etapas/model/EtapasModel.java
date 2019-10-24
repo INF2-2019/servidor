@@ -5,61 +5,61 @@ import java.util.Map;
 
 public final class EtapasModel extends Model {
 
-    private int id, ano;
-    private double valor;
+	private int id, ano;
+	private double valor;
 
-    public EtapasModel(int ano, double valor) {
-	// Para evitar repetição, reaproveitamento do construtor completo
-	this(ID_INDEFINIDO, ano, valor);
-    }
-
-    public EtapasModel(int id, int ano, double valor) {
-	// Usar setters para validar os dados de maneira isolada
-	this.setId(id);
-	this.setAno(ano);
-	this.setValor(valor);
-    }
-
-    public Object[] retornarValoresRestantes(Map<String, String> parametros) {
-	Object[] retorno = new Object[3];
-	retorno[0] = id;
-
-	if (!parametros.containsKey("ano")) {
-	    retorno[1] = ano;
-	} else {
-	    retorno[1] = parametros.get("ano");
+	public EtapasModel(int ano, double valor) {
+		// Para evitar repetição, reaproveitamento do construtor completo
+		this(ID_INDEFINIDO, ano, valor);
 	}
 
-	if (!parametros.containsKey("valor")) {
-	    retorno[2] = valor;
-	} else {
-	    retorno[2] = parametros.get("valor");
+	public EtapasModel(int id, int ano, double valor) {
+		// Usar setters para validar os dados de maneira isolada
+		this.setId(id);
+		this.setAno(ano);
+		this.setValor(valor);
 	}
 
-	return retorno;
-    }
+	public Object[] retornarValoresRestantes(Map<String, String> parametros) {
+		Object[] retorno = new Object[3];
+		retorno[0] = id;
 
-    public void setId(int id) {
-	this.id = id;
-    }
+		if (!parametros.containsKey("ano")) {
+			retorno[1] = ano;
+		} else {
+			retorno[1] = parametros.get("ano");
+		}
 
-    public void setAno(int ano) {
-	this.ano = ano;
-    }
+		if (!parametros.containsKey("valor")) {
+			retorno[2] = valor;
+		} else {
+			retorno[2] = parametros.get("valor");
+		}
 
-    public void setValor(double valor) {
-	this.valor = valor;
-    }
+		return retorno;
+	}
 
-    public int getId() {
-	return id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public int getAno() {
-	return ano;
-    }
+	public void setAno(int ano) {
+		this.ano = ano;
+	}
 
-    public double getValor() {
-	return valor;
-    }
+	public void setValor(double valor) {
+		this.valor = valor;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public int getAno() {
+		return ano;
+	}
+
+	public double getValor() {
+		return valor;
+	}
 }
