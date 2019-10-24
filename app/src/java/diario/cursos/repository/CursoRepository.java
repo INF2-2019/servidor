@@ -130,7 +130,7 @@ public class CursoRepository {
 
 	}
 
-	public boolean atualizarPorId(Map<String, Object> parametros) throws NumberFormatException, SQLException {
+	public boolean atualizarPorId(Map<String, Object> parametros) throws NumberFormatException, NullPointerException, SQLException {
 		int id = Integer.parseUnsignedInt(parametros.get("id").toString());
 		int idDepto = Integer.parseUnsignedInt(parametros.get("id-depto").toString());
 		int horasTotal = Integer.parseUnsignedInt(parametros.get("horas-total").toString());
@@ -159,6 +159,8 @@ public class CursoRepository {
 		}
 
 		CursoModel curso = consultarId(Integer.toString(id));
+		if(curso == null)
+			throw new NullPointerException("Id inválido");
 		Object[] vals = curso.retornarValoresRestantes(parametros);
 		String[] keys = {"id", "id-depto", "nome", "horas-total", "modalidade"};
 		Map<String, Object> valores = new LinkedHashMap<>();

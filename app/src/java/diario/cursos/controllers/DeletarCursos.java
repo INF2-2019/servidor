@@ -43,9 +43,13 @@ public class DeletarCursos extends HttpServlet {
 		String idParam = request.getParameter("id");
 
 		try {
-			boolean sucesso = cursoRep.deletar(idParam);
-			View sucessoView = new SucessoView("Deletado com sucesso.");
-			sucessoView.render(out);
+			boolean deletado = cursoRep.deletar(idParam);
+			View resultado;
+			if(deletado)
+				resultado = new SucessoView("Deletado com sucesso.");
+			else
+				resultado = new ErroView(new Exception("Id inválido."));
+			resultado.render(out);
 		} catch (NumberFormatException excecaoFormatoErrado) {
 			response.setStatus(400);
 			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
