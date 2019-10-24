@@ -1,12 +1,9 @@
 package diario.cursos.controllers;
 
 import diario.cursos.repository.CursoRepository;
+import diario.cursos.view.*;
 import utils.ConnectionFactory;
 import utils.Headers;
-import diario.cursos.view.RenderException;
-import diario.cursos.view.View;
-import diario.cursos.view.ErroView;
-import diario.cursos.view.SucessoView;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -45,11 +42,21 @@ public class DeletarCursos extends HttpServlet {
 		try {
 			boolean deletado = cursoRep.deletar(idParam);
 			View resultado;
-			if(deletado)
+			if (deletado)
 				resultado = new SucessoView("Deletado com sucesso.");
 			else
 				resultado = new ErroView(new Exception("Id inválido."));
 			resultado.render(out);
+		} catch(ExcecaoTurmaVinculada excecao) {
+			response.setStatus(400);
+			System.err.println("Turma vinculada ao curso, impossível deletar.");
+
+			View erro = new ErroView(excecao);
+			try{
+				erro.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
 		} catch (NumberFormatException excecaoFormatoErrado) {
 			response.setStatus(400);
 			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
