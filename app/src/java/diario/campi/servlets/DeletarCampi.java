@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import diario.campi.repository.*;
 import diario.cursos.view.*;
 import java.io.PrintWriter;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import utils.ConnectionFactory;
 import utils.Headers;
 
@@ -30,22 +32,36 @@ public class DeletarCampi extends HttpServlet {
 		Headers.XMLHeaders(response);
 
 		if (rep.checarAutorizacaoADM(request, response)) {
-			
-			String id = request.getParameter("id");
 			try {
-				boolean sucesso = rep.deletarCampi(id);
-				View sucessoView = new SucessoView("Deletado com sucesso.");
-				sucessoView.render(out);
-			} catch (NumberFormatException excecaoFormatoErrado) {
-				response.setStatus(400);
-				System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+			String id = request.getParameter("id");
+			PreparedStatement ps = conexao.prepareStatement("SELECT * FROM `departamentos` WHERE `id-campi` = ?");
+			int idParsed = Integer.parseUnsignedInt(id);
+			ps.setInt(1, idParsed);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				response.setStatus(409);
+				out.println("<erro>Existe um departamento registrado neste campi, delete-o antes de deletar o campi</erro>");
+			} else {
+							
+				try{			
+					boolean sucesso = rep.deletarCampi(id);
+					View sucessoView = new SucessoView("Deletado com sucesso.");
+					sucessoView.render(out);
+				} catch (NumberFormatException excecaoFormatoErrado) {
+					response.setStatus(400);
+					System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
 
-				View erroView = new ErroView(excecaoFormatoErrado);
-				try {
-					erroView.render(out);
+					View erroView = new ErroView(excecaoFormatoErrado);
+					try {
+						erroView.render(out);
+					} catch (RenderException e) {
+						throw new ServletException(e);
+					}
+				
 				} catch (RenderException e) {
 					throw new ServletException(e);
 				}
+			}
 			} catch (SQLException excecaoSQL) {
 				response.setStatus(400);
 				System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
@@ -56,9 +72,10 @@ public class DeletarCampi extends HttpServlet {
 				} catch (RenderException e) {
 					throw new ServletException(e);
 				}
-			} catch (RenderException e) {
-				throw new ServletException(e);
 			}
+			
+			
+			
         } else {
 			response.setStatus(401);
 			out.println("<erro>Voce nao tem permissao para fazer isso</erro>");
