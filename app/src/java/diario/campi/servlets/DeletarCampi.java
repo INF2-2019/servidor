@@ -29,36 +29,40 @@ public class DeletarCampi extends HttpServlet {
 
 		Headers.XMLHeaders(response);
 
-
-		String id = request.getParameter("id");
-		try {
-			boolean sucesso = rep.deletarCampi(id);
-			View sucessoView = new SucessoView("Deletado com sucesso.");
-			sucessoView.render(out);
-		} catch (NumberFormatException excecaoFormatoErrado) {
-			response.setStatus(400);
-			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
-
-			View erroView = new ErroView(excecaoFormatoErrado);
+		if (rep.checarAutorizacaoADM(request, response)) {
+			
+			String id = request.getParameter("id");
 			try {
-				erroView.render(out);
+				boolean sucesso = rep.deletarCampi(id);
+				View sucessoView = new SucessoView("Deletado com sucesso.");
+				sucessoView.render(out);
+			} catch (NumberFormatException excecaoFormatoErrado) {
+				response.setStatus(400);
+				System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+
+				View erroView = new ErroView(excecaoFormatoErrado);
+				try {
+					erroView.render(out);
+				} catch (RenderException e) {
+					throw new ServletException(e);
+				}
+			} catch (SQLException excecaoSQL) {
+				response.setStatus(400);
+				System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+
+				View erroView = new ErroView(excecaoSQL);
+				try {
+					erroView.render(out);
+				} catch (RenderException e) {
+					throw new ServletException(e);
+				}
 			} catch (RenderException e) {
 				throw new ServletException(e);
 			}
-		} catch (SQLException excecaoSQL) {
-			response.setStatus(400);
-			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
-
-			View erroView = new ErroView(excecaoSQL);
-			try {
-				erroView.render(out);
-			} catch (RenderException e) {
-				throw new ServletException(e);
-			}
-		} catch (RenderException e) {
-			throw new ServletException(e);
-		}
-               
+        } else {
+			response.setStatus(401);
+			out.println("<erro>Voce nao tem permissao para fazer isso</erro>");
+		}       
     }
 
 }

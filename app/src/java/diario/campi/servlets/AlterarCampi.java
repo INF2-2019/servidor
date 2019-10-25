@@ -30,40 +30,47 @@ public class AlterarCampi extends HttpServlet {
 		CampiRepository rep = new CampiRepository(conexao);
 		PrintWriter out = response.getWriter();
 		Headers.XMLHeaders(response);
+		
+		if (rep.checarAutorizacaoADM(request, response)) {
 
-		String id = request.getParameter("id");
-		String nome = request.getParameter("nome");
-		String cidade = request.getParameter("cidade");
-		String uf = request.getParameter("uf");
-		try {
-			rep.alterarCampi(id,nome,cidade,uf);
-			View sucessoView = new SucessoView("Atualizado com sucesso.");
-			sucessoView.render(out);
-		} catch (NumberFormatException excecaoFormatoErrado) {
-			response.setStatus(400);
-			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
-
-			View erroView = new ErroView(excecaoFormatoErrado);
+			String id = request.getParameter("id");
+			String nome = request.getParameter("nome");
+			String cidade = request.getParameter("cidade");
+			String uf = request.getParameter("uf");
 			try {
-				erroView.render(out);
+				rep.alterarCampi(id,nome,cidade,uf);
+				View sucessoView = new SucessoView("Atualizado com sucesso.");
+				sucessoView.render(out);
+			} catch (NumberFormatException excecaoFormatoErrado) {
+				response.setStatus(400);
+				System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+
+				View erroView = new ErroView(excecaoFormatoErrado);
+				try {
+					erroView.render(out);
+				} catch (RenderException e) {
+					throw new ServletException(e);
+				}
+			} catch (SQLException excecaoSQL) {
+				response.setStatus(400);
+				System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+
+				View erroView = new ErroView(excecaoSQL);
+				try {
+					erroView.render(out);
+				} catch (RenderException e) {
+					throw new ServletException(e);
+				}
 			} catch (RenderException e) {
 				throw new ServletException(e);
+			} catch (TransformerException | ParserConfigurationException ex) {
+				Logger.getLogger(AlterarCampi.class.getName()).log(Level.SEVERE, null, ex);
 			}
-		} catch (SQLException excecaoSQL) {
-			response.setStatus(400);
-			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
-
-			View erroView = new ErroView(excecaoSQL);
-			try {
-				erroView.render(out);
-			} catch (RenderException e) {
-				throw new ServletException(e);
-			}
-		} catch (RenderException e) {
-			throw new ServletException(e);
-		} catch (TransformerException | ParserConfigurationException ex) {
-			Logger.getLogger(AlterarCampi.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		
+		} else {
+			response.setStatus(401);
+			out.println("<erro>Voce nao tem permissao para fazer isso</erro>");
+		} 
 
 	}
 

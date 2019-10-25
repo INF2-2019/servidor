@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import utils.ConnectionFactory;
 import utils.Headers;
 
+
 /**
  *
  * @author User
@@ -27,37 +28,42 @@ public class InserirCampi extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		Headers.XMLHeaders(response);
 
+		if (rep.checarAutorizacaoADM(request, response)) {
+			
+			String nome = request.getParameter("nome");
+			String cidade = request.getParameter("cidade");
+			String uf = request.getParameter("uf");
 
-		String nome = request.getParameter("nome");
-		String cidade = request.getParameter("cidade");
-		String uf = request.getParameter("uf");
-		
-		try {
-			boolean sucesso = rep.inserirCampi(nome, cidade, uf);
-			View sucessoView = new SucessoView("Inserido com sucesso.");
-			sucessoView.render(out);
-		} catch (NumberFormatException excecaoFormatoErrado) {
-			response.setStatus(400);
-			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
-
-			View erroView = new ErroView(excecaoFormatoErrado);
 			try {
-				erroView.render(out);
+				boolean sucesso = rep.inserirCampi(nome, cidade, uf);
+				View sucessoView = new SucessoView("Inserido com sucesso.");
+				sucessoView.render(out);
+			} catch (NumberFormatException excecaoFormatoErrado) {
+				response.setStatus(400);
+				System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+
+				View erroView = new ErroView(excecaoFormatoErrado);
+				try {
+					erroView.render(out);
+				} catch (RenderException e) {
+					throw new ServletException(e);
+				}
+			} catch (SQLException excecaoSQL) {
+				response.setStatus(400);
+				System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+
+				View erroView = new ErroView(excecaoSQL);
+				try {
+					erroView.render(out);
+				} catch (RenderException e) {
+					throw new ServletException(e);
+				}
 			} catch (RenderException e) {
 				throw new ServletException(e);
 			}
-		} catch (SQLException excecaoSQL) {
-			response.setStatus(400);
-			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
-
-			View erroView = new ErroView(excecaoSQL);
-			try {
-				erroView.render(out);
-			} catch (RenderException e) {
-				throw new ServletException(e);
-			}
-		} catch (RenderException e) {
-			throw new ServletException(e);
+		} else {
+			response.setStatus(401);
+			out.println("<erro>Voce nao tem permissao para fazer isso</erro>");
 		}
 
 	}

@@ -4,9 +4,11 @@ package diario.campi.repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-
+import utils.autenticador.*;
 
 /**
  *
@@ -80,5 +82,16 @@ public class CampiRepository {
 		return sucesso != 0;
 
 	}
+	
+	public boolean checarAutorizacaoADM(HttpServletRequest request, HttpServletResponse response) {
+		DiarioAutenticador x = new DiarioAutenticador(request, response);
+		
+		return x.cargoLogado() == DiarioCargos.ADMIN;
+	}
+			
+			
+			
+			
+	}
    
-}
+
