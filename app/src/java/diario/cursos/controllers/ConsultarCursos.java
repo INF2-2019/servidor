@@ -32,7 +32,7 @@ public class ConsultarCursos extends HttpServlet {
 		Headers.XMLHeaders(response);
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
-		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+		if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
 			response.setStatus(403);
 			return;
 		}
