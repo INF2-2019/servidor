@@ -41,30 +41,13 @@ public class AtualizarProfessor extends HttpServlet {
 				throw new SQLException("Impossível se conectar ao banco de dados");
 			}
 
+			validarParametros(requisicao.getParameterMap());
+			InsercaoProfessor.validarDepartamento(requisicao.getParameter("id-depto"), conexao);
+
 			String statement = "UPDATE `professores` SET "
 					+ "`id-depto` = ?, `nome` = ?, `senha` = ?, "
 					+ "`email` = ?, `titulacao` = ? WHERE `id` = ?";
 			PreparedStatement ps = conexao.prepareStatement(statement);
-
-			// Validação dos parâmetros
-			Map<String, String[]> camposAtualizados = requisicao.getParameterMap();
-			if (camposAtualizados.size() < 6) {
-				throw new ExcecaoParametrosIncorretos("Parâmetros insuficientes");
-			}
-			if (camposAtualizados.size() > 6) {
-				throw new ExcecaoParametrosIncorretos("Parâmetros em excesso");
-			}
-			for (Map.Entry<String, String[]> iterador : camposAtualizados.entrySet()) {
-				boolean valido = false;
-				for (String param : params) {
-					if (iterador.getKey().equals(param)) {
-						valido = true;
-					}
-				}
-				if (!valido) {
-					throw new ExcecaoParametrosIncorretos("Parâmetro desconhecido: " + iterador.getKey());
-				}
-			}
 
 			ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-depto")));
 			ps.setString(2, requisicao.getParameter("nome"));
@@ -96,6 +79,27 @@ public class AtualizarProfessor extends HttpServlet {
 	@Override
 	public String getServletInfo() {
 		return "Servlet dedicado a atualizar registros da tabela 'professores'";
+	}
+
+	private void validarParametros(Map<String, String[]> parametros) throws ExcecaoParametrosIncorretos {
+		if (parametros.size() < 6) {
+			throw new ExcecaoParametrosIncorretos("Parâmetros insuficientes");
+		}
+		if (parametros.size() > 6) {
+			throw new ExcecaoParametrosIncorretos("Parâmetros em excesso");
+		}
+
+		for (Map.Entry<String, String[]> iterador : parametros.entrySet()) {
+			boolean valido = false;
+			for (String param : params) {
+				if (iterador.getKey().equals(param)) {
+					valido = true;
+				}
+			}
+			if (!valido) {
+				throw new ExcecaoParametrosIncorretos("Parâmetro desconhecido: " + iterador.getKey());
+			}
+		}
 	}
 
 }

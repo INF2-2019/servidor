@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -36,22 +37,23 @@ public class InsercaoProfessor extends HttpServlet {
 		saida.println("<root>");
 		try (Connection conexao = ConnectionFactory.getDiario()) {
 
+			if (conexao == null) {
+				throw new SQLException("Impossível se conectar ao banco de dados");
+			}
+
 			// Validação dos parâmetros
 			for (String param : params) {
 				if (requisicao.getParameter(param) == null) {
 					throw new ExcecaoParametrosIncorretos("Todos os parâmetros devem ser preenchidos na inserção de um registro");
 				}
 			}
-			if (conexao == null) {
-				throw new SQLException("Impossível se conectar ao banco de dados");
-			}
+
+			validarDepartamento(requisicao.getParameter("id-depto"), conexao);
 
 			PreparedStatement ps = conexao.prepareStatement("INSERT INTO `professores` VALUES (?, ?, ?, ?, ?, ?)");
 			ps.setInt(1, Integer.parseInt(requisicao.getParameter("id")));
 			ps.setInt(2, Integer.parseInt(requisicao.getParameter("id-depto")));
 			ps.setString(3, requisicao.getParameter("nome"));
-			ps.setString(4, /*Hasher.hash(*/ requisicao.getParameter("senha"/*)*/));
-			System.out.println(Hasher.hash(requisicao.getParameter("senha")));
 			ps.setString(4, Hasher.hash(requisicao.getParameter("senha")));
 			ps.setString(5, requisicao.getParameter("email"));
 			ps.setString(6, requisicao.getParameter("titulacao"));
@@ -79,6 +81,18 @@ public class InsercaoProfessor extends HttpServlet {
 	@Override
 	public String getServletInfo() {
 		return "Servlet dedicado à inserção de registro de professores no BD";
+	}
+
+	public static void validarDepartamento(String depto, Connection con)
+			throws SQLException, ExcecaoParametrosIncorretos {
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM `departamentos` WHERE id = ?");
+		ps.setString(1, depto);
+		ps.execute();
+		ResultSet resultado = ps.getResultSet();
+
+		if (!resultado.first()) {
+			throw new ExcecaoParametrosIncorretos("Nos dados registrado há um departamento inválido");
+		}
 	}
 
 }
