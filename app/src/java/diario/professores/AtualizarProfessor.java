@@ -1,5 +1,8 @@
 package diario.professores;
 
+import utils.ConnectionFactory;
+import utils.Hasher;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -10,7 +13,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.ConnectionFactory;
 
 @WebServlet(name = "AtualizarProfessores", urlPatterns = "/diario/professores/atualizar")
 /**
@@ -66,7 +68,7 @@ public class AtualizarProfessor extends HttpServlet {
 
 			ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-depto")));
 			ps.setString(2, requisicao.getParameter("nome"));
-			ps.setString(3, requisicao.getParameter("senha"));
+			ps.setString(3, Hasher.hash(requisicao.getParameter("senha")));
 			ps.setString(4, requisicao.getParameter("email"));
 			ps.setString(5, requisicao.getParameter("titulacao"));
 			ps.setInt(6, Integer.parseInt(requisicao.getParameter("id")));
