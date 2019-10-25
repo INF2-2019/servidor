@@ -4,6 +4,8 @@ import diario.cursos.repository.CursoRepository;
 import diario.cursos.view.*;
 import utils.ConnectionFactory;
 import utils.Headers;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,6 +22,13 @@ public class DeletarCursos extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Headers.XMLHeaders(response);
+
+		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			response.setStatus(403);
+			return;
+		}
+
 		Connection conexao = ConnectionFactory.getDiario();
 
 		PrintWriter out = response.getWriter();

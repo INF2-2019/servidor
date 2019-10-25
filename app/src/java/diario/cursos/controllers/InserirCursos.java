@@ -7,6 +7,8 @@ import diario.cursos.view.RenderException;
 import diario.cursos.view.View;
 import diario.cursos.view.ErroView;
 import diario.cursos.view.SucessoView;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,6 +28,12 @@ public class InserirCursos extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Headers.XMLHeaders(response);
 		Connection conexao = ConnectionFactory.getDiario();
+
+		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			response.setStatus(403);
+			return;
+		}
 
 		PrintWriter out = response.getWriter();
 
