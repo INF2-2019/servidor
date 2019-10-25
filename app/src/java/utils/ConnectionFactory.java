@@ -13,7 +13,7 @@ public class ConnectionFactory {
 	private final static String DRIVER = "com.mysql.cj.jdbc.Driver";
 	private final static String URL = "jdbc:mysql://localhost/";
 	private final static String USUARIO = "root";
-	private final static String SENHA = "123456";
+	private final static String SENHA = "";
 
 	public static Connection getConnection(String database) {
 		Properties prop = loadProperties();
