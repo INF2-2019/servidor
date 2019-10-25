@@ -51,6 +51,8 @@ public class InsercaoProfessor extends HttpServlet {
 			ps.setInt(2, Integer.parseInt(requisicao.getParameter("id-depto")));
 			ps.setString(3, requisicao.getParameter("nome"));
 			ps.setString(4, /*Hasher.hash(*/ requisicao.getParameter("senha"/*)*/));
+			System.out.println(Hasher.hash(requisicao.getParameter("senha")));
+			ps.setString(4, Hasher.hash(requisicao.getParameter("senha")));
 			ps.setString(5, requisicao.getParameter("email"));
 			ps.setString(6, requisicao.getParameter("titulacao"));
 
