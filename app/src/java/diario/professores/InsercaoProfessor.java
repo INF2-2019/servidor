@@ -91,7 +91,7 @@ public class InsercaoProfessor extends HttpServlet {
 		ResultSet resultado = ps.getResultSet();
 
 		if (!resultado.first()) {
-			throw new ExcecaoParametrosIncorretos("Nos dados registrado há um departamento inválido");
+			throw new ExcecaoParametrosIncorretos("Departamento informado não encontrado");
 		}
 	}
 
