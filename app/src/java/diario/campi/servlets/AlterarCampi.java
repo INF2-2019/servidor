@@ -69,7 +69,7 @@ public class AlterarCampi extends HttpServlet {
 		
 		} else {
 			response.setStatus(401);
-			out.println("<erro>Voce nao tem permissao para fazer isso</erro>");
+			out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
 		} 
 
 	}

@@ -1,5 +1,6 @@
 package diario.campi.servlets;
 
+import diario.campi.repository.CampiRepository;
 import diario.campi.view.*;
 import java.io.IOException;
 import java.sql.Connection;
@@ -25,24 +26,19 @@ public class ConsultarPorId extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		String xml = "";
+		String xml;
 		Headers.XMLHeaders(response);
 		String id = request.getParameter("id");
-
 		Connection conexao = ConnectionFactory.getDiario();
+		CampiRepository rep = new CampiRepository(conexao);
+		
 		try {
 
-			PreparedStatement ps = conexao.prepareStatement("SELECT * FROM `campi` WHERE `id` = ?");
-			int idParsed = Integer.parseUnsignedInt(id);
-			ps.setInt(1, idParsed);
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()) {
-			xml += viewConsulta.XMLCampi(rs.getInt("id"), rs.getString("nome"),  rs.getString("cidade"),  rs.getString("uf"));
-			}
+			xml = rep.consultarPorId(id);
 			out.println(xml);
 			conexao.close();
 		} catch(SQLException ex) {
-			out.println("<erro>Falha ao consultar campis do banco de dados</erro>");
+			out.println("<erro><mensagem>Falha ao consultar campis do banco de dados</mensagem></erro>");
 		}
 		
     }
