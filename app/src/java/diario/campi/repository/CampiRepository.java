@@ -25,17 +25,24 @@ public class CampiRepository {
 	}
     
     
-	public boolean deletarCampi(String id) throws SQLException{
+	public String deletarCampi(String id, HttpServletRequest request, HttpServletResponse response) throws SQLException{
 		String sql;
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM `departamentos` WHERE `id-campi` = ?");
 		int idParsed = Integer.parseUnsignedInt(id);
+		ps.setInt(1, idParsed);
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) {
+			response.setStatus(409);
+			return("<erro><mensagem>Existe um departamento registrado neste campi, delete-o antes de deletar o campi</mensagem></erro>");
+		}
 		sql = "DELETE FROM `campi` WHERE `id` = ?";
 
 		PreparedStatement stat =  con.prepareStatement(sql);
 		stat.setInt(1, idParsed);
 
 		int sucesso = stat.executeUpdate();
-		// Se deletou algo, retorna true, senão retorna false
-		return sucesso != 0;
+		
+		return "sucesso";
     }
     
 	public boolean inserirCampi(String nome, String cidade, String uf) throws NumberFormatException, SQLException {
