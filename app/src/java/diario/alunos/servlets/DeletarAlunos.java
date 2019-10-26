@@ -35,7 +35,7 @@ public class DeletarAlunos extends HttpServlet {
         Headers.XMLHeaders(response);
 		String id = request.getParameter("id");
         
-       if (!rep.checarAutorizacaoADM(request, response)) {
+       if (rep.checarAutorizacaoADM(request, response)) {
 			
 
 			try{			
