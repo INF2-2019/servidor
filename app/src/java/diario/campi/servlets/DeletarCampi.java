@@ -40,7 +40,7 @@ public class DeletarCampi extends HttpServlet {
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				response.setStatus(409);
-				out.println("<erro>Existe um departamento registrado neste campi, delete-o antes de deletar o campi</erro>");
+				out.println("<erro><mensagem>Existe um departamento registrado neste campi, delete-o antes de deletar o campi</mensagem></erro>");
 			} else {
 							
 				try{			
@@ -78,7 +78,7 @@ public class DeletarCampi extends HttpServlet {
 			
         } else {
 			response.setStatus(401);
-			out.println("<erro>Voce nao tem permissao para fazer isso</erro>");
+			out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
 		}       
     }
 
