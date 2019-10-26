@@ -33,38 +33,34 @@ public class DeletarAlunos extends HttpServlet {
         AlunosRepository rep = new AlunosRepository(conexao);
         PrintWriter out = response.getWriter();
         Headers.XMLHeaders(response);
+		String id = request.getParameter("id");
         
-       if (rep.checarAutorizacaoADM(request, response)) {
-			try {
-				String id = request.getParameter("id");
-				PreparedStatement ps = conexao.prepareStatement("SELECT * FROM `matriculas` WHERE `id-alunos` = ?");
-				int idParsed = Integer.parseUnsignedInt(id);
-				ps.setInt(1, idParsed);
-				ResultSet rs = ps.executeQuery();
-				if (rs.next()) {
+       if (!rep.checarAutorizacaoADM(request, response)) {
+			
+
+			try{			
+				if("sucesso".equals(rep.deletarAlunos(id))) {
+					View sucessoView = new SucessoView("Deletado com sucesso.");
+					sucessoView.render(out);
+				} else if ("mat".equals(rep.deletarAlunos(id))) {
 					response.setStatus(409);
 					out.println("<erro><mensagem>Existe uma matricula registrada na identificacao deste aluno, delete-a antes de deletar o aluno</mensagem></erro>");
 				} else {
-
-					try{			
-						boolean sucesso = rep.deletarAlunos(id);
-						View sucessoView = new SucessoView("Deletado com sucesso.");
-						sucessoView.render(out);
-					} catch (NumberFormatException excecaoFormatoErrado) {
-						response.setStatus(400);
-						System.err.println("Numero inteiro invalido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
-
-						View erroView = new ErroView(excecaoFormatoErrado);
-						try {
-							erroView.render(out);
-						} catch (RenderException e) {
-							throw new ServletException(e);
-						}
-
-					} catch (RenderException e) {
-						throw new ServletException(e);
-					}
+					out.println("<erro><mensagem>Nao foi possivel deletar o aluno</mensagem></erro>");
 				}
+			} catch (NumberFormatException excecaoFormatoErrado) {
+				response.setStatus(400);
+				System.err.println("Numero inteiro invalido para o parametro. Erro: " + excecaoFormatoErrado.toString());
+
+				View erroView = new ErroView(excecaoFormatoErrado);
+				try {
+					erroView.render(out);
+				} catch (RenderException e) {
+					throw new ServletException(e);
+				}
+
+			} catch (RenderException e) {
+				throw new ServletException(e);
 			} catch (SQLException excecaoSQL) {
 				response.setStatus(400);
 				System.err.println("Busca SQL invalida. Erro: " + excecaoSQL.toString());
@@ -76,6 +72,7 @@ public class DeletarAlunos extends HttpServlet {
 					throw new ServletException(e);
 				}
 			}
+			
 			
 			
 			

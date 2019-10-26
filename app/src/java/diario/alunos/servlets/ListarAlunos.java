@@ -31,8 +31,7 @@ public class ListarAlunos extends HttpServlet {
 		Headers.XMLHeaders(response);
 
 		try {
-			xml = rep.listarAlunos();			
-			xml = viewConsulta.XMLConsultaAlunos(xml);
+			xml = rep.listarAlunos();
 			out.println(xml);
 			conexao.close();
 		} catch(SQLException ex) {

@@ -31,9 +31,14 @@ public class AlunosRepository {
     }
     
     
-    public boolean deletarAlunos(String id) throws SQLException{
+    public String deletarAlunos(String id) throws SQLException{
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM `matriculas` WHERE `id-alunos` = ?");
+		int idParsed = Integer.parseUnsignedInt(id);
+		ps.setInt(1, idParsed);
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) 
+			return "mat";
         String sql;
-        int idParsed = Integer.parseUnsignedInt(id);
         sql = "DELETE FROM `alunos` WHERE `id` = ?";
         
         PreparedStatement stat =  con.prepareStatement(sql);
@@ -41,7 +46,9 @@ public class AlunosRepository {
        
         int sucesso = stat.executeUpdate();
         // Se deletou algo, retorna true, senão retorna false
-        return sucesso != 0;
+		if (sucesso != 0)
+			return "sucesso";
+		return "erro";
     }
     
     public boolean inserirAlunos(String id, String nome, String email, String senha, String sexo, String nascimento, String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf, String foto  ) throws NumberFormatException, SQLException, NoSuchAlgorithmException {
