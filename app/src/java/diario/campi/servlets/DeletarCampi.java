@@ -12,6 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import diario.campi.repository.*;
 import diario.cursos.view.*;
 import java.io.PrintWriter;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import utils.ConnectionFactory;
 import utils.Headers;
 
@@ -28,37 +32,45 @@ public class DeletarCampi extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		Headers.XMLHeaders(response);
-
-
 		String id = request.getParameter("id");
-		try {
-			boolean sucesso = rep.deletarCampi(id);
-			View sucessoView = new SucessoView("Deletado com sucesso.");
-			sucessoView.render(out);
-		} catch (NumberFormatException excecaoFormatoErrado) {
-			response.setStatus(400);
-			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
-
-			View erroView = new ErroView(excecaoFormatoErrado);
-			try {
-				erroView.render(out);
-			} catch (RenderException e) {
-				throw new ServletException(e);
+		if (rep.checarAutorizacaoADM(request, response)) {
+			try{			
+				String sucesso = rep.deletarCampi(id, request, response);
+				if("sucesso".equals(sucesso)) {
+					View sucessoView = new SucessoView("Deletado com sucesso.");
+					try {
+						sucessoView.render(out);
+					} catch (RenderException ex) {
+						throw new ServletException(ex);
+					}
+				} else {
+					out.println(sucesso);
+				}
+			} catch (NumberFormatException excecaoFormatoErrado) {
+				response.setStatus(400);
+				System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+				View erroView = new ErroView(excecaoFormatoErrado);
+				try {
+					erroView.render(out);
+				} catch (RenderException e) {
+					throw new ServletException(e);
+				}
+			} catch (SQLException ex) {
+				View erroView = new ErroView(ex);
+				try {
+					erroView.render(out);
+				} catch (RenderException e) {
+					throw new ServletException(e);
+				}
 			}
-		} catch (SQLException excecaoSQL) {
-			response.setStatus(400);
-			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
-			View erroView = new ErroView(excecaoSQL);
-			try {
-				erroView.render(out);
-			} catch (RenderException e) {
-				throw new ServletException(e);
-			}
-		} catch (RenderException e) {
-			throw new ServletException(e);
-		}
-               
+
+			
+			
+		} else {
+			response.setStatus(401);
+			out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
+		}       
     }
 
 }
