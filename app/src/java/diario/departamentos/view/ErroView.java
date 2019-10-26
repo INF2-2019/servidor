@@ -4,10 +4,10 @@ public class ErroView {
 	
 	public static String erro(String msg, Exception ex) {
 		String xml =
-				"<sucesso>" +
+				"<erro>" +
 					"<mensagem>" + msg + "</mensagem>" +
 					"<causa>" + ex + "</causa>" +
-				"</sucesso>";
+				"</erro>";
 		return xml;
 	}
 	
