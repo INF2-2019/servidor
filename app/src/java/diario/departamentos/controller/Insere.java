@@ -1,5 +1,7 @@
 package diario.departamentos.controller;
 
+import diario.departamentos.view.ErroView;
+import diario.departamentos.view.SucessoView;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -32,12 +34,13 @@ public class Insere extends HttpServlet {
 					prst.execute();
 					prst.close();
 					con.close();
+					out.println(SucessoView.sucesso("Departamento inserido com sucesso"));
 				} catch(SQLException ex) {
-					out.println("<erro>Falha ao inserir departamento no banco de dados</erro>");
+					out.println(ErroView.erro("Falha ao inserir departamento", ex));
 				} catch(NumberFormatException ex) {
-					out.println("<erro>Falha ao receber parâmetros</erro>");
+					out.println(ErroView.erro("Falha ao receber parâmetros", ex));
 				}
-			} else out.println("<erro>Falha ao conectar ao banco de dados</erro>");
+			} else out.println(ErroView.erro("Falha ao conectar ao banco de dados", new SQLException()));
 		}
 	}
 

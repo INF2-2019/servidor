@@ -1,7 +1,7 @@
 package diario.departamentos.controller;
 
 import diario.departamentos.model.Departamento;
-import diario.departamentos.view.View;
+import diario.departamentos.view.ConsultaView;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -39,14 +39,14 @@ public class Consulta extends HttpServlet {
 						deptos.add(new Departamento(rs.getInt("id"), rs.getInt("id-campi"), rs.getString("nome")));
 					}
 
-					out.println(View.XMLConsulta(deptos));
+					out.println(ConsultaView.consulta(deptos, null));
 
 					stmt.close();
 					con.close();
 				} catch(SQLException ex) {
-					out.println("<erro>Falha ao consultar departamentos do banco de dados</erro>");
+					out.println(ConsultaView.consulta(null, ex));
 				}
-			} else out.println("<erro>Falha ao conectar ao banco de dados</erro>");
+			} else out.println(ConsultaView.consulta(null, new SQLException()));
 		}
 	}
 
