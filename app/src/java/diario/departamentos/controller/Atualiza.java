@@ -1,19 +1,18 @@
 package diario.departamentos.controller;
 
+import diario.departamentos.repository.DepartamentoRepository;
 import diario.departamentos.view.ErroView;
 import diario.departamentos.view.SucessoView;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.ConnectionFactory;
 import utils.Headers;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
 
 @WebServlet(name = "AtualizaDepartamentos", urlPatterns = "/diario/departamentos/atualiza")
 public class Atualiza extends HttpServlet {
@@ -24,24 +23,24 @@ public class Atualiza extends HttpServlet {
 		Headers.XMLHeaders(response);
 
 		try(PrintWriter out = response.getWriter()) {
-			Connection con = ConnectionFactory.getDiario();
-			if(con != null) {
-				try {
-					PreparedStatement prst = con.prepareStatement(
-							"UPDATE `departamentos` SET `id-campi` = ?, `nome` = ? WHERE `id` = ?");
-					prst.setInt(1, Integer.parseInt(request.getParameter("id-campi")));
-					prst.setString(2, request.getParameter("nome"));
-					prst.setInt(3, Integer.parseInt(request.getParameter("id")));
-					prst.execute();
-					prst.close();
-					con.close();
-					out.println(SucessoView.sucesso("Departamento atualizado com sucesso"));
-				} catch(SQLException ex) {
-					out.println(ErroView.erro("Falha ao atualizar departamento", ex));
-				} catch(NumberFormatException ex) {
-					out.println(ErroView.erro("Falha ao receber parâmetros", ex));
+			try {
+				if(request.getParameter("id") == null)
+					throw new Exception("Informe o id do departamento");
+				int id = Integer.parseInt(request.getParameter("id"));
+
+				if(request.getParameter("id-campi") != null) {
+					int idCampi = Integer.parseInt(request.getParameter("id-campi"));
+					DepartamentoRepository.atualiza(id, idCampi);
 				}
-			} else out.println(ErroView.erro("Falha ao conectar ao banco de dados", new SQLException()));
+				if(request.getParameter("nome") != null) {
+					String nome = request.getParameter("nome");
+					DepartamentoRepository.atualiza(id, nome);
+				}
+
+				out.println(SucessoView.sucesso("Departamento atualizado com sucesso"));
+			} catch(Exception ex) {
+				out.println(ErroView.erro("Falha ao atualizar departamento", ex.getMessage()));
+			}
 		}
 	}
 
