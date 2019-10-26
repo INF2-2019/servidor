@@ -1,5 +1,6 @@
 package diario.alunos.servlets;
 
+import diario.alunos.repository.AlunosRepository;
 import diario.campi.view.*;
 import java.io.IOException;
 import java.sql.Connection;
@@ -24,21 +25,15 @@ public class ListarAlunos extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Connection conexao = ConnectionFactory.getDiario();
+		AlunosRepository rep = new AlunosRepository(conexao);
 		PrintWriter out = response.getWriter();
 		String xml = "";
 		Headers.XMLHeaders(response);
 
 		try {
-			Statement stmt = conexao.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM `alunos`");
-
-			while(rs.next()) {
-				xml += viewConsulta.XMLAluno(rs.getInt("id"), rs.getString("nome"), rs.getString("email"));
-			}
+			xml = rep.listarAlunos();			
 			xml = viewConsulta.XMLConsultaAlunos(xml);
 			out.println(xml);
-
-			stmt.close();
 			conexao.close();
 		} catch(SQLException ex) {
 			out.println("<erro><mensagem>Falha ao listar alunos do banco de dados</mensagem></erro>");

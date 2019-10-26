@@ -1,5 +1,6 @@
 package diario.alunos.servlets;
 
+import diario.alunos.repository.AlunosRepository;
 import diario.campi.view.*;
 import java.io.IOException;
 import java.sql.Connection;
@@ -23,25 +24,18 @@ import utils.Headers;
 public class ConsultarPorId extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Connection conexao = ConnectionFactory.getDiario();
 		PrintWriter out = response.getWriter();
 		String xml = "";
 		Headers.XMLHeaders(response);
 		String id = request.getParameter("id");
-
-		Connection conexao = ConnectionFactory.getDiario();
+		AlunosRepository rep = new AlunosRepository(conexao);
 		try {
-
-			PreparedStatement ps = conexao.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ?");
-			int idParsed = Integer.parseUnsignedInt(id);
-			ps.setInt(1, idParsed);
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()) {
-			xml += viewConsulta.XMLAlunoCompleto(rs.getInt("id"), rs.getString("nome"),  rs.getString("email"), rs.getString("sexo"), rs.getDate("nascimento"), rs.getString("logradouro"), rs.getInt("numero"), rs.getString("complemento"), rs.getString("bairro"),rs.getString("cidade"), rs.getInt("cep"),rs.getString("uf"), rs.getString("foto"));
-			}
+			xml = rep.consultarPorId(id);
 			out.println(xml);
 			conexao.close();
 		} catch(SQLException ex) {
-			out.println("<erro>Falha ao consultar alunos do banco de dados</erro>");
+			out.println("<erro><mensagem>Falha ao consultar alunos do banco de dados</mensagem></erro>");
 		}
 		
     }
