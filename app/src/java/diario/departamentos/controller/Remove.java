@@ -30,7 +30,7 @@ public class Remove extends HttpServlet {
 				DepartamentoRepository.remove(id);
 				out.println(SucessoView.sucesso("Departamento removido com sucesso"));
 			} catch(Exception ex) {
-				out.println(ErroView.erro("Falha ao remover departamento", ex.getMessage()));
+				out.println(ErroView.erro("Falha ao remover departamento", ex));
 			}
 		}
 	}

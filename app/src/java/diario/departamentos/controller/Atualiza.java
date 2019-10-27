@@ -39,7 +39,7 @@ public class Atualiza extends HttpServlet {
 
 				out.println(SucessoView.sucesso("Departamento atualizado com sucesso"));
 			} catch(Exception ex) {
-				out.println(ErroView.erro("Falha ao atualizar departamento", ex.getMessage()));
+				out.println(ErroView.erro("Falha ao atualizar departamento", ex));
 			}
 		}
 	}

@@ -37,7 +37,7 @@ public class Consulta extends HttpServlet {
 
 				out.println(ConsultaView.consulta(deptos, null));
 			} catch(Exception ex) {
-				out.println(ErroView.erro("Falha ao consultar departamentos", ex.getMessage()));
+				out.println(ErroView.erro("Falha ao consultar departamentos", ex));
 			}
 
 		}

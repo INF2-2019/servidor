@@ -31,7 +31,7 @@ public class Insere extends HttpServlet {
 				DepartamentoRepository.insere(idCampi, nome);
 				out.println(SucessoView.sucesso("Departamento inserido com sucesso"));
 			} catch(Exception ex) {
-				out.println(ErroView.erro("Falha ao inserir departamento", ex.getMessage()));
+				out.println(ErroView.erro("Falha ao inserir departamento", ex));
 			}
 		}
 	}
