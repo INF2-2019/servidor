@@ -33,7 +33,6 @@ public class ConsultarProfessor extends HttpServlet {
 		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
 
 		PrintWriter saida = resposta.getWriter();
-		saida.println("<root>");
 		try (Connection conexao = ConnectionFactory.getDiario()) {
 
 			if (conexao == null) {
@@ -43,30 +42,24 @@ public class ConsultarProfessor extends HttpServlet {
 			String sqlQuery = "SELECT * FROM `professores`";
 			ResultSet rs = conexao.createStatement().executeQuery(sqlQuery);
 
-			saida.println("<info>");
-			saida.println("  <erro>false</erro>");
-			saida.println("  <mensagem>Registros obtidos com sucesso</mensagem>");
-			saida.println("</info>");
-
 			saida.println("<professores>");
 			while (rs.next()) {
-				saida.println("  <professor>");
+				saida.println("<professor>");
 				for (String param : params) {
-					saida.println("    <" + param + ">" + rs.getString(param) + "</" + param + ">");
+					if (!param.equals("senha")) {
+						saida.println("<" + param + ">" + rs.getString(param) + "</" + param + ">");
+					}
 				}
-				saida.println("  </professor>");
+				saida.println("</professor>");
 			}
 			saida.println("</professores>");
 
 		} catch (Exception e) {
 
-			saida.println("<info>");
-			saida.println("  <erro>true</erro>");
+			saida.println("<erro>");
 			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
-			saida.println("</info>");
+			saida.println("</erro>");
 
-		} finally {
-			saida.println("</root>");
 		}
 	}
 
