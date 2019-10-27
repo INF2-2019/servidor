@@ -39,146 +39,133 @@ public class DepartamentoRepository {
             PreparedStatement prst = con.prepareStatement("SELECT * FROM `departamentos` WHERE `id` = ?");
             prst.setInt(1, id);
 			ResultSet rs = prst.executeQuery();
+            
+            Departamento depto = new Departamento(rs.getInt("id"), rs.getInt("idCampi"), rs.getString("nome"));
+            
 			prst.close();
 			con.close();
 
-            return new Departamento(rs.getInt("id"), rs.getInt("idCampi"), rs.getString("nome"));
+            return depto;
         }
         else{
             throw new SQLException();
         }
     }
 
-    public static Departamento insere(int idCampi, String nome) throws SQLException{
+    public static void insere(int idCampi, String nome) throws SQLException{
         Connection con = ConnectionFactory.getDiario();
         if(con != null){
             PreparedStatement prst = con.prepareStatement("INSERT INTO `departamentos` (`id-campi`, `nome`) VALUES (?, ?)");
 			prst.setInt(1, idCampi);
 			prst.setString(2, nome);
-            ResultSet rs = prst.executeQuery();
+            prst.executeUpdate();
             prst.close();
-            con.close();
-
-            return new Departamento(rs.getInt("id"), rs.getInt("idCampi"), rs.getString("nome"));
+            con.close();;
         }
         else{
             throw new SQLException();
         }
     }
 
-    public static Departamento insere(Departamento depto) throws SQLException{
+    public static void insere(Departamento depto) throws SQLException{
         Connection con = ConnectionFactory.getDiario();
         if(con != null){
             PreparedStatement prst = con.prepareStatement("INSERT INTO `departamentos` (`id-campi`, `nome`) VALUES (?, ?)");
 			prst.setInt(1, depto.getIdCampi());
 			prst.setString(2, depto.getNome());
-            ResultSet rs = prst.executeQuery();
+            prst.executeUpdate();
             prst.close();
             con.close();
-
-            return new Departamento(rs.getInt("id"), rs.getInt("idCampi"), rs.getString("nome"));
         }
         else{
             throw new SQLException();
         }
     }
 
-    public static Departamento atualiza(int id, int idCampi) throws SQLException{
+    public static void atualiza(int id, int idCampi) throws SQLException{
         Connection con = ConnectionFactory.getDiario();
         if(con != null){
             PreparedStatement prst = con.prepareStatement("UPDATE `departamentos` SET `id-campi` = ? WHERE `id` = ?");
 			prst.setInt(1, idCampi);
 			prst.setInt(2, id);
-			ResultSet rs = prst.executeQuery();
+			prst.executeUpdate();
 			prst.close();
 			con.close();
-            
-            return new Departamento(rs.getInt("id"), rs.getInt("idCampi"), rs.getString("nome"));
         }
         else{
            throw new SQLException();
         }
     }
 
-    public static Departamento atualiza(int id, String nome) throws SQLException{
+    public static void atualiza(int id, String nome) throws SQLException{
         Connection con = ConnectionFactory.getDiario();
         if(con != null){
             PreparedStatement prst = con.prepareStatement("UPDATE `departamentos` SET `nome` = ? WHERE `id` = ?");
 			prst.setString(1, nome);
 			prst.setInt(2, id);
-			ResultSet rs = prst.executeQuery();
+			prst.executeUpdate();
 			prst.close();
 			con.close();
-            
-            return new Departamento(rs.getInt("id"), rs.getInt("idCampi"), rs.getString("nome"));
         }
         else{
             throw new SQLException();
         }
     }
 
-    public static Departamento atualiza(int id, int idCampi, String nome) throws SQLException{
+    public static void atualiza(int id, int idCampi, String nome) throws SQLException{
         Connection con = ConnectionFactory.getDiario();
         if(con != null){
             PreparedStatement prst = con.prepareStatement("UPDATE `departamentos` SET `id-campi` = ?, `nome` = ? WHERE `id` = ?");
 			prst.setInt(1, idCampi);
 			prst.setString(2, nome);
 			prst.setInt(3, id);
-			ResultSet rs = prst.executeQuery();
+            prst.executeUpdate();
 			prst.close();
 			con.close();
-            
-            return new Departamento(rs.getInt("id"), rs.getInt("idCampi"), rs.getString("nome"));
         }
         else{
             throw new SQLException();
         }
     }
 
-    public static Departamento atualiza(Departamento depto) throws SQLException{
+    public static void atualiza(Departamento depto) throws SQLException{
         Connection con = ConnectionFactory.getDiario();
         if(con != null){
             PreparedStatement prst = con.prepareStatement("UPDATE `departamentos` SET `id-campi` = ?, `nome` = ? WHERE `id` = ?");
 			prst.setInt(1, depto.getIdCampi());
 			prst.setString(2, depto.getNome());
 			prst.setInt(3, depto.getId());
-			ResultSet rs = prst.executeQuery();
+			prst.executeUpdate();
 			prst.close();
 			con.close();
-            
-            return new Departamento(rs.getInt("id"), rs.getInt("idCampi"), rs.getString("nome"));
         }
         else{
             throw new SQLException();
         }
     }
 
-    public static Departamento remove(int id) throws SQLException{
+    public static void remove(int id) throws SQLException{
         Connection con = ConnectionFactory.getDiario();
         if(con != null){
             PreparedStatement prst = con.prepareStatement("DELETE FROM `departamentos` WHERE `id` = ?");
 			prst.setInt(1, id);
-			ResultSet rs = prst.executeQuery();
+            prst.executeUpdate();
 			prst.close();
-			con.close();
-            
-            return new Departamento(rs.getInt("id"), rs.getInt("idCampi"), rs.getString("nome"));
+			con.close();     
         }
         else{
             throw new SQLException();
         }
     }
 
-    public static Departamento remove(Departamento depto) throws SQLException{
+    public static void remove(Departamento depto) throws SQLException{
         Connection con = ConnectionFactory.getDiario();
         if(con != null){
             PreparedStatement prst = con.prepareStatement("DELETE FROM `departamentos` WHERE `id` = ?");
 			prst.setInt(1, depto.getId());
-			ResultSet rs = prst.executeQuery();
+			prst.executeUpdate();
 			prst.close();
 			con.close();
-            
-            return new Departamento(rs.getInt("id"), rs.getInt("idCampi"), rs.getString("nome"));
         }
         else{
             throw new SQLException();
