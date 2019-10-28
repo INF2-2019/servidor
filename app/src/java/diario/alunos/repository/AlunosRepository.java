@@ -209,10 +209,10 @@ return sucesso != 0;
 		return xml;
 	}
         
-        public boolean checarAutorizacaoAluno(HttpServletRequest request, HttpServletResponse response) {
+        public boolean checarAutorizacaoAluno(HttpServletRequest request, HttpServletResponse response, String id) {
 		DiarioAutenticador x = new DiarioAutenticador(request, response);
-		
-		return x.cargoLogado() == DiarioCargos.ALUNO;
+		int idParsed= Integer.parseUnsignedInt(id);
+		return x.cargoLogado() == DiarioCargos.ALUNO && x.idLogado() == idParsed;
 	}
         
         public Boolean alterarSenha(String id, String senha) throws SQLException {
@@ -233,7 +233,6 @@ return sucesso != 0;
         }
         
         public Boolean alterarFoto(String id, String foto) throws SQLException {
-            String hashSenha = null;
             int idParsed = Integer.parseUnsignedInt(id);            
             String query = "UPDATE alunos SET foto= ? WHERE id = ?";
 

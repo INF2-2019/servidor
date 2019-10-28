@@ -25,8 +25,8 @@ import utils.Headers;
  *
  * @author User
  */
-@WebServlet(name = "AlterarSenha", urlPatterns = {"/diario/alunos/senha"})
-public class AlterarSenha extends HttpServlet {
+@WebServlet(name = "AlterarFoto", urlPatterns = {"/diario/alunos/altfoto"})
+public class AlterarFoto extends HttpServlet {
 
      protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -35,16 +35,17 @@ public class AlterarSenha extends HttpServlet {
         PrintWriter out = response.getWriter();
         Headers.XMLHeaders(response);
         String id = request.getParameter("id");
-        String senha = request.getParameter("senha");
+        String foto = request.getParameter("foto");
+        
 		
         if (rep.checarAutorizacaoAluno(request, response, id) || rep.checarAutorizacaoADM(request, response)) {
 
             try {
-                if(rep.alterarSenha(id, senha)) {
-                    View sucessoView = new SucessoView("Senha atualizada com sucesso.");
+                if(rep.alterarFoto(id, foto)) {
+                    View sucessoView = new SucessoView("Foto atualizada com sucesso.");
                     sucessoView.render(out);
                 } else {
-                    out.println("<erro><mensagem>Não foi possível alterar a senha</mensagem></erro>");
+                    out.println("<erro><mensagem>Não foi possível alterar a foto</mensagem></erro>");
                 }
             } catch (SQLException excecaoSQL) {
                 response.setStatus(400);
