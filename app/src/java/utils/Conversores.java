@@ -12,7 +12,7 @@ import java.io.StringWriter;
 
 public class Conversores {
 
-    public static String documentParaXMLString(Document doc) throws TransformerException {
+	public static String converterDocumentEmXMLString(Document doc) throws TransformerException {
 		DOMSource dom = new DOMSource(doc);
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer transformador = tf.newTransformer();
@@ -25,8 +25,8 @@ public class Conversores {
 		StringWriter escreveLinhas = new StringWriter();
 		StreamResult resultado = new StreamResult(escreveLinhas);
 
-        transformador.transform(dom, resultado);
-        return escreveLinhas.toString();
-    }
+		transformador.transform(dom, resultado);
+		return escreveLinhas.toString();
+	}
 
 }

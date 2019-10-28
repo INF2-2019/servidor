@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS `alunos`;
 CREATE TABLE IF NOT EXISTS `alunos` (
   `id` INT NOT NULL,
   `nome` VARCHAR(127) NOT NULL,
-  `senha` TEXT NOT NULL,
+  `senha` VARCHAR(170) NOT NULL,
   `email` VARCHAR(127) NOT NULL UNIQUE,
   `sexo` ENUM('M', 'F') NOT NULL,
   `nascimento` DATE NOT NULL,
@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS `operador`;
 CREATE TABLE IF NOT EXISTS `operador` (
   `id` INT NOT NULL,
   `nome` VARCHAR(127) NOT NULL,
-  `senha` VARCHAR(127) NOT NULL,
+  `senha` VARCHAR(170) NOT NULL,
   `email` VARCHAR(127) NOT NULL UNIQUE,
   PRIMARY KEY(id)
 );
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
   `nome` VARCHAR(127) NOT NULL,
   `usuario` VARCHAR(127) NOT NULL UNIQUE, 
   `email` VARCHAR(127) NOT NULL UNIQUE,
-  `senha` VARCHAR(127) NOT NULL,
+  `senha` VARCHAR(170) NOT NULL,
   PRIMARY KEY(id)
 );
 
