@@ -1,7 +1,5 @@
 package diario.professores;
 
-import utils.ConnectionFactory;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -12,6 +10,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
 
 @WebServlet(name = "ConsultarProfessores", urlPatterns = "/diario/professores/consultar")
 /**
@@ -31,6 +33,12 @@ public class ConsultarProfessor extends HttpServlet {
 
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
 		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
+
+		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
+		if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
+			resposta.setStatus(403);
+			return;
+		}
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
