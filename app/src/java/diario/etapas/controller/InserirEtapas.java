@@ -21,12 +21,22 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 @WebServlet(name = "InserirEtapas", urlPatterns = "/diario/etapas/inserir")
 public class InserirEtapas extends HttpServlet {
 
 	// método doGet será alterado para doPost quando for terminado o front-end
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Headers.XMLHeaders(response);
+
+		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			response.setStatus(403);
+			return;
+		}
+
 		Connection conexao = ConnectionFactory.getDiario();
 
 		EtapasRepository etapasRep = new EtapasRepository(conexao);

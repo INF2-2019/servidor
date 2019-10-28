@@ -19,6 +19,9 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 @WebServlet(name = "Deletar", urlPatterns = "/diario/etapas/deletar")
 public class DeletarEtapas extends HttpServlet {
 
@@ -26,6 +29,13 @@ public class DeletarEtapas extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Headers.XMLHeaders(response);
+
+		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			response.setStatus(403);
+			return;
+		}
+
 		Connection conexao = ConnectionFactory.getDiario();
 
 		PrintWriter out = response.getWriter();
