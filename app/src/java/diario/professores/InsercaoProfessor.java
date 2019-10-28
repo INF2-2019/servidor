@@ -1,7 +1,5 @@
 package diario.professores;
 
-import utils.ConnectionFactory;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -13,9 +11,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.Hasher;
 
-@WebServlet(name = "InserirProfessores", urlPatterns = "/diario/professores/inserir")
+import utils.ConnectionFactory;
+import utils.Hasher;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
+@WebServlet(name = "InserirProfessor", urlPatterns = "/diario/professores/inserir")
 /**
  * <h1> Servlet de Inserção de Professor</h1>
  * Servlet para a requisição de indlusão de registro na tabela 'professores'
@@ -33,6 +35,13 @@ public class InsercaoProfessor extends HttpServlet {
 
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
 		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
+
+		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
+		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			resposta.setStatus(403);
+			return;
+		}
+
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
 

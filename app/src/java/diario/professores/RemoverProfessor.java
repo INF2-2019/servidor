@@ -1,7 +1,5 @@
 package diario.professores;
 
-import utils.ConnectionFactory;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -13,7 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "DeletarProfessores", urlPatterns = "/diario/professores/deletar")
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
+@WebServlet(name = "DeletarProfessor", urlPatterns = "/diario/professores/deletar")
 /**
  * <h1>Servlet de Remoção de Professor</h1>
  * Servlet dedicado para deletar registros na tablea 'professores'
@@ -29,6 +31,12 @@ public class RemoverProfessor extends HttpServlet {
 
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
 		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
+
+		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
+		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			resposta.setStatus(403);
+			return;
+		}
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
