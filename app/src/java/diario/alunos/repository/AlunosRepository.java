@@ -208,5 +208,40 @@ return sucesso != 0;
 		}
 		return xml;
 	}
+        
+        public boolean checarAutorizacaoAluno(HttpServletRequest request, HttpServletResponse response) {
+		DiarioAutenticador x = new DiarioAutenticador(request, response);
+		
+		return x.cargoLogado() == DiarioCargos.ALUNO;
+	}
+        
+        public Boolean alterarSenha(String id, String senha) throws SQLException {
+            String hashSenha = null;
+            int idParsed = Integer.parseUnsignedInt(id);
+            try {
+                    hashSenha = hash(senha);
+            } catch (InvalidKeySpecException | NoSuchAlgorithmException ex) {
+                    Logger.getLogger(AlunosRepository.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            String query = "UPDATE alunos SET senha= ? WHERE id = ?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, hashSenha);
+            ps.setInt(2, idParsed);
+            int sucesso = ps.executeUpdate();
+            return sucesso!=0;
+        }
+        
+        public Boolean alterarFoto(String id, String foto) throws SQLException {
+            String hashSenha = null;
+            int idParsed = Integer.parseUnsignedInt(id);            
+            String query = "UPDATE alunos SET foto= ? WHERE id = ?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, foto);
+            ps.setInt(2, idParsed);
+            int sucesso = ps.executeUpdate();
+            return sucesso!=0;
+        }
    
 }
