@@ -1,4 +1,4 @@
-package diario.cursos.view;
+package diario.disciplinas.views;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -9,8 +9,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.PrintWriter;
-import views.RenderException;
-import views.View;
 
 public class ErroView extends View {
 
@@ -19,7 +17,7 @@ public class ErroView extends View {
 	}
 
 	@Override
-	public void render(PrintWriter writer) throws RenderException{
+	public void render(PrintWriter writer) throws RenderException {
 		try {
 			writer.write(Conversores.converterDocumentEmXMLString(criarErroXML((Exception) data)));
 		} catch (ParserConfigurationException | TransformerException ex) {
@@ -33,7 +31,7 @@ public class ErroView extends View {
 		Document documento = construtor.newDocument();
 
 		Element erro = documento.createElement("erro");
-		Element msg = documento.createElement("mensagem");
+		Element msg = documento.createElement("informacao");
 
 		msg.appendChild(documento.createTextNode("Os parâmetros inseridos são inválidos."));
 		erro.appendChild(msg);

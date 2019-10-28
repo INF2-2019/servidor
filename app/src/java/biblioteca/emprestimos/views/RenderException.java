@@ -1,6 +1,7 @@
-package views;
+package diario.disciplinas.views;
 
-public class RenderException extends Exception{
+public class RenderException extends Exception {
+
 	public RenderException() {
 	}
 
