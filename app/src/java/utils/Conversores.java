@@ -25,7 +25,8 @@ public class Conversores {
 		StringWriter escreveLinhas = new StringWriter();
 		StreamResult resultado = new StreamResult(escreveLinhas);
 
-		transformador.transform(dom, resultado);
-		return escreveLinhas.toString();
-	}
+        transformador.transform(dom, resultado);
+        return escreveLinhas.toString();
+    }
+
 }

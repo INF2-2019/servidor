@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS `operador`;
 CREATE TABLE IF NOT EXISTS `operador` (
   `id` INT NOT NULL,
   `nome` VARCHAR(127) NOT NULL,
-  `senha` TEXT NOT NULL,
+  `senha` VARCHAR(127) NOT NULL,
   `email` VARCHAR(127) NOT NULL UNIQUE,
   PRIMARY KEY(id)
 );
@@ -36,9 +36,9 @@ DROP TABLE IF EXISTS `admin`;
 CREATE TABLE IF NOT EXISTS `admin` (
   `id` INT NOT NULL,
   `nome` VARCHAR(127) NOT NULL,
-  `usuario` VARCHAR(127) NOT NULL, 
+  `usuario` VARCHAR(127) NOT NULL UNIQUE, 
   `email` VARCHAR(127) NOT NULL UNIQUE,
-  `senha` TEXT NOT NULL,
+  `senha` VARCHAR(127) NOT NULL,
   PRIMARY KEY(id)
 );
 
