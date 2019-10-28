@@ -8,6 +8,8 @@ public class EmprestimoModel extends Model {
     private int id, idAlunos, idAcervo;
     private Date dataEmprestimo, dataPrevDevol, dataDevolucao;
     private double multa;
+    public static double multaPerDay = 0.50;
+    public static int tempoEmprestimo = 7;
 
     public EmprestimoModel(int id, int idAlunos, int idAcervo, Date dataEmprestimo, Date dataPrevDevol, Date dataDevolucao, double multa) {
 	this.id = id;
