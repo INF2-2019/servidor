@@ -20,14 +20,14 @@ public class EtapasRepository {
 		// Base da query SQL
 		String sql = "SELECT * FROM `etapas` ORDER BY `id`";
 		Set<EtapasModel> etapasResultado = new LinkedHashSet<>();
-		int id =-1, ano = -1;
-                double valor = -1;
+		int id = -1, ano = -1;
+		double valor = -1;
 
-                if (filtros.containsKey("id")) {
+		if (filtros.containsKey("id")) {
 			// Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
 			id = Integer.parseUnsignedInt(filtros.get("id"));
 		}
-                
+
 		if (filtros.containsKey("ano")) {
 			// Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
 			ano = Integer.parseUnsignedInt(filtros.get("ano"));
@@ -46,7 +46,7 @@ public class EtapasRepository {
 			adicionar = true;
 
 			EtapasModel etapa = resultSetParaEtapas(resultadoBusca);
-                        if (filtros.containsKey("id")) {
+			if (filtros.containsKey("id")) {
 				if (id != etapa.getId()) {
 					adicionar = false;
 				}
