@@ -1,14 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package biblioteca.acervo;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,154 +14,132 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import utils.ConnectionFactory;
 
-@WebServlet(name="inserir", urlPatterns = {"/biblioteca/acervo/inserir"})
+@WebServlet(name = "inserir", urlPatterns = {"/biblioteca/acervo/inserir"})
 /**
- *<h1> Servlet de Inserção de Obras</h1>
- * Servlet para a requisição de inclusão de registro nas tabelas 'acervo','livros','midias','periodicos' e 'academicos'
+ * <h1> Servlet de Inserção de Obras</h1>
+ * Servlet para a requisição de inclusão de registro nas tabelas
+ * 'acervo','livros','midias','periodicos' e 'academicos'
+ *
  * @author Indra Matsiendra
+ * @author Jonata Novais Cirqueira
  */
 public class InserirAcervo extends HttpServlet {
-  
-    private static final String[] paramsAcervo = {"id", "id-campi", "nome", "tipo", "local", "ano", "editora", "paginas"};
-    private static final String[] paramsLivros = {"idObra", "edicao", "isbn"};
-    private static final String[] paramsAcademicos = {"idObra", "programa"};
-    private static final String[] paramsMidias = {"idObra", "tempo", "subtipo"};
-    private static final String[] paramsPeriodicos = {"idObra", "periodicidade", "mes", "volume", "subtipo", "issn"};
-    /*id-acervo nas 4 outras tabelas equivale ao 'id' em paramsAcervo*/
-    
-    @Override
-    protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
-            throws ServletException, IOException {
-        
-        // Validação dos parâmetros:
-        
-        for(String param : paramsAcervo) {
-            if (requisicao.getParameter(param)== null) {
-		resposta.setStatus(400);
-                return;
-            }
-	}
-        switch(requisicao.getParameter("tipo"))
-        {
-            case "academicos":
-                for (String param : paramsAcademicos) {
-                    if (requisicao.getParameter(param) == null) {
-                        resposta.setStatus(400);
-                        return;
-                    }
-                }
-                break;
-            case "livros":
-                for (String param : paramsLivros) {
-                    if (requisicao.getParameter(param) == null) {
-                        resposta.setStatus(400);
-                        return;
-                    }
-                }
-                break;
-            case "midias":
-                for (String param : paramsMidias) {
-                    if (requisicao.getParameter(param) == null) {
-                        resposta.setStatus(400);
-                        return;
-                    }
-                }
-                break;
-            case "periodicos":
-                for (String param : paramsPeriodicos) {
-                    if (requisicao.getParameter(param) == null) {
-                        resposta.setStatus(400);
-                        return;
-                    }
-                }
-                break;
-        }
-        
-	resposta.addHeader("Access-Control-Allow-Origin", "*");
-	resposta.setContentType("text/xml;charset=UTF-8");
-        
-        
-        PrintWriter saida = resposta.getWriter();
-		saida.println("<root>");
+
+	/*id-acervo nas 4 outras tabelas equivale ao 'id' em paramsAcervo*/
+	@Override
+	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
+			throws ServletException, IOException {
+
+		resposta.addHeader("Access-Control-Allow-Origin", "*");
+		resposta.setContentType("application/xml;charset=UTF-8");
+
+		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getBiblioteca()) {
 
 			if (conexao == null) {
 				throw new SQLException("Impossível se conectar ao banco de dados");
 			}
-                        
-                        String id = requisicao.getParameter(paramsAcervo[0]),
-                                idCampi = requisicao.getParameter(paramsAcervo[1]),
-				nome = requisicao.getParameter(paramsAcervo[2]),
-				tipo = requisicao.getParameter(paramsAcervo[3]),
-				local = requisicao.getParameter(paramsAcervo[4]),
-				ano = requisicao.getParameter(paramsAcervo[5]),
-                                editora = requisicao.getParameter(paramsAcervo[6]),
-                                paginas = requisicao.getParameter(paramsAcervo[7]);
 
-			String clausulaSql = "INSERT INTO `acervo` VALUES ('"
-					+ id +"', '"+ idCampi +"', '"+ nome +"', '"+ tipo +"', '"+ local+
-					"', '"+ano+"', '"+ editora + "', '" + paginas + "')";
-			conexao.createStatement().executeUpdate(clausulaSql);
-                         
-                        String idObra,subtipo;
-                        switch(tipo)
-                        {
-                            case "academicos":
-				idObra = requisicao.getParameter(paramsAcademicos[0]);
-                                String  programa = requisicao.getParameter(paramsAcademicos[1]);
-                                clausulaSql = "INSERT INTO `academicos` VALUES ('"
-					+ idObra +"', '"+ id +"', '"+ programa +"')";
-                                conexao.createStatement().executeUpdate(clausulaSql);
-                                break;
-                            case "livros":
-				idObra = requisicao.getParameter(paramsLivros[0]);
-                                String  edicao = requisicao.getParameter(paramsLivros[1]),
-                                        isbn = requisicao.getParameter(paramsLivros[2]);
-                                clausulaSql = "INSERT INTO `livros` VALUES ('"
-					+ idObra +"', '"+ id +"', '"+ edicao +"', '"+ isbn + "')";
-                                conexao.createStatement().executeUpdate(clausulaSql);
-                                break;
-                            case "midias":
-				idObra = requisicao.getParameter(paramsMidias[0]);
-                                String  tempo = requisicao.getParameter(paramsMidias[1]);
-                                subtipo = requisicao.getParameter(paramsMidias[2]);
-                                clausulaSql = "INSERT INTO `midias` VALUES ('"
-					+ idObra +"', '"+ id +"', '"+ tempo +"', '"+ subtipo + "')";
-                                conexao.createStatement().executeUpdate(clausulaSql);
-                                break;
-                            case "periodicos":
-				idObra = requisicao.getParameter(paramsPeriodicos[0]);
-                                String  periodicidade = requisicao.getParameter(paramsPeriodicos[1]),
-                                        mes = requisicao.getParameter(paramsPeriodicos[2]),
-                                        volume = requisicao.getParameter(paramsPeriodicos[3]),
-                                        issn = requisicao.getParameter(paramsPeriodicos[5]);
-                                subtipo=requisicao.getParameter(paramsPeriodicos[4]);
-                                clausulaSql = "INSERT INTO `periodicos` VALUES ('"
-					+ idObra +"', '"+ id +"', '"+ periodicidade +"', '"+ mes + "', '"+ volume +"', '"+
-                                        subtipo+"', '"+issn+"')";
-                                conexao.createStatement().executeUpdate(clausulaSql);
-                                break;
-                        }
-                        
+			Validacao.validarParametros(requisicao);
+//			Validacao.validarIdCampi(Integer.parseInt(requisicao.getParameter("id-campi")), conexao);
+			Validacao.validarIdObra(Integer.parseInt(requisicao.getParameter("id-obra")), conexao);
+
+			String clausulaSql = "INSERT INTO `acervo` "
+					+ "(`id-campi`, `nome`, `tipo`, `local`, `ano`, `editora`, `paginas`)"
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
+			PreparedStatement ps = conexao.prepareStatement(clausulaSql);
+			ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-campi")));
+			ps.setString(2, requisicao.getParameter("nome"));
+			ps.setString(3, requisicao.getParameter("tipo").toUpperCase());
+			ps.setString(4, requisicao.getParameter("local"));
+			ps.setInt(5, Integer.parseInt(requisicao.getParameter("ano")));
+			ps.setString(6, requisicao.getParameter("editora"));
+			ps.setInt(7, Integer.parseInt(requisicao.getParameter("paginas")));
+			ps.executeUpdate();
+			ps.close();
+
+			// Obtendo o `id` com característica auto-incremento
+			ResultSet resultado = conexao.createStatement().executeQuery("SELECT LAST_INSERT_ID() AS last_id FROM `acervo`");
+			resultado.first();
+			int id = Integer.parseInt(resultado.getString("last_id"));
+
+			switch (requisicao.getParameter("tipo").toLowerCase()) {
+				case "academicos":
+					inserirAcademico(id, requisicao, conexao);
+					break;
+				case "livros":
+					inserirLivro(id, requisicao, conexao);
+					break;
+				case "midias":
+					inserirMidia(id, requisicao, conexao);
+					break;
+				case "periodicos":
+					inserirPeriodico(id, requisicao, conexao);
+					break;
+			}
 			conexao.close();
 
-			saida.println("<info>");
-			saida.println("  <erro>false</erro>");
+			saida.println("<sucesso>");
 			saida.println("	 <mensagem>Registro inserido com sucesso</mensagem>");
-			saida.println("</info>");
-                        
-                }catch(Exception e) {
-			saida.println("<info>");
-			saida.println("  <erro>true</erro>");
-			saida.println("  <mensagem>" + e.getLocalizedMessage() + "</mensagem>");
-			saida.println("</info>");
-		} finally {
-			saida.println("</root>");
+			saida.println("</sucesso>");
+
+		} catch (Exception e) {
+			saida.println("<erro>");
+			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
+			saida.println("</erro>");
 		}
-    }
-    @Override
-    public String getServletInfo() {
-        return "Servlet dedicado à inserção de registro de obras no BD";
-    }
+	}
+
+	@Override
+	public String getServletInfo() {
+		return "Servlet dedicado à inserção de registro de obras no BD";
+	}
+
+	private void inserirAcademico(int idAcervo, HttpServletRequest requisicao, Connection conexao)
+			throws SQLException, NumberFormatException {
+		PreparedStatement ps = conexao.prepareStatement("INSERT INTO `academicos` VALUES (?, ?, ?)");
+		ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
+		ps.setInt(2, idAcervo);
+		ps.setString(3, requisicao.getParameter("programa"));
+		ps.execute();
+		ps.close();
+	}
+
+	private void inserirLivro(int idAcervo, HttpServletRequest requisicao, Connection conexao)
+			throws SQLException, NumberFormatException {
+		PreparedStatement ps = conexao.prepareStatement("INSERT INTO `livros` VALUES (?, ?, ?, ?)");
+		ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
+		ps.setInt(2, idAcervo);
+		ps.setInt(3, Integer.parseInt(requisicao.getParameter("edicao")));
+		ps.setLong(4, Long.parseLong(requisicao.getParameter("isbn")));
+		ps.execute();
+		ps.close();
+	}
+
+	private void inserirMidia(int idAcervo, HttpServletRequest requisicao, Connection conexao)
+			throws SQLException, NumberFormatException {
+		PreparedStatement ps = conexao.prepareStatement("INSERT INTO `midias` VALUES (?, ?, ?, ?)");
+		ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
+		ps.setInt(2, idAcervo);
+		ps.setString(3, requisicao.getParameter("tempo")); // o formato deverá ser adaptado no front-end
+		ps.setString(4, requisicao.getParameter("subtipo").toUpperCase());
+		ps.execute();
+		ps.close();
+	}
+
+	private void inserirPeriodico(int idAcervo, HttpServletRequest requisicao, Connection conexao)
+			throws SQLException, NumberFormatException {
+		PreparedStatement ps = conexao.prepareStatement("INSERT INTO `periodicos` "
+				+ "(`id-acervo`, `periodicidade`, `mes`, `volume`, `subtipo`, `issn`) "
+				+ "VALUES (?, ?, ?, ?, ?, ?)");
+		ps.setInt(1, idAcervo);
+		ps.setString(2, requisicao.getParameter("periodicidade"));
+		ps.setString(3, requisicao.getParameter("mes"));
+		ps.setInt(4, Integer.parseInt(requisicao.getParameter("volume")));
+		ps.setString(5, requisicao.getParameter("subtipo"));
+		ps.setInt(6, Integer.parseInt(requisicao.getParameter("issn")));
+		ps.execute();
+		ps.close();
+	}
 
 }
