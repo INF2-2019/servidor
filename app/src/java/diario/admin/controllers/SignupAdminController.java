@@ -45,7 +45,7 @@ public class SignupAdminController extends HttpServlet {
 
 		try {
 			if(autenticador.cargoLogado() != DiarioCargos.ADMIN){
-				response.setStatus(401);
+				response.setStatus(403);
 				new ErroView(SOMENTE_ADMIN).render(out);
 				return;
 			}
