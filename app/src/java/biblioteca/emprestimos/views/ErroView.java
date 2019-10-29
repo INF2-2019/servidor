@@ -1,4 +1,4 @@
-package diario.disciplinas.views;
+package biblioteca.emprestimos.views;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

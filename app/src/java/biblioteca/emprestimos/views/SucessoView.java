@@ -1,4 +1,4 @@
-package diario.disciplinas.views;
+package biblioteca.emprestimos.views;
 
 import java.io.PrintWriter;
 import javax.xml.parsers.DocumentBuilder;

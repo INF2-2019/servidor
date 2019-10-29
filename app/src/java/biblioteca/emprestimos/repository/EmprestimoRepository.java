@@ -22,36 +22,62 @@ public class EmprestimoRepository {
 
     public EmprestimoRepository(Connection con) {
 	this.con = con;
-        simpleFormat = new SimpleDateFormat("yyyy-mm-dd");
+        simpleFormat = new SimpleDateFormat("yyyy-MM-dd");
     }
 
-    public void deletar(String id) throws SQLException {
+    public void deletar(String id) throws SQLException, ParseException {
 	String sql;
-	int idParsed = Integer.parseUnsignedInt(id);
-                  sql = "SELECT * FROM `emprestimos` WHERE `id`= ?";
-                  Date dataDevolucao = new Date();
-                  ResultSet resultadoBusca = con.prepareCall(sql).executeQuery();
-                  
-	sql = "UPDATE `emprestimos` set  `data-devolucao` = ?, `multa` = ? WHERE `id` = ?";
+		int idParsed = Integer.parseUnsignedInt(id);
+                double multa=0.00;
+		sql = "SELECT * FROM `emprestimos` WHERE `id`= ?";
+		 //System.out.println("AAAAAA");
 
-	PreparedStatement stat = con.prepareStatement(sql);
-	stat.setInt(1, idParsed);
-	stat.executeUpdate();
+                  java.util.Date dataDevolucao = new java.util.Date();
+                  PreparedStatement stat = con.prepareStatement(sql);
+		  //System.out.println(dataDevolucao);
+		  //System.out.println(dataDevolucao.getTime());
+                  stat.setInt(1, idParsed);
+                  ResultSet resultadoBusca = stat.executeQuery();
+		  resultadoBusca.next();
+		  EmprestimoModel emprestimo = resultSetParaDisciplina(resultadoBusca);
+		  
+                  if(!dataDevolucao.after(emprestimo.getDataPrevDevol())) multa=0.00;
+                  else{
+		      //System.out.println(emprestimo.getDataPrevDevol());
+		      //System.out.println(emprestimo.getDataEmprestimo());
+                      long tempoEmprestimo = dataDevolucao.getTime() - emprestimo.getDataPrevDevol().getTime();
+		      //System.out.println(tempoEmprestimo);
+                      int days = (int) (tempoEmprestimo/86400000)-1;
+		      //System.out.println(days);
+                      multa = days*EmprestimoModel.multaPerDay;
+                  }
+		  
+		
+		//System.out.println(multa);
+                  
+                  
+                sql = "UPDATE `emprestimos` SET `data-devolucao` = ?, `multa` = ? WHERE `id` = ?";
+
+		stat = con.prepareStatement(sql);
+		stat.setDate(1, new java.sql.Date(dataDevolucao.getTime()));
+                stat.setDouble(2, multa);
+                stat.setInt(3, idParsed);
+		stat.executeUpdate();
     }
     // TODO: Adequar ao sistema de datas
 
     public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException, ParseException {
 
-	if (valores.size() != 6) {
+	/*if (valores.size() != 6) {
 	    return false;
-	}
-
+	}*/
+        
 	int idAlunos = 0;
-
+        //System.out.println(valores.get("id-alunos"));
 	if (valores.containsKey("id-alunos")) {
 	    idAlunos = Integer.parseUnsignedInt(valores.get("id-alunos"));
 	}
-
+        //System.out.println(valores.get("id-alunos"));
 	int idAcervo = 0;
 
 	if (valores.containsKey("id-acervo")) {
@@ -59,24 +85,20 @@ public class EmprestimoRepository {
 	}
 
 	Date dataEmprestimo = new Date();
-	String dataE = simpleFormat.format(dataEmprestimo);
-	dataEmprestimo = simpleFormat.parse(dataE);
 
 	if (valores.containsKey("data-emprestimo")) {
 	    dataEmprestimo = simpleFormat.parse(valores.get("data-emprestimo"));
 	}
-
-	Date dataPrevDevol = new Date(dataEmprestimo.getYear(), dataEmprestimo.getMonth(), dataEmprestimo.getDate() + EmprestimoModel.tempoEmprestimo);
-	String dataPD = simpleFormat.format(dataPrevDevol);
-	dataEmprestimo = simpleFormat.parse(dataPD);
+        
+	
+        Date dataPrevDevol = new Date(dataEmprestimo.getYear(), dataEmprestimo.getMonth(), dataEmprestimo.getDate() + EmprestimoModel.tempoEmprestimo);
+       
 
 	if (valores.containsKey("data-prev-devol")) {
 	    dataPrevDevol = simpleFormat.parse(valores.get("data-prev-devol"));
 	}
 
-	Date dataDevolucao = new Date(0, 0, 0);
-	String dataD = simpleFormat.format(dataDevolucao);
-	dataEmprestimo = simpleFormat.parse(dataD);
+	Date dataDevolucao = new Date(0);
 
 	if (valores.containsKey("data-devolucao")) {
 	    dataDevolucao = simpleFormat.parse(valores.get("data-devolucao"));
@@ -87,9 +109,7 @@ public class EmprestimoRepository {
 	if (valores.containsKey("multa")) {
 	    multa = Double.parseDouble(valores.get("multa"));
 	}
-
 	PreparedStatement ps = con.prepareStatement("INSERT INTO `emprestimos` (`id-alunos`, `id-acervo`, `data-emprestimo`, `data-prev-devol`, `data-devolucao`, `multa`) VALUES (?, ?, ?, ?, ?, ?)");
-
 	ps.setInt(1, idAlunos);
 	ps.setInt(2, idAcervo);
 	ps.setDate(3, new java.sql.Date(dataEmprestimo.getTime()));
@@ -144,18 +164,21 @@ public class EmprestimoRepository {
 	int id = Integer.parseUnsignedInt(parametros.get("id").toString());
 	int idAlunos = Integer.parseUnsignedInt(parametros.get("id-alunos").toString());
 	int idAcervo = Integer.parseUnsignedInt(parametros.get("id-acervo").toString());
-        Date dataEmprestimo = simpleFormat.parse(parametros.get("data-emprestimo").toString());
-        Date dataPrevDevol = simpleFormat.parse(parametros.get("data-prev-devol").toString());
-        Date dataDevolucao = simpleFormat.parse(parametros.get("data-devolucao").toString());
-        double multa = Double.parseDouble(parametros.get("multa").toString());
+	
+	Date dataEmprestimo = (Date) (parametros.get("data-emprestimo"));
+	
+	Date dataPrevDevol = (Date) (parametros.get("data-prev-devol"));
+	
+	Date dataDevolucao = (Date) (parametros.get("data-devolucao"));
+	double multa = Double.parseDouble(parametros.get("multa").toString());
 
 	PreparedStatement ps = con.prepareStatement("UPDATE `emprestimos` SET `id-alunos` = ?, `id-acervo` = ?, `data-emprestimo` = ?, `data-prev-devol` = ?, `data-devolucao` = ?, `multa` = ? WHERE `id` = ?");
 	ps.setInt(1, idAlunos);
 	ps.setInt(2, idAcervo);
 	ps.setDate(3, new java.sql.Date(dataEmprestimo.getTime()));
-        ps.setDate(4, new java.sql.Date(dataPrevDevol.getTime()));
-        ps.setDate(5, new java.sql.Date(dataDevolucao.getTime()));
-        ps.setDouble(6, multa);
+	ps.setDate(4, new java.sql.Date(dataPrevDevol.getTime()));
+	ps.setDate(5, new java.sql.Date(dataDevolucao.getTime()));
+	ps.setDouble(6, multa);
 	ps.setInt(7, id);
 
 	int sucesso = ps.executeUpdate();
@@ -168,8 +191,8 @@ public class EmprestimoRepository {
 	Set<EmprestimoModel> emprestimoResultado = new LinkedHashSet<>();
 	sql = "SELECT * FROM `emprestimos` ORDER BY `id`";
 	int idAlunos = -1, idAcervo = -1;
-        java.sql.Date dataEmprestimo = new java.sql.Date(-1, -1, -1), dataPrevDevol = new java.sql.Date(-1, -1, -1), dataDevolucao = new java.sql.Date(-1, -1, -1);
-        double multa = -0.1;
+	java.sql.Date dataEmprestimo = new java.sql.Date(0), dataPrevDevol = new java.sql.Date(0), dataDevolucao = new java.sql.Date(0);
+	double multa = -1;
         
 
 	if (filtros.containsKey("id-alunos")) {
@@ -204,8 +227,8 @@ public class EmprestimoRepository {
 	while (resultadoBusca.next()) {
 	    adicionar = true;
 
-	    EmprestimoModel emprestimo = resultSetParaDisciplina(resultadoBusca);
-	    if (filtros.containsKey("id-alunos")) {
+	EmprestimoModel emprestimo = resultSetParaDisciplina(resultadoBusca);
+            if (filtros.containsKey("id-alunos")) {
                 if(idAlunos != emprestimo.getIdAlunos()){
                     adicionar = false;
                 }
@@ -240,25 +263,32 @@ public class EmprestimoRepository {
                     adicionar = false;
                 }
             }
+	    if(adicionar){
+		emprestimoResultado.add(emprestimo);
+		System.out.println("aaaaaaaaaaa");
+	    }
 	}
 
 	return emprestimoResultado;
     }
 
     private EmprestimoModel resultSetParaDisciplina(ResultSet res) throws SQLException, ParseException {
+	
 	int id = res.getInt("id");
 	int idAlunos = res.getInt("id-alunos");        
 	int idAcervo = res.getInt("id-acervo");
+	
                   Date dataEmprestimo = simpleFormat.parse(res.getDate("data-emprestimo").toString());
                   Date dataPrevDevol = simpleFormat.parse(res.getDate("data-prev-devol").toString());
                   Date dataDevolucao = simpleFormat.parse(res.getDate("data-devolucao").toString());
                   double multa = res.getDouble("multa");
-                  
+        
 	return new EmprestimoModel(id, idAlunos, idAcervo, dataEmprestimo, dataPrevDevol, dataDevolucao, multa);
     }
 
     public EmprestimoModel consultarId(String idStr) throws NumberFormatException, SQLException, ParseException {
 	PreparedStatement ps = con.prepareStatement("SELECT * FROM `emprestimos` WHERE `id` = ?");
+	
 	// Se id não for um inteiro sem sinal, joga a exceção NumberFormatException
 	int id = Integer.parseUnsignedInt(idStr);
 

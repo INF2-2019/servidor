@@ -1,5 +1,6 @@
-package diario.disciplinas;
+package biblioteca.emprestimos;
 
+import biblioteca.emprestimos.repository.EmprestimoRepository;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -11,21 +12,24 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import diario.disciplinas.repository.EmprestimoRepository;
+//import biblioteca.emprestimos.repository.EmprestimoRepository;
 import utils.ConnectionFactory;
 import utils.Headers;
-import diario.disciplinas.views.RenderException;
-import diario.disciplinas.views.View;
-import diario.disciplinas.views.SucessoView;
-import diario.disciplinas.views.ErroView;
+import biblioteca.emprestimos.views.RenderException;
+import biblioteca.emprestimos.views.View;
+import biblioteca.emprestimos.views.SucessoView;
+import biblioteca.emprestimos.views.ErroView;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-@WebServlet(name = "InserirDisciplinas", urlPatterns = {"/diario/disciplinas/inserir"})
+@WebServlet(name = "InserirEmprestimos", urlPatterns = {"/biblioteca/emprestimos/inserir"})
 public class InserirEmprestimos extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-	Connection conexao = ConnectionFactory.getDiario();
-	EmprestimoRepository disciplinaRep = new EmprestimoRepository(conexao);
-
+	Connection conexao = ConnectionFactory.getBiblioteca();
+	EmprestimoRepository emprestimoRep = new EmprestimoRepository(conexao);
+        //System.out.println("AAAAAAAA");
 	Headers.XMLHeaders(response);
 	PrintWriter out = response.getWriter();
 
@@ -41,7 +45,8 @@ public class InserirEmprestimos extends HttpServlet {
 	Map<String, String> dados = definirMap(request);
 
 	try {
-	    disciplinaRep.inserir(dados);
+            //System.out.println("AAAAAA");
+	    emprestimoRep.inserir(dados);
 	    View sucessoView = new SucessoView("Inserido com sucesso.");
 	    sucessoView.render(out);
 	} catch (NumberFormatException excecaoFormatoErrado) {
@@ -66,25 +71,39 @@ public class InserirEmprestimos extends HttpServlet {
 	    }
 	} catch (RenderException e) {
 	    throw new ServletException(e);
-	}
+	} catch (ParseException ex) {
+            Logger.getLogger(InserirEmprestimos.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    public Map<String, String> definirMap(HttpServletRequest req) {
-	Map<String, String> dados = new LinkedHashMap<>();
+   public Map<String, String> definirMap(HttpServletRequest req) {
+		Map<String, String> dados = new LinkedHashMap<>();
+		
+		System.out.println(req.getParameter("id-alunos"));
+                
+		if (req.getParameter("id-alunos") != null) {
+			dados.put("id-alunos", req.getParameter("id-alunos"));
+		}
 
-	if (req.getParameter("turma") != null) {
-	    dados.put("id-turmas", req.getParameter("turma"));
+		if (req.getParameter("id-acervo") != null) {
+			dados.put("id-acervo", req.getParameter("id-acervo"));
+		}
+
+		if (req.getParameter("data-emprestimo") != null) {
+			dados.put("data-emprestimo", req.getParameter("data-emprestimo"));
+		}
+                
+		if (req.getParameter("data-prev-devol") != null) {
+			dados.put("data-prev-devol", req.getParameter("data-prev-devol"));
+		}
+		if (req.getParameter("data-devolucao") != null) {
+			dados.put("data-devolucao", req.getParameter("data-devolucao"));
+		}
+		if (req.getParameter("multa") != null) {
+			dados.put("multa", req.getParameter("multa"));
+		}
+
+		return dados;
 	}
-
-	if (req.getParameter("nome") != null) {
-	    dados.put("nome", req.getParameter("nome"));
-	}
-
-	if (req.getParameter("horas") != null) {
-	    dados.put("carga-horaria-min", req.getParameter("horas"));
-	}
-
-	return dados;
-    }
 
 }

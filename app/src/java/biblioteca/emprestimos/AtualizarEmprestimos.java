@@ -1,7 +1,7 @@
-package diario.disciplinas;
+package biblioteca.emprestimos;
 
-import diario.disciplinas.repository.EmprestimoRepository;
-import diario.disciplinas.views.SucessoView;
+import biblioteca.emprestimos.repository.EmprestimoRepository;
+import biblioteca.emprestimos.views.SucessoView;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -15,16 +15,19 @@ import utils.ConnectionFactory;
 import utils.Headers;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import diario.disciplinas.views.RenderException;
-import diario.disciplinas.views.View;
-import diario.disciplinas.views.ErroView;
+import biblioteca.emprestimos.views.View;
+import biblioteca.emprestimos.views.ErroView;
+import biblioteca.emprestimos.views.RenderException;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-@WebServlet(name = "AtualizarDisciplinas", urlPatterns = {"/diario/disciplinas/atualizar"})
+@WebServlet(name = "AtualizarDisciplinas", urlPatterns = {"/biblioteca/emprestimos/atualizar"})
 public class AtualizarEmprestimos extends HttpServlet {
 
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 	Headers.XMLHeaders(res);
-	Connection con = ConnectionFactory.getDiario();
+	Connection con = ConnectionFactory.getBiblioteca();
 	PrintWriter out = res.getWriter();
 	if (con == null) {
 	    View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
@@ -65,7 +68,9 @@ public class AtualizarEmprestimos extends HttpServlet {
 	    }
 	} catch (RenderException e) {
 	    throw new ServletException(e);
-	}
+	} catch (ParseException ex) {
+            Logger.getLogger(AtualizarEmprestimos.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
@@ -73,16 +78,26 @@ public class AtualizarEmprestimos extends HttpServlet {
 	SortedMap<String, String> dados = new TreeMap<String, String>();
 
 	// definir os valores do map condicionalmente, conforme a requisição
-	if (req.getParameter("turma") != null) {
-	    dados.put("id-turmas", req.getParameter("turma"));
+	if (req.getParameter("id-alunos") != null) {
+		dados.put("id-alunos", req.getParameter("id-alunos"));
 	}
 
-	if (req.getParameter("nome") != null) {
-	    dados.put("nome", req.getParameter("nome"));
+	if (req.getParameter("id-acervo") != null) {
+		dados.put("id-acervo", req.getParameter("id-acervo"));
+	}
+	System.out.println(req.getParameter("id-acervo"));
+	if (req.getParameter("data-emprestimo") != null) {
+		dados.put("data-emprestimo", req.getParameter("data-emprestimo"));
 	}
 
-	if (req.getParameter("horas") != null) {
-	    dados.put("carga-horaria-min", req.getParameter("horas"));
+	if (req.getParameter("data-prev-devol") != null) {
+		dados.put("data-prev-devol", req.getParameter("data-prev-devol"));
+	}
+	if (req.getParameter("data-devolucao") != null) {
+		dados.put("data-devolucao", req.getParameter("data-devolucao"));
+	}
+	if (req.getParameter("multa") != null) {
+		dados.put("multa", req.getParameter("multa"));
 	}
 
 	return dados;

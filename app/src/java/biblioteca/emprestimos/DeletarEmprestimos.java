@@ -1,4 +1,4 @@
-package diario.disciplinas;
+package biblioteca.emprestimos;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,20 +9,23 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import diario.disciplinas.repository.EmprestimoRepository;
+import biblioteca.emprestimos.repository.EmprestimoRepository;
 import utils.ConnectionFactory;
 import utils.Headers;
-import diario.disciplinas.views.RenderException;
-import diario.disciplinas.views.View;
-import diario.disciplinas.views.SucessoView;
-import diario.disciplinas.views.ErroView;
+import biblioteca.emprestimos.views.RenderException;
+import biblioteca.emprestimos.views.View;
+import biblioteca.emprestimos.views.SucessoView;
+import biblioteca.emprestimos.views.ErroView;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-@WebServlet(name = "DeletarDisciplinas", urlPatterns = {"/diario/disciplinas/deletar"})
+@WebServlet(name = "DeletarDisciplinas", urlPatterns = {"/biblioteca/emprestimos/deletar"})
 public class DeletarEmprestimos extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	Headers.XMLHeaders(response);
-	Connection conexao = ConnectionFactory.getDiario();
+	Connection conexao = ConnectionFactory.getBiblioteca();
 
 	PrintWriter out = response.getWriter();
 
@@ -31,11 +34,11 @@ public class DeletarEmprestimos extends HttpServlet {
 	    return;
 	}
 
-	EmprestimoRepository disciplinaRep = new EmprestimoRepository(conexao);
+	EmprestimoRepository emprestimoRep = new EmprestimoRepository(conexao);
 
 	String id = request.getParameter("id");
 	try {
-	    disciplinaRep.deletar(id);
+	    emprestimoRep.deletar(id);
 	    View sucessoView = new SucessoView("Deletado com sucesso.");
 	    sucessoView.render(out);
 	} catch (NumberFormatException excecaoFormatoErrado) {
@@ -60,7 +63,9 @@ public class DeletarEmprestimos extends HttpServlet {
 	    }
 	} catch (RenderException e) {
 	    throw new ServletException(e);
-	}
+	} catch (ParseException ex) {
+            Logger.getLogger(DeletarEmprestimos.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-package diario.disciplinas.views;
+package biblioteca.emprestimos.views;
 
 public class RenderException extends Exception {
 

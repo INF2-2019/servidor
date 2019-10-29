@@ -1,19 +1,19 @@
-package diario.disciplinas.views;
+package biblioteca.emprestimos.views;
 
+import biblioteca.emprestimos.model.EmprestimoModel;
 import java.io.PrintWriter;
 import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import diario.disciplinas.model.DisciplinaModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Conversores;
 
-public class EmprestimoConsultaView extends View<Set<DisciplinaModel>> {
+public class EmprestimoConsultaView extends View<Set<EmprestimoModel>> {
 
-	public EmprestimoConsultaView(Set<DisciplinaModel> DisciplinaModel) {
-		super(DisciplinaModel);
+	public EmprestimoConsultaView(Set<EmprestimoModel> EmprestimoModel) {
+		super(EmprestimoModel);
 	}
 
 	@Override
@@ -25,18 +25,18 @@ public class EmprestimoConsultaView extends View<Set<DisciplinaModel>> {
 			throw new RenderException(ex);
 		}
 	}
-
-	private Document disciplinaParaDocument(Set<DisciplinaModel> disciplinas) throws ParserConfigurationException {
+	
+	private Document disciplinaParaDocument(Set<EmprestimoModel> emprestimos) throws ParserConfigurationException {
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder construtor = dbf.newDocumentBuilder();
 		Document documento = construtor.newDocument();
 
-		Element root = documento.createElement("disciplinas");
+		Element root = documento.createElement("emprestimos");
 
-		for (DisciplinaModel disciplina : disciplinas) {
-			if (disciplina != null) {
-				root.appendChild(criarElementoDocument(documento, disciplina));
+		for (EmprestimoModel emprestimo : emprestimos) {
+			if (emprestimo != null) {
+				root.appendChild(criarElementoDocument(documento, emprestimo));
 			}
 		}
 
@@ -45,24 +45,33 @@ public class EmprestimoConsultaView extends View<Set<DisciplinaModel>> {
 		return documento;
 	}
 
-	private static Element criarElementoDocument(Document documento, DisciplinaModel c) {
+	private static Element criarElementoDocument(Document documento, EmprestimoModel e) {
 
-		Element elemento = documento.createElement("disciplina");
+		Element elemento = documento.createElement("emprestimo");
 
 		Element id = documento.createElement("id");
-		Element id_depto = documento.createElement("id-turmas");
-		Element nome = documento.createElement("nome");
-		Element carga_horaria_min = documento.createElement("carga-horaria-min");
+		Element idAlunos = documento.createElement("id-alunos");
+		Element idAcervo = documento.createElement("id-acervo");
+		Element dataEmprestimo = documento.createElement("data-emprestimo");
+		Element dataPrevDevol = documento.createElement("data-prev-devol");
+		Element dataDevolucao = documento.createElement("data-devolucao");
+		Element multa = documento.createElement("multa");
 
-		id.appendChild(documento.createTextNode("" + c.getId()));
-		id_depto.appendChild(documento.createTextNode("" + c.getIdTurmas()));
-		nome.appendChild(documento.createTextNode(c.getNome()));
-		carga_horaria_min.appendChild(documento.createTextNode("" + c.getCargaHorariaMin()));
+		id.appendChild(documento.createTextNode("" + e.getId()));
+		idAlunos.appendChild(documento.createTextNode("" + e.getIdAlunos()));
+		idAcervo.appendChild(documento.createTextNode("" + e.getIdAcervo()));
+		dataEmprestimo.appendChild(documento.createTextNode("" + e.getDataEmprestimo()));
+		dataPrevDevol.appendChild(documento.createTextNode("" + e.getDataPrevDevol()));
+		dataDevolucao.appendChild(documento.createTextNode("" + e.getDataDevolucao()));
+		multa.appendChild(documento.createTextNode("" + e.getMulta()));
 
 		elemento.appendChild(id);
-		elemento.appendChild(id_depto);
-		elemento.appendChild(nome);
-		elemento.appendChild(carga_horaria_min);
+		elemento.appendChild(idAlunos);
+		elemento.appendChild(idAcervo);
+		elemento.appendChild(dataEmprestimo);
+		elemento.appendChild(dataPrevDevol);
+		elemento.appendChild(dataDevolucao);
+		elemento.appendChild(multa);
 
 		return elemento;
 	}

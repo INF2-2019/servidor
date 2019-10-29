@@ -1,4 +1,4 @@
-package diario.disciplinas;
+package biblioteca.emprestimos;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,22 +12,26 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import diario.disciplinas.model.DisciplinaModel;
-import diario.disciplinas.repository.EmprestimoRepository;
+import biblioteca.emprestimos.model.EmprestimoModel;
+import biblioteca.emprestimos.repository.EmprestimoRepository;
+import biblioteca.emprestimos.views.EmprestimoConsultaView;
 import utils.ConnectionFactory;
-import diario.disciplinas.views.RenderException;
-import diario.disciplinas.views.View;
-import diario.disciplinas.views.EmprestimoConsultaView;
-import diario.disciplinas.views.ErroView;
+import biblioteca.emprestimos.views.RenderException;
+import biblioteca.emprestimos.views.View;
+import biblioteca.emprestimos.views.SucessoView;
+import biblioteca.emprestimos.views.ErroView;
+import java.text.ParseException;
 import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import utils.Headers;
 
-@WebServlet(name = "ConsultarDisciplinas", urlPatterns = {"/diario/disciplinas/consultar"})
+@WebServlet(name = "ConsultarDisciplinas", urlPatterns = {"/biblioteca/emprestimos/consultar"})
 public class ConsultarEmprestimos extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	Headers.XMLHeaders(response);
-	Connection conexao = ConnectionFactory.getDiario();
+	Connection conexao = ConnectionFactory.getBiblioteca();
 	PrintWriter out = response.getWriter();
 	if (conexao == null) {
 	    System.err.println("Falha ao conectar ao bd");
@@ -40,15 +44,15 @@ public class ConsultarEmprestimos extends HttpServlet {
 	    return;
 	}
 
-	EmprestimoRepository disciplinaRep = new EmprestimoRepository(conexao);
+	EmprestimoRepository emprestimoRep = new EmprestimoRepository(conexao);
 
-	Set<DisciplinaModel> resultado;
+	Set<EmprestimoModel> resultado;
 	Map<String, String> filtros = definirMap(request); // criando um Map para armazenar os filtros de maneira pratica
 	try {
 	    resultado = new HashSet<>();
-	    resultado = disciplinaRep.consultar(definirMap(request));
-	    View DisciplinaConsultaView = new EmprestimoConsultaView(resultado);
-	    DisciplinaConsultaView.render(out);
+	    resultado = emprestimoRep.consultar(filtros);
+	    View EmprestimoConsultaView = new EmprestimoConsultaView(resultado);
+	    EmprestimoConsultaView.render(out);
 	} catch (NumberFormatException excecaoFormatoErrado) {
 	    response.setStatus(400);
 	    System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
@@ -74,23 +78,35 @@ public class ConsultarEmprestimos extends HttpServlet {
 	    }
 	} catch (RenderException ex) {
 	    throw new ServletException(ex);
+	} catch (ParseException ex) {
+	    Logger.getLogger(ConsultarEmprestimos.class.getName()).log(Level.SEVERE, null, ex);
 	}
     }
 
     public Map<String, String> definirMap(HttpServletRequest req) {
 	Map<String, String> dados = new LinkedHashMap<>();
 
-	// definir os valores do map condicionalmente, conforme a requisição
-	if (req.getParameter("turma") != null) {
-	    dados.put("id-turmas", req.getParameter("turma"));
+
+	if (req.getParameter("id-alunos") != null) {
+		dados.put("id-alunos", req.getParameter("id-alunos"));
 	}
 
-	if (req.getParameter("nome") != null) {
-	    dados.put("nome", req.getParameter("nome"));
+	if (req.getParameter("id-acervo") != null) {
+		dados.put("id-acervo", req.getParameter("id-acervo"));
 	}
 
-	if (req.getParameter("horas") != null) {
-	    dados.put("carga-horaria-min", req.getParameter("horas"));
+	if (req.getParameter("data-emprestimo") != null) {
+		dados.put("data-emprestimo", req.getParameter("data-emprestimo"));
+	}
+
+	if (req.getParameter("data-prev-devol") != null) {
+		dados.put("data-prev-devol", req.getParameter("data-prev-devol"));
+	}
+	if (req.getParameter("data-devolucao") != null) {
+		dados.put("data-devolucao", req.getParameter("data-devolucao"));
+	}
+	if (req.getParameter("multa") != null) {
+		dados.put("multa", req.getParameter("multa"));
 	}
 
 	return dados;
