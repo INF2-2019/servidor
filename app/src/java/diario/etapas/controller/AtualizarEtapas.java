@@ -23,6 +23,9 @@ import diario.etapas.view.View;
 import diario.etapas.RenderException;
 import diario.etapas.repository.EtapasRepository;
 
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 @WebServlet(name = "AtualizarEtapas", urlPatterns = "/diario/etapas/atualizar")
 public class AtualizarEtapas extends HttpServlet {
 
@@ -30,6 +33,13 @@ public class AtualizarEtapas extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Headers.XMLHeaders(response);
+
+		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			response.setStatus(403);
+			return;
+		}
+
 		Connection conexao = ConnectionFactory.getDiario();
 
 		PrintWriter out = response.getWriter();
