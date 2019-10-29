@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import utils.ConnectionFactory;
 import utils.Headers;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
 
 @WebServlet(name = "ConsultarPorId", urlPatterns = {"/diario/disciplinas/consultarporid"})
 public class ConsultarPorId extends HttpServlet {
@@ -27,6 +29,18 @@ public class ConsultarPorId extends HttpServlet {
 		Headers.XMLHeaders(response);
 		Connection conexao = ConnectionFactory.getDiario();
 		PrintWriter out = response.getWriter();
+		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+/*
+		if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
+			response.setStatus(403);
+			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+			return;
+		*/
 		if (conexao == null) {
 			System.err.println("Falha ao conectar ao bd");
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));

@@ -14,10 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 import diario.disciplinas.repository.DisciplinaRepository;
 import utils.ConnectionFactory;
 import utils.Headers;
+
 import diario.disciplinas.views.RenderException;
 import diario.disciplinas.views.View;
 import diario.disciplinas.views.SucessoView;
 import diario.disciplinas.views.ErroView;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
 
 @WebServlet(name = "InserirDisciplinas", urlPatterns = {"/diario/disciplinas/inserir"})
 public class InserirDisciplinas extends HttpServlet {
@@ -25,10 +28,21 @@ public class InserirDisciplinas extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Connection conexao = ConnectionFactory.getDiario();
 		DisciplinaRepository disciplinaRep = new DisciplinaRepository(conexao);
-
-		Headers.XMLHeaders(response);
 		PrintWriter out = response.getWriter();
-
+		Headers.XMLHeaders(response);
+		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+        /*
+		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			response.setStatus(403);
+			View erroView = new ErroView(new Exception("O usuario nao tem permisao para essa operacao"));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+			return;
+		}
+		*/
 		if (conexao == null) {
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {
@@ -88,3 +102,4 @@ public class InserirDisciplinas extends HttpServlet {
 	}
 
 }
+
