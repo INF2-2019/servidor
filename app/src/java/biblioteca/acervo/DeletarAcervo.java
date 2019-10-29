@@ -100,16 +100,26 @@ public class DeletarAcervo extends HttpServlet {
 
 		HashMap<String, String> alunos = new HashMap<>();
 
+		// Obtenção das reservas
 		PreparedStatement ps = con.prepareStatement("SELECT `id-aluno` FROM `reservas` WHERE `id-acervo` = ?");
 		ps.setInt(1, Integer.parseInt(id));
-		ResultSet emprestimos = ps.executeQuery();
-		while (emprestimos.next()) {
+		ResultSet reservas = ps.executeQuery();
+
+		// Remoção das reservas
+		PreparedStatement ps1 = con.prepareStatement("DELETE FROM `reservas` WHERE `id-acervo` = ?");
+		ps1.setInt(1, Integer.parseInt(id));
+		ps1.execute();
+		ps1.close();
+
+		while (reservas.next()) {
 			PreparedStatement ps2 = con.prepareStatement("SELECT `nome`, `email` FROM `alunos` WHERE `id` = ?");
-			ps2.setInt(1, emprestimos.getInt(1));
+			ps2.setInt(1, reservas.getInt(1));
 			ResultSet temp = ps2.executeQuery();
 			temp.first();
 			alunos.put(temp.getString(1), temp.getString(2));
+			ps2.close();
 		}
+		ps.close();
 		return alunos;
 
 	}
