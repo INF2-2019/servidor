@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import diario.disciplinas.model.DisciplinaModel;
 import java.util.SortedMap;
+import diario.disciplinas.views.ExcecaoConteudoVinculado;
 
 public class DisciplinaRepository {
 
@@ -19,12 +20,20 @@ public class DisciplinaRepository {
 		this.con = con;
 	}
 
-	public void deletar(String id) throws SQLException {
+	public void deletar(String id) throws SQLException, ExcecaoConteudoVinculado {
 		String sql;
 		int idParsed = Integer.parseUnsignedInt(id);
+		PreparedStatement stat = con.prepareCall("SELECT * FROM `conteudos` WHERE `id-disciplinas` = ?");
+		stat.setInt(1, idParsed);
+		ResultSet verificacao = stat.executeQuery();
+		if (verificacao.next()) {
+			throw new ExcecaoConteudoVinculado();
+		}
+		verificacao.close();
+
 		sql = "DELETE FROM `disciplinas` WHERE `id` = ?";
 
-		PreparedStatement stat = con.prepareStatement(sql);
+		stat = con.prepareStatement(sql);
 		stat.setInt(1, idParsed);
 		stat.executeUpdate();
 	}
@@ -34,7 +43,7 @@ public class DisciplinaRepository {
 		if (valores.size() != 3) {
 			return false;
 		}
-  
+
 		int idTurmas = 0;
 
 		if (valores.containsKey("id-turmas")) {
