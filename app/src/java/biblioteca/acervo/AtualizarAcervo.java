@@ -16,20 +16,19 @@ import javax.servlet.http.HttpServletResponse;
 import utils.ConnectionFactory;
 import utils.Hasher;
 /**
- *
+ *Servlet dedicado a atualizar registros do acervo e outras tabelas da biblioteca
+ * 
  * @author Indra Matsiendra
- * @author Amanda
- * @author Nikolas
- * @author Jonata
+ * @author Jonata Novais
  */
 @WebServlet(name = "atualizar", urlPatterns = {"/biblioteca/acervo/atualizar"})
 public class AtualizarAcervo extends HttpServlet {
 
         private static final String[] paramsAcervo = {"id", "id-campi", "nome", "tipo", "local", "ano", "editora", "paginas"};
-        private static final String[] paramsLivros = {"idObra", "edicao", "isbn"};
-        private static final String[] paramsAcademicos = {"idObra", "programa"};
-        private static final String[] paramsMidias = {"idObra", "tempo", "subtipo"};
-        private static final String[] paramsPeriodicos = {"idObra", "periodicidade", "mes", "volume", "subtipo", "issn"};
+        private static final String[] paramsLivros = {"id-obra", "edicao", "isbn"};
+        private static final String[] paramsAcademicos = {"id-obra", "programa"};
+        private static final String[] paramsMidias = {"id-obra", "tempo", "subtipo"};
+        private static final String[] paramsPeriodicos = {"id-obra", "periodicidade", "mes", "volume", "subtipo", "issn"};
 	@Override
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws IOException {
@@ -39,24 +38,20 @@ public class AtualizarAcervo extends HttpServlet {
 
 		PrintWriter saida = resposta.getWriter();
 
-		try (Connection conexao = ConnectionFactory.getDiario()) {
+		try (Connection conexao = ConnectionFactory.getBiblioteca()) {
 
 			if (conexao == null) {
 				throw new SQLException("Impossível se conectar ao banco de dados");
 			}
-                    System.out.println("gt7gu");
 			validarParametros(requisicao.getParameterMap(),requisicao.getParameter("tipo"));
-                        System.out.println("re");
                         /*verificando se o id já existe no acervo paa ser alterado*/
                         validarID(requisicao.getParameter("id"),conexao);
-                        System.out.println("YYY");
                         
                         /*MODIFICAÇÃO DO ACERVO:*/
 			String statement = "UPDATE `acervo` SET "
-					+ "id = ? , id-campi = ? ,nome = ? , tipo = ? , local = ?, "
-					+ "ano = ? , editora = ? , paginas = ? WHERE id = ?";
+					+ "`id` = ? , `id-campi` = ? ,`nome` = ? , `tipo` = ? , `local` = ?, "
+					+ "`ano` = ? , `editora` = ? , `paginas` = ? WHERE `id` = ?";
 			PreparedStatement ps = conexao.prepareStatement(statement);
-System.out.println("TESTE2");
 			ps.setInt(1, Integer.parseInt(requisicao.getParameter("id")));
 			ps.setString(2, requisicao.getParameter("id-campi"));
 			ps.setString(3,requisicao.getParameter("nome"));
@@ -66,37 +61,26 @@ System.out.println("TESTE2");
 			ps.setString(7, requisicao.getParameter("editora"));
 			ps.setString(8, requisicao.getParameter("paginas"));
                         ps.setInt(9, Integer.parseInt(requisicao.getParameter("id")));
-			ps.close();
 			ps.execute();
+			ps.close();
                         
                         /*MODIFICAÇÃO DA TABELAS DA OBRA:*/
-                        statement = "UPDATE `"+requisicao.getParameter("tipo")+"` SET ";System.out.println("TESTE1");
                         switch(requisicao.getParameter("tipo"))
                         {
                             case "academicos":
-                                    statement+="id-obra ='"+requisicao.getParameter("idObra")+"' , id-acervo='"+requisicao.getParameter("id")+"' , programa='"
-                                            +requisicao.getParameter("programa")+"' WHERE id='"+requisicao.getParameter("id")+"'";
-                                    conexao.createStatement().executeUpdate(statement);System.out.println("TESTE3");
+                                    atualizarAcademico(Integer.parseInt(requisicao.getParameter("id")),requisicao,conexao);
                                 break;
                             case "livros":
-                                    statement+="id-obra ='"+requisicao.getParameter("idObra")+"' , id-acervo='"+requisicao.getParameter("id")+"' , edicao='"
-                                            +requisicao.getParameter("edicao")+"' , isbn='"+requisicao.getParameter("isbn")+"' WHERE id='"+requisicao.getParameter("id")+"'";
-                                    conexao.createStatement().executeUpdate(statement);
-                                break;
-                            case "periodicos":
-                                    statement+="id-obra ='"+requisicao.getParameter("idObra")+"' , id-acervo='"+requisicao.getParameter("id")+"' , periodicidade='"
-                                            +requisicao.getParameter("periodicidade")+"' , mes='"+requisicao.getParameter("mes")+"', volume='"+requisicao.getParameter("volume")
-                                            +"' , subtipo='"+requisicao.getParameter("subtipo")+"' , issn='"+requisicao.getParameter("issn")
-                                            +"' WHERE id='"+requisicao.getParameter("id")+"'";
-                                    conexao.createStatement().executeUpdate(statement);
+                                    atualizarLivro(Integer.parseInt(requisicao.getParameter("id")),requisicao,conexao);
                                 break;
                             case "midias":
-                                    statement+="id-obra ='"+requisicao.getParameter("idObra")+"' , id-acervo='"+requisicao.getParameter("id")+"' , tempo='"
-                                            +requisicao.getParameter("tempo")+"', subtipo='"+requisicao.getParameter("subtipo")+"' WHERE id='"+requisicao.getParameter("id")+"'";
-                                    conexao.createStatement().executeUpdate(statement);
+                                    atualizarMidia(Integer.parseInt(requisicao.getParameter("id")),requisicao,conexao);
+                                break;
+                            case "periodicos":
+                                    atualizarPeriodico(Integer.parseInt(requisicao.getParameter("id")),requisicao,conexao);
                                 break;
 			
-                        }System.out.println("TESTE4");
+                        }
 			conexao.close();
 
 			saida.println("<sucesso>");
@@ -114,80 +98,78 @@ System.out.println("TESTE2");
 	}
 
 	private void validarParametros(Map<String, String[]> parametros,String tipo) throws ExcecaoParametrosIncorretos {
-		/*quando a pessoa alterar um dado do acervo terá também a opcao de alterar da tabela dependente 
-                * do tipo da obra, entao os primeiros parametros passados sao relativos ao acervo e os seguintes
-                *relativos ao tipo*/
-            if (parametros.size() < paramsAcervo.length) {
+            /*quando a pessoa alterar um dado do acervo terá também a opcao de alterar da tabela dependente 
+            * do tipo da obra, entao os primeiros parametros passados sao relativos ao acervo e os seguintes
+            * relativos ao tipo*/
+            
+            for(String param : paramsAcervo)
+            {    
+                if(!parametros.keySet().contains(param)) 
+                {
+                        throw new ExcecaoParametrosIncorretos("Um dos parâmetros esperados não foi passado: " + param);
+                }
+            }
+            switch(tipo)
+            {
+                case "academicos":
+                        for(String pa : paramsAcademicos)
+                        {    
+                            if(!parametros.containsKey(pa)) 
+                            {
+                                throw new ExcecaoParametrosIncorretos("Um dos parâmetros esperados não foi passado: " + pa);
+                            }
+                        }
+                    break;
+                case "livros":
+                    for(String pl : paramsLivros)
+                    {    
+                        if(!parametros.containsKey(pl)) 
+                        {
+                            throw new ExcecaoParametrosIncorretos("Um dos parâmetros esperados não foi passado: " + pl);
+                        }
+                    }
+                    /*verificando se a quantidade de parametros é condizente:*/
+                    if (tipo.equals("academicos") && parametros.size() < paramsAcervo.length+paramsAcademicos.length) {
+                        throw new ExcecaoParametrosIncorretos("Parâmetros insuficientes");
+                    }
+                    break;
+                case "midias":
+                    for(String pm : paramsMidias)
+                    {    
+                        if(!parametros.containsKey(pm)) 
+                        {
+                            throw new ExcecaoParametrosIncorretos("Um dos parâmetros esperados não foi passado: " + pm);
+                        }
+                    }
+                    break;
+                case "periodicos":
+                    for(String pp : paramsPeriodicos)
+                    {    
+                        if(!parametros.containsKey(pp)) 
+                        {
+                            throw new ExcecaoParametrosIncorretos("Um dos parâmetros esperados não foi passado: " + pp);
+                        }
+                    }
+                    break;
+            }
+            /*verificando se a quantidade de parametros é condizente:*/
+            if (tipo.equals("academicos") && parametros.size() < paramsAcervo.length+paramsAcademicos.length) {
 		throw new ExcecaoParametrosIncorretos("Parâmetros insuficientes");
             }
-            for (Map.Entry<String, String[]> iterador : parametros.entrySet()) {
-		boolean valido = false;
-		for (String param : paramsAcervo) {
-                    String chave=iterador.getKey();        
-			if (chave.equals(param)) {
-                            valido = true;
-                            /*if("tipo".equals(chave))
-                            {
-                                tipo=iterador.getValue();
-                            }*/
-			}
-                        if (!valido) {
-                            throw new ExcecaoParametrosIncorretos("Parâmetro desconhecido: " + iterador.getKey());
-                        }
-		}
-                switch(tipo)
-                {
-                    case "academicos":
-                        for (String param : paramsAcademicos) {
-                        valido = false;
-			if (iterador.getKey().equals(param)) {
-                            valido = true;
-			}
-                        if (!valido) {
-                            throw new ExcecaoParametrosIncorretos("Parâmetro desconhecido: " + iterador.getKey());
-                        }
-                        }
-                        break;
-                    case "livros":
-                        for (String param : paramsLivros) { 
-                            valido = false;System.out.println("aaaaaaa");
-                            if (iterador.getKey().equals(param)) {System.out.println("d");
-                                valido = true;
-                            }
-                            if (!valido) {System.out.println("ee");
-                                throw new ExcecaoParametrosIncorretos("Parâmetro desconhecido: " + iterador.getKey());
-                            }System.out.println("aaaaaaa");
-                        }
-                        break;
-                    case "periodicos":
-                        for (String param : paramsPeriodicos) { 
-                        valido = false;
-			if (iterador.getKey().equals(param)) {
-                            valido = true;
-			}
-                        if (!valido) {
-                            throw new ExcecaoParametrosIncorretos("Parâmetro desconhecido: " + iterador.getKey());
-                        }
-                        }
-                        break;
-                    case "midias":
-                        for (String param : paramsMidias) { 
-                        valido = false;
-			if (iterador.getKey().equals(param)) {
-                            valido = true;
-			}
-                        if (!valido) {
-                            throw new ExcecaoParametrosIncorretos("Parâmetro desconhecido: " + iterador.getKey());
-                        }
-                        }
-                        break;
-                }
+            else if (tipo.equals("livros") && parametros.size() < paramsAcervo.length+paramsLivros.length) {
+		throw new ExcecaoParametrosIncorretos("Parâmetros insuficientes");
+            }
+            else if (tipo.equals("midias") && parametros.size() < paramsAcervo.length+paramsMidias.length) {
+		throw new ExcecaoParametrosIncorretos("Parâmetros insuficientes");
+            }
+            else if (tipo.equals("periodicos") && parametros.size() < paramsAcervo.length+paramsPeriodicos.length) {
+		throw new ExcecaoParametrosIncorretos("Parâmetros insuficientes");
             }
         }
         public static void validarID(String id, Connection con)
 			throws SQLException, ExcecaoParametrosIncorretos {
             
-                        PreparedStatement ps = con.prepareStatement("SELECT * FROM `acervo` WHERE id= ? ");
+                        PreparedStatement ps = con.prepareStatement("SELECT * FROM `acervo` WHERE `id`= ? ");
                         ps.setString(1, id);
                         ps.execute();
                         ResultSet resultado = ps.getResultSet();
@@ -196,7 +178,55 @@ System.out.println("TESTE2");
                             throw new ExcecaoParametrosIncorretos("ID não encontrado");
                         }
 	}
+        private void atualizarAcademico(int idAcervo, HttpServletRequest requisicao, Connection conexao)
+			throws SQLException, NumberFormatException {
+		PreparedStatement ps = conexao.prepareStatement( "UPDATE `academicos` SET `id-obra` = ? , `id-acervo` = ? ,`programa` = ?  WHERE `id-acervo` = ?");
+		ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
+		ps.setInt(2, idAcervo);
+		ps.setString(3, requisicao.getParameter("programa"));
+		ps.setInt(4, idAcervo);
+		ps.execute();
+		ps.close();
+	}
 
+	private void atualizarLivro(int idAcervo, HttpServletRequest requisicao, Connection conexao)
+			throws SQLException, NumberFormatException {
+		PreparedStatement ps = conexao.prepareStatement("UPDATE `livros` SET `id-obra` = ? , `id-acervo` = ? ,`edicao` = ? ,`isbn` = ?  WHERE `id-acervo` = ?");
+		ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
+		ps.setInt(2, idAcervo);
+		ps.setInt(3, Integer.parseInt(requisicao.getParameter("edicao")));
+		ps.setLong(4, Long.parseLong(requisicao.getParameter("isbn")));
+		ps.setInt(5, idAcervo);
+		ps.execute();
+		ps.close();
+	}
+
+	private void atualizarMidia(int idAcervo, HttpServletRequest requisicao, Connection conexao)
+			throws SQLException, NumberFormatException {
+		PreparedStatement ps = conexao.prepareStatement("UPDATE `midias` SET `id-obra` = ? , `id-acervo` = ? ,`tempo` = ? ,`subtipo` = ?  WHERE `id-acervo` = ?");
+		ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
+		ps.setInt(2, idAcervo);
+		ps.setString(3, requisicao.getParameter("tempo")); // o formato deverá ser adaptado no front-end
+		ps.setString(4, requisicao.getParameter("subtipo").toUpperCase());
+		ps.setInt(5, idAcervo);
+		ps.execute();
+		ps.close();
+	}
+
+	private void atualizarPeriodico(int idAcervo, HttpServletRequest requisicao, Connection conexao)
+			throws SQLException, NumberFormatException {
+		PreparedStatement ps = conexao.prepareStatement("UPDATE `periodicos` SET "
+				+ "`id-acervo`=?, `periodicidade`=?, `mes`=?, `volume`=?, `subtipo`=?, `issn`=? WHERE `id-acervo`=?");
+		ps.setInt(1, idAcervo);
+		ps.setString(2, requisicao.getParameter("periodicidade"));
+		ps.setString(3, requisicao.getParameter("mes"));
+		ps.setInt(4, Integer.parseInt(requisicao.getParameter("volume")));
+		ps.setString(5, requisicao.getParameter("subtipo"));
+		ps.setInt(6, Integer.parseInt(requisicao.getParameter("issn")));
+		ps.setInt(7, idAcervo);
+		ps.execute();
+		ps.close();
+	}
 	@Override
 	public String getServletInfo() {
 		return "Servlet dedicado a atualizar registros do acervo e outras tabelas da biblioteca";
