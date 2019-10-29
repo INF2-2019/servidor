@@ -43,7 +43,6 @@ public class LoginAdminController extends HttpServlet {
 		senha = request.getParameter("senha");
 		manter = request.getParameter("manter") != null;
 
-
 		try {
 			if(login == null){
 				new ErroView(SEM_LOGIN).render(out);

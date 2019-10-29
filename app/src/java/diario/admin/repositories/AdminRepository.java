@@ -15,20 +15,38 @@ public class AdminRepository {
 	}
 
 	public Admin getAdminFromUsuario(String usuario) throws SQLException, AdminNotFoundException {
-		String query = "SELECT * FROM admins WHERE `usuario` = ?";
+		String query = "SELECT * FROM admin WHERE `usuario` = ?";
 
 		PreparedStatement ps = connection.prepareStatement(query);
 		ps.setString(1, usuario);
 		ResultSet rs = ps.executeQuery();
 
-		if(!rs.next()){
+		if (!rs.next()) {
 			throw new AdminNotFoundException(usuario);
 		}
 
 		return resultSetToAdmin(rs);
 	}
 
-	private Admin resultSetToAdmin(ResultSet rs) throws SQLException{
+	public void insertAdmin(Admin adm) throws SQLException {
+		String query = "INSERT INTO admin (nome, usuario, email, senha) VALUES (?, ?, ?, ?)";
+
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setString(1, adm.getNome());
+		ps.setString(2, adm.getUsuario());
+		ps.setString(3, adm.getEmail());
+		ps.setString(4, adm.getHashSenha());
+		ps.executeUpdate();
+
+		ResultSet rs = ps.getGeneratedKeys();
+
+		if(rs.next()){
+			int id = rs.getInt(1);
+			adm.setId(id);
+		}
+	}
+
+	private Admin resultSetToAdmin(ResultSet rs) throws SQLException {
 		int id = rs.getInt("id");
 		String nome = rs.getString("nome");
 		String usuario = rs.getString("usuario");

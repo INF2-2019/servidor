@@ -46,12 +46,12 @@ public class ErroView extends View<String>{
 
 			Element msg = dom.createElement("mensagem");
 			root.appendChild(msg);
-			msg.setNodeValue(mensagem);
+			msg.setTextContent(mensagem);
 
 			if(causaStr != null){
 				Element causa = dom.createElement("causa");
 				root.appendChild(causa);
-				causa.setNodeValue(causaStr);
+				causa.setTextContent(causaStr);
 			}
 
 			return dom;
