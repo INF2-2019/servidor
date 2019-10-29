@@ -6,13 +6,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.servlet.ServletException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.ConnectionFactory;
-import utils.Headers;
 
+import utils.ConnectionFactory;
+
+@WebServlet(name = "DeletarAcervo", urlPatterns = "/biblioteca/acervo/deletar")
 /**
  *
  * @author Jonata Novais Cirqueira
@@ -20,7 +23,7 @@ import utils.Headers;
  */
 public class DeletarAcervo extends HttpServlet {
 
-    @Override
+	@Override
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws IOException {
 
@@ -28,33 +31,48 @@ public class DeletarAcervo extends HttpServlet {
 		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
 
 		PrintWriter saida = resposta.getWriter();
-		try (Connection conexao = ConnectionFactory.getDiario()) {
+		try (Connection conexao = ConnectionFactory.getBiblioteca()) {
 
 			if (conexao == null) {
 				throw new SQLException("Impossível se conectar ao banco de dados");
 			}
 
-			String id = requisicao.getParameter("id");
+			String id = requisicao.getParameter("id"), msg = "Registro deletado com sucesso";
 			if (id == null) {
 				throw new ExcecaoParametrosIncorretos("O parâmetro 'id' é obrigatório para deletar registros");
 			}
-                        
-                        if(haEmprestimos(id, conexao)) {
-                            throw new ExcecaoParametrosIncorretos("Este registro não pode ser deletado porque está emprestado");
-                        }
-                        ResultSet alunos = alunosQueReservaram(id, conexao);
-                        while(alunos.next()) {
-                            EmailHelper.enviarEmail(alunos.getString("email"), alunos.getString("nome"));
-                        }
 
-			PreparedStatement ps = conexao.prepareStatement("DELETE FROM `acervo` WHERE `id` = ?");
-			ps.setInt(1, Integer.parseInt(id));
-			ps.execute();
-			ps.close();
+			if (haEmprestimos(id, conexao)) {
+				throw new ExcecaoParametrosIncorretos("Este item não pode ser deletado porque está emprestado");
+			}
+			HashMap<String, String> alunos = alunosQueReservaram(id, conexao);
+			for (Map.Entry<String, String> it : alunos.entrySet()) {
+				EmailHelper.enviarEmail(it.getValue(), it.getKey());
+			}
+
+			PreparedStatement ps1 = conexao.prepareStatement("SELECT `tipo` FROM `acervo` WHERE `id` = ?");
+			ps1.setInt(1, Integer.parseInt(id));
+			ResultSet resultado = ps1.executeQuery();
+			if (resultado.first()) {
+				String tipo = resultado.getString(1).toLowerCase();
+				PreparedStatement ps2 = conexao.prepareStatement(
+						String.format("DELETE FROM `%s` WHERE `id-acervo` = ?", tipo));
+				ps2.setInt(1, Integer.parseInt(id));
+				ps2.execute();
+				ps2.close();
+			} else {
+				msg = "Nenhum registro alterado";
+			}
+
+			PreparedStatement ps3 = conexao.prepareStatement("DELETE FROM `acervo` WHERE `id` = ?");
+			ps3.setInt(1, Integer.parseInt(id));
+			ps3.execute();
+			ps1.close();
+			ps3.close();
 			conexao.close();
 
 			saida.println("<sucesso>");
-			saida.println("  <mensagem>Registro deletado com sucesso</mensagem>");
+			saida.println("  <mensagem>" + msg + "</mensagem>");
 			saida.println("</sucesso>");
 
 		} catch (Exception e) {
@@ -66,27 +84,34 @@ public class DeletarAcervo extends HttpServlet {
 		}
 
 	}
-        
-        private boolean haEmprestimos(String id, Connection con)
-                throws SQLException, NumberFormatException {
-            
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM `emprestimos` WHERE `id-alunos` = ?");
-            ps.setInt(1, Integer.parseInt(id));
-            ResultSet resultado = ps.executeQuery();
-            ps.close();
-            return resultado.first();
-            
-        }
-        
-        private ResultSet alunosQueReservaram(String id, Connection con) 
-                throws SQLException, NumberFormatException {
-            
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM `reservas` WHERE `id-acervo` = ?");
-            ps.setInt(1, Integer.parseInt(id));
-            ResultSet resultado = ps.executeQuery();
-            ps.close();
-            return resultado;
-            
-        }
-    
+
+	private boolean haEmprestimos(String id, Connection con)
+			throws SQLException, NumberFormatException {
+
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM `emprestimos` WHERE `id-acervo` = ?");
+		ps.setInt(1, Integer.parseInt(id));
+		ResultSet resultado = ps.executeQuery();
+		return resultado.first();
+
+	}
+
+	private HashMap alunosQueReservaram(String id, Connection con)
+			throws SQLException, NumberFormatException {
+
+		HashMap<String, String> alunos = new HashMap<>();
+
+		PreparedStatement ps = con.prepareStatement("SELECT `id-aluno` FROM `reservas` WHERE `id-acervo` = ?");
+		ps.setInt(1, Integer.parseInt(id));
+		ResultSet emprestimos = ps.executeQuery();
+		while (emprestimos.next()) {
+			PreparedStatement ps2 = con.prepareStatement("SELECT `nome`, `email` FROM `alunos` WHERE `id` = ?");
+			ps2.setInt(1, emprestimos.getInt(1));
+			ResultSet temp = ps2.executeQuery();
+			temp.first();
+			alunos.put(temp.getString(1), temp.getString(2));
+		}
+		return alunos;
+
+	}
+
 }
