@@ -2,10 +2,7 @@ package diario.admin.repositories;
 
 import diario.admin.models.Admin;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class AdminRepository {
 	private Connection connection;
@@ -31,7 +28,7 @@ public class AdminRepository {
 	public void insertAdmin(Admin adm) throws SQLException {
 		String query = "INSERT INTO admin (nome, usuario, email, senha) VALUES (?, ?, ?, ?)";
 
-		PreparedStatement ps = connection.prepareStatement(query);
+		PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		ps.setString(1, adm.getNome());
 		ps.setString(2, adm.getUsuario());
 		ps.setString(3, adm.getEmail());
