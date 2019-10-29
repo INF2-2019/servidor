@@ -38,11 +38,12 @@ public class DeletarAlunos extends HttpServlet {
        if (rep.checarAutorizacaoADM(request, response)) {
 			
 
-			try{			
-				if("sucesso".equals(rep.deletarAlunos(id))) {
+			try{
+				String result = rep.deletarAlunos(id);
+				if("sucesso".equals(result)) {
 					View sucessoView = new SucessoView("Deletado com sucesso.");
 					sucessoView.render(out);
-				} else if ("mat".equals(rep.deletarAlunos(id))) {
+				} else if ("mat".equals(result)) {
 					response.setStatus(409);
 					out.println("<erro><mensagem>Existe uma matricula registrada na identificacao deste aluno, delete-a antes de deletar o aluno</mensagem></erro>");
 				} else {
