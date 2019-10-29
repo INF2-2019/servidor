@@ -1,6 +1,7 @@
 package diario.cursos.repository;
 
 import diario.cursos.models.CursoModel;
+import diario.cursos.view.ExcecaoTurmaVinculada;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -85,10 +86,16 @@ public class CursoRepository {
 
 	}
 
-	public boolean deletar(String idStr) throws NumberFormatException, SQLException {
+	public boolean deletar(String idStr) throws NumberFormatException, ExcecaoTurmaVinculada, SQLException {
 		PreparedStatement ps = con.prepareStatement("DELETE FROM `cursos` WHERE `id` = ?");
 		// Se id não for um inteiro sem sinal, joga a exceção NumberFormatException
 		int id = Integer.parseUnsignedInt(idStr);
+
+		ResultSet verificacao = con.prepareCall("SELECT * FROM `turmas` WHERE `id-cursos` = "+id).executeQuery();
+		if(verificacao.next()) {
+			throw new ExcecaoTurmaVinculada();
+		}
+		verificacao.close();
 
 		ps.setInt(1, id);
 
@@ -130,7 +137,7 @@ public class CursoRepository {
 
 	}
 
-	public boolean atualizarPorId(Map<String, Object> parametros) throws NumberFormatException, SQLException {
+	public boolean atualizarPorId(Map<String, Object> parametros) throws NumberFormatException, NullPointerException, SQLException {
 		int id = Integer.parseUnsignedInt(parametros.get("id").toString());
 		int idDepto = Integer.parseUnsignedInt(parametros.get("id-depto").toString());
 		int horasTotal = Integer.parseUnsignedInt(parametros.get("horas-total").toString());
@@ -159,6 +166,8 @@ public class CursoRepository {
 		}
 
 		CursoModel curso = consultarId(Integer.toString(id));
+		if(curso == null)
+			throw new NullPointerException("Id inválido");
 		Object[] vals = curso.retornarValoresRestantes(parametros);
 		String[] keys = {"id", "id-depto", "nome", "horas-total", "modalidade"};
 		Map<String, Object> valores = new LinkedHashMap<>();

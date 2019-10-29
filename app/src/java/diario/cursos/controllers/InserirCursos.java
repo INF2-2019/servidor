@@ -7,6 +7,8 @@ import diario.cursos.view.RenderException;
 import diario.cursos.view.View;
 import diario.cursos.view.ErroView;
 import diario.cursos.view.SucessoView;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,10 +29,22 @@ public class InserirCursos extends HttpServlet {
 		Headers.XMLHeaders(response);
 		Connection conexao = ConnectionFactory.getDiario();
 
+		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			response.setStatus(403);
+			return;
+		}
+
 		PrintWriter out = response.getWriter();
 
 		if (conexao == null) {
-			System.err.println("Falha ao conectar ao bd"); // Adicionar XML de erro
+			System.err.println("Falha ao conectar ao bd");
+			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
 			return;
 		}
 
