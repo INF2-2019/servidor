@@ -27,6 +27,7 @@ import java.sql.SQLException;
 public class SignupAdminController extends HttpServlet {
 	private final static String SEM_NOME = "O parâmetro nome é obrigatório!";
 	private final static String SEM_USUARIO = "O parâmetro usuário é obrigatório!";
+	private final static String SEM_EMAIL = "O parâmetro email é obrigatório!";
 	private final static String SEM_SENHA = "O parâmetro senha é obrigatório!";
 	private final static String INTERNAL = "Uma falha interna ocorreu!";
 	private final static String SUCCESS	 = "Administrador adicionado com sucesso!";
@@ -62,7 +63,7 @@ public class SignupAdminController extends HttpServlet {
 			}
 			if(emailParam == null){
 				response.setStatus(422);
-				new ErroView(SEM_SENHA).render(out);
+				new ErroView(SEM_EMAIL).render(out);
 				return;
 			}
 			if(senhaParam == null){
