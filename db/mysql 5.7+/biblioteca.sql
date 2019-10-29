@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `livros` (
   `id-obra` INT NOT NULL,
   `id-acervo` INT NOT NULL,
   `edicao` INT NOT NULL,
-  `isbn` INT NOT NULL
+  `isbn` BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS `midias`;
