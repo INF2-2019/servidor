@@ -31,7 +31,7 @@ public class DeletarDisciplinas extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
-/*
+
 		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
 			response.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
@@ -42,7 +42,7 @@ public class DeletarDisciplinas extends HttpServlet {
 			}
 			return;
 		}
-*/
+
 		if (conexao == null) {
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {

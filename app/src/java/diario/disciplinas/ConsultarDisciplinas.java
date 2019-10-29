@@ -32,6 +32,7 @@ public class ConsultarDisciplinas extends HttpServlet {
 		Connection conexao = ConnectionFactory.getDiario();
 		PrintWriter out = response.getWriter();
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+
 		if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
 			response.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
@@ -42,6 +43,7 @@ public class ConsultarDisciplinas extends HttpServlet {
 			}
 			return;
 		}
+
 		if (conexao == null) {
 			System.err.println("Falha ao conectar ao bd");
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));

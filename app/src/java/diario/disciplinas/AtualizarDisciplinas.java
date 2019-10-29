@@ -29,7 +29,7 @@ public class AtualizarDisciplinas extends HttpServlet {
 		Connection con = ConnectionFactory.getDiario();
 		PrintWriter out = res.getWriter();
 		DiarioAutenticador autenticador = new DiarioAutenticador(req, res);
-/*
+
 		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
 			res.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
@@ -40,7 +40,7 @@ public class AtualizarDisciplinas extends HttpServlet {
 			}
 			return;
 		}
-*/
+
 		 
 		if (con == null) {
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
