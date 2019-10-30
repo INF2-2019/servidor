@@ -17,6 +17,7 @@ import diario.cursos.view.RenderException;
 import diario.cursos.view.SucessoView;
 import diario.cursos.view.View;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 import utils.ConnectionFactory;
 import utils.Headers;
@@ -58,7 +59,11 @@ public class AlterarSenha extends HttpServlet {
                 }
             } catch (RenderException e) {
                 throw new ServletException(e);
-            }
+            } catch (NoSuchAlgorithmException ex) {
+				Logger.getLogger(AlterarSenha.class.getName()).log(Level.SEVERE, null, ex);
+			} catch (InvalidKeySpecException ex) {
+				Logger.getLogger(AlterarSenha.class.getName()).log(Level.SEVERE, null, ex);
+			}
 
         } else {
                 response.setStatus(401);

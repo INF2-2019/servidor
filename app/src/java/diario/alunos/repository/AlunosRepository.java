@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
+import utils.Hasher;
 import static utils.Hasher.hash;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
@@ -51,7 +52,7 @@ public class AlunosRepository {
 		return "erro";
     }
     
-    public boolean inserirAlunos(String id, String nome, String email, String senha, String sexo, String nascimento, String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf, String foto  ) throws NumberFormatException, SQLException, NoSuchAlgorithmException {
+    public boolean inserirAlunos(String id, String nome, String email, String senha, String sexo, String nascimento, String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf, String foto  ) throws NumberFormatException, SQLException, NoSuchAlgorithmException, ParseException, InvalidKeySpecException {
 		
 
 		int idParsed = Integer.parseUnsignedInt(id);
@@ -61,19 +62,11 @@ public class AlunosRepository {
 		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy"); 
 		 Date nascimentoDate = null;
 		 java.sql.Date data = null;
-		try {
-			nascimentoDate = formato.parse(nascimento);
-			data = new java.sql.Date(nascimentoDate.getTime());
-		} catch (ParseException ex) {
-			Logger.getLogger(AlunosRepository.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		nascimentoDate = formato.parse(nascimento);
+		data = new java.sql.Date(nascimentoDate.getTime());
 		
 		String hashSenha = null;
-		try {
-			hashSenha = hash(senha);
-		} catch (InvalidKeySpecException ex) {
-			Logger.getLogger(AlunosRepository.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		hashSenha = hash(senha);
 		
 		PreparedStatement ps = con.prepareStatement("INSERT INTO `alunos` (`id`, `nome`, `email`, `senha`, `sexo`, `nascimento`, `logradouro`, `numero`, `complemento`, `bairro`, `cidade`, `cep`, `uf`, `foto`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
@@ -215,14 +208,10 @@ return sucesso != 0;
 		return x.cargoLogado() == DiarioCargos.ALUNO && x.idLogado() == idParsed;
 	}
         
-        public Boolean alterarSenha(String id, String senha) throws SQLException {
+        public Boolean alterarSenha(String id, String senha) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
             String hashSenha = null;
             int idParsed = Integer.parseUnsignedInt(id);
-            try {
-                    hashSenha = hash(senha);
-            } catch (InvalidKeySpecException | NoSuchAlgorithmException ex) {
-                    Logger.getLogger(AlunosRepository.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            hashSenha = hash(senha);
             String query = "UPDATE alunos SET senha= ? WHERE id = ?";
 
             PreparedStatement ps = con.prepareStatement(query);
@@ -242,5 +231,21 @@ return sucesso != 0;
             int sucesso = ps.executeUpdate();
             return sucesso!=0;
         }
+		
+		public Boolean logarAluno(HttpServletRequest request, HttpServletResponse response, String id, String senha) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
+			int idParsed = Integer.parseUnsignedInt(id);
+			DiarioAutenticador x = new DiarioAutenticador(request, response);
+            String query = "SELECT * FROM `alunos` WHERE `id` = ?";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, idParsed);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			if(Hasher.validar(senha, rs.getString("senha"))) {
+				x.logar(idParsed, DiarioCargos.ALUNO, false);
+				return true;
+			}
+			return false;
+				
+		}
    
 }
