@@ -22,12 +22,6 @@ import utils.autenticador.DiarioCargos;
 @WebServlet(name = "atualizar", urlPatterns = {"/biblioteca/acervo/atualizar"})
 public class AtualizarAcervo extends HttpServlet {
 
-	private static final String[] paramsAcervo = {"id", "id-campi", "nome", "tipo", "local", "ano", "editora", "paginas"};
-	private static final String[] paramsLivros = {"id-obra", "edicao", "isbn"};
-	private static final String[] paramsAcademicos = {"id-obra", "programa"};
-	private static final String[] paramsMidias = {"id-obra", "tempo", "subtipo"};
-	private static final String[] paramsPeriodicos = {"id-obra", "periodicidade", "mes", "volume", "subtipo", "issn"};
-
 	@Override
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws IOException {
