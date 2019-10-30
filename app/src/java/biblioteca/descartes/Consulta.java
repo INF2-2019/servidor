@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+package biblioteca.descartes;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,18 +13,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import utils.ConnectionFactory;
 
 /**
  *
  * @author juanr
  */
-@WebServlet(urlPatterns = {"/consulta"})
+@WebServlet(urlPatterns = {"/biblioteca/descartes/consulta"})
 public class Consulta extends HttpServlet {
-
-    // Constantes de conexão ao MYSQL
-    final String SERVIDOR_SQL = "jdbc:mysql://localhost:3307/biblioteca",
-	    USUARIO_ADMIN_SQL = "root",
-	    SENHA_ADMIN_SQL = "123456";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
@@ -50,8 +42,7 @@ public class Consulta extends HttpServlet {
 		}
 
 		// Conecta e executa Query SQL
-		DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-		Connection conexao = DriverManager.getConnection(SERVIDOR_SQL, USUARIO_ADMIN_SQL, SENHA_ADMIN_SQL);
+		Connection conexao = ConnectionFactory.getBiblioteca();
 		PreparedStatement st = conexao.prepareStatement(query);
 
 		ResultSet resultado = st.executeQuery();
