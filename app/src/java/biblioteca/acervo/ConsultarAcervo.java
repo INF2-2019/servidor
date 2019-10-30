@@ -3,6 +3,7 @@ package biblioteca.acervo;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
@@ -20,7 +21,7 @@ import utils.ConnectionFactory;
 public class ConsultarAcervo extends HttpServlet {
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse resposta)
+	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws ServletException, IOException {
 
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
@@ -34,7 +35,15 @@ public class ConsultarAcervo extends HttpServlet {
 				throw new SQLException("Impossível se conectar ao banco de dados");
 			}
 
-			ResultSet acervo = conexao.createStatement().executeQuery("SELECT * FROM `acervo`");
+			ResultSet acervo;
+			if (requisicao.getParameter("id") != null) {
+				PreparedStatement ps = conexao.prepareStatement("SELECT * FROM `acervo` WHERE `id` = ?");
+				ps.setInt(1, Integer.parseInt(requisicao.getParameter("id")));
+				acervo = ps.executeQuery();
+			} else {
+				acervo = conexao.createStatement().executeQuery("SELECT * FROM `acervo`");
+			}
+
 			while (acervo.next()) {
 				saida.println("<item>");
 				escreverItemDados(acervo, saida);
@@ -73,6 +82,7 @@ public class ConsultarAcervo extends HttpServlet {
 	}
 
 	private void escreverItemDados(ResultSet item, PrintWriter saida) throws SQLException {
+		saida.println("  <id>" + item.getInt("id") + "</id>");
 		saida.println("  <id-campi>" + item.getInt("id-campi") + "</id-campi>");
 		saida.println("  <nome>" + item.getString("nome") + "</nome>");
 		saida.println("  <tipo>" + item.getString("tipo") + "</tipo>");
