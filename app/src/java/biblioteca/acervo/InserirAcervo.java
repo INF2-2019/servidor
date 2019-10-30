@@ -41,7 +41,7 @@ public class InserirAcervo extends HttpServlet {
 			}
 
 			Validacao.validarParametros(requisicao);
-//			Validacao.validarIdCampi(Integer.parseInt(requisicao.getParameter("id-campi")), conexao);
+			Validacao.validarIdCampi(Integer.parseInt(requisicao.getParameter("id-campi")), conexao);
 			Validacao.validarIdObra(Integer.parseInt(requisicao.getParameter("id-obra")), conexao);
 
 			String clausulaSql = "INSERT INTO `acervo` "

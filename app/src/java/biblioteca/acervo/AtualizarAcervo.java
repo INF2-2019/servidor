@@ -46,6 +46,7 @@ public class AtualizarAcervo extends HttpServlet {
 				throw new ExcecaoParametrosIncorretos("Parâmetro obrigaótrio: 'id'");
 			}
 			Validacao.validarParametros(requisicao);
+			Validacao.validarIdCampi(Integer.parseInt(requisicao.getParameter("id-campi")), conexao);
 			Validacao.validarIdObra(Integer.parseInt(requisicao.getParameter("id")), conexao);
 
 			/*MODIFICAÇÃO DO ACERVO:*/

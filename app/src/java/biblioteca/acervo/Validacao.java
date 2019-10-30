@@ -94,12 +94,15 @@ public class Validacao {
 
 	}
 
-//	public static void validarIdCampi(int idCampi, Connection conexao)
-//			throws ExcecaoParametrosIncorretos, SQLException {
-//		PreparedStatement ps = conexao.prepareStatement("SELECT * WHERE `id-campi` = ?");
-//		ps.setInt(1, idCampi);
-//		ResultSet rs = ps.executeQuery();
-//	}
+	public static void validarIdCampi(int idCampi, Connection conexao)
+			throws ExcecaoParametrosIncorretos, SQLException {
+
+		if (idCampi != 1 && idCampi != 2) {
+			throw new ExcecaoParametrosIncorretos("Parâmetro inválido: 'id-campi' deve ser 1 ou 2");
+		}
+
+	}
+
 	public static void validarIdObra(int idObra, Connection conexao)
 			throws ExcecaoParametrosIncorretos, SQLException {
 
