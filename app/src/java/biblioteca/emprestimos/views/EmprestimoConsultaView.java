@@ -12,68 +12,68 @@ import utils.Conversores;
 
 public class EmprestimoConsultaView extends View<Set<EmprestimoModel>> {
 
-	public EmprestimoConsultaView(Set<EmprestimoModel> EmprestimoModel) {
-		super(EmprestimoModel);
-	}
+    public EmprestimoConsultaView(Set<EmprestimoModel> EmprestimoModel) {
+        super(EmprestimoModel);
+    }
 
-	@Override
-	public void render(PrintWriter writer) throws RenderException {
-		try {
-			Document cursosEmDocument = disciplinaParaDocument(data);
-			writer.write(Conversores.converterDocumentEmXMLString(cursosEmDocument));
-		} catch (Exception ex) {
-			throw new RenderException(ex);
-		}
-	}
-	
-	private Document disciplinaParaDocument(Set<EmprestimoModel> emprestimos) throws ParserConfigurationException {
+    @Override
+    public void render(PrintWriter writer) throws RenderException {
+        try {
+            Document cursosEmDocument = disciplinaParaDocument(data);
+            writer.write(Conversores.converterDocumentEmXMLString(cursosEmDocument));
+        } catch (Exception ex) {
+            throw new RenderException(ex);
+        }
+    }
 
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder construtor = dbf.newDocumentBuilder();
-		Document documento = construtor.newDocument();
+    private Document disciplinaParaDocument(Set<EmprestimoModel> emprestimos) throws ParserConfigurationException {
 
-		Element root = documento.createElement("emprestimos");
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder construtor = dbf.newDocumentBuilder();
+        Document documento = construtor.newDocument();
 
-		for (EmprestimoModel emprestimo : emprestimos) {
-			if (emprestimo != null) {
-				root.appendChild(criarElementoDocument(documento, emprestimo));
-			}
-		}
+        Element root = documento.createElement("emprestimos");
 
-		documento.appendChild(root);
+        for (EmprestimoModel emprestimo : emprestimos) {
+            if (emprestimo != null) {
+                root.appendChild(criarElementoDocument(documento, emprestimo));
+            }
+        }
 
-		return documento;
-	}
+        documento.appendChild(root);
 
-	private static Element criarElementoDocument(Document documento, EmprestimoModel e) {
+        return documento;
+    }
 
-		Element elemento = documento.createElement("emprestimo");
+    private static Element criarElementoDocument(Document documento, EmprestimoModel e) {
 
-		Element id = documento.createElement("id");
-		Element idAlunos = documento.createElement("id-alunos");
-		Element idAcervo = documento.createElement("id-acervo");
-		Element dataEmprestimo = documento.createElement("data-emprestimo");
-		Element dataPrevDevol = documento.createElement("data-prev-devol");
-		Element dataDevolucao = documento.createElement("data-devolucao");
-		Element multa = documento.createElement("multa");
+        Element elemento = documento.createElement("emprestimo");
 
-		id.appendChild(documento.createTextNode("" + e.getId()));
-		idAlunos.appendChild(documento.createTextNode("" + e.getIdAlunos()));
-		idAcervo.appendChild(documento.createTextNode("" + e.getIdAcervo()));
-		dataEmprestimo.appendChild(documento.createTextNode("" + e.getDataEmprestimo()));
-		dataPrevDevol.appendChild(documento.createTextNode("" + e.getDataPrevDevol()));
-		dataDevolucao.appendChild(documento.createTextNode("" + e.getDataDevolucao()));
-		multa.appendChild(documento.createTextNode("" + e.getMulta()));
+        Element id = documento.createElement("id");
+        Element idAlunos = documento.createElement("id-alunos");
+        Element idAcervo = documento.createElement("id-acervo");
+        Element dataEmprestimo = documento.createElement("data-emprestimo");
+        Element dataPrevDevol = documento.createElement("data-prev-devol");
+        Element dataDevolucao = documento.createElement("data-devolucao");
+        Element multa = documento.createElement("multa");
 
-		elemento.appendChild(id);
-		elemento.appendChild(idAlunos);
-		elemento.appendChild(idAcervo);
-		elemento.appendChild(dataEmprestimo);
-		elemento.appendChild(dataPrevDevol);
-		elemento.appendChild(dataDevolucao);
-		elemento.appendChild(multa);
+        id.appendChild(documento.createTextNode("" + e.getId()));
+        idAlunos.appendChild(documento.createTextNode("" + e.getIdAlunos()));
+        idAcervo.appendChild(documento.createTextNode("" + e.getIdAcervo()));
+        dataEmprestimo.appendChild(documento.createTextNode("" + e.getDataEmprestimo()));
+        dataPrevDevol.appendChild(documento.createTextNode("" + e.getDataPrevDevol()));
+        dataDevolucao.appendChild(documento.createTextNode("" + e.getDataDevolucao()));
+        multa.appendChild(documento.createTextNode("" + e.getMulta()));
 
-		return elemento;
-	}
+        elemento.appendChild(id);
+        elemento.appendChild(idAlunos);
+        elemento.appendChild(idAcervo);
+        elemento.appendChild(dataEmprestimo);
+        elemento.appendChild(dataPrevDevol);
+        elemento.appendChild(dataDevolucao);
+        elemento.appendChild(multa);
+
+        return elemento;
+    }
 
 }

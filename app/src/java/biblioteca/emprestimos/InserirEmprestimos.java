@@ -27,83 +27,83 @@ import java.util.logging.Logger;
 public class InserirEmprestimos extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-	Connection conexao = ConnectionFactory.getBiblioteca();
-	EmprestimoRepository emprestimoRep = new EmprestimoRepository(conexao);
+        Connection conexao = ConnectionFactory.getBiblioteca();
+        EmprestimoRepository emprestimoRep = new EmprestimoRepository(conexao);
         //System.out.println("AAAAAAAA");
-	Headers.XMLHeaders(response);
-	PrintWriter out = response.getWriter();
+        Headers.XMLHeaders(response);
+        PrintWriter out = response.getWriter();
 
-	if (conexao == null) {
-	    View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
-	    try {
-		erroView.render(out);
-	    } catch (RenderException e) {
-		throw new ServletException(e);
-	    }
-	    return;
-	}
-	Map<String, String> dados = definirMap(request);
+        if (conexao == null) {
+            View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
+            try {
+                erroView.render(out);
+            } catch (RenderException e) {
+                throw new ServletException(e);
+            }
+            return;
+        }
+        Map<String, String> dados = definirMap(request);
 
-	try {
+        try {
             //System.out.println("AAAAAA");
-	    emprestimoRep.inserir(dados);
-	    View sucessoView = new SucessoView("Inserido com sucesso.");
-	    sucessoView.render(out);
-	} catch (NumberFormatException excecaoFormatoErrado) {
-	    response.setStatus(400);
-	    System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+            emprestimoRep.inserir(dados);
+            View sucessoView = new SucessoView("Inserido com sucesso.");
+            sucessoView.render(out);
+        } catch (NumberFormatException excecaoFormatoErrado) {
+            response.setStatus(400);
+            System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
 
-	    View erroView = new ErroView(excecaoFormatoErrado);
-	    try {
-		erroView.render(out);
-	    } catch (RenderException e) {
-		throw new ServletException(e);
-	    }
-	} catch (SQLException excecaoSQL) {
-	    response.setStatus(400);
-	    System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+            View erroView = new ErroView(excecaoFormatoErrado);
+            try {
+                erroView.render(out);
+            } catch (RenderException e) {
+                throw new ServletException(e);
+            }
+        } catch (SQLException excecaoSQL) {
+            response.setStatus(400);
+            System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
-	    View erroView = new ErroView(excecaoSQL);
-	    try {
-		erroView.render(out);
-	    } catch (RenderException e) {
-		throw new ServletException(e);
-	    }
-	} catch (RenderException e) {
-	    throw new ServletException(e);
-	} catch (ParseException ex) {
+            View erroView = new ErroView(excecaoSQL);
+            try {
+                erroView.render(out);
+            } catch (RenderException e) {
+                throw new ServletException(e);
+            }
+        } catch (RenderException e) {
+            throw new ServletException(e);
+        } catch (ParseException ex) {
             Logger.getLogger(InserirEmprestimos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-   public Map<String, String> definirMap(HttpServletRequest req) {
-		Map<String, String> dados = new LinkedHashMap<>();
-		
-		System.out.println(req.getParameter("id-alunos"));
-                
-		if (req.getParameter("id-alunos") != null) {
-			dados.put("id-alunos", req.getParameter("id-alunos"));
-		}
+    public Map<String, String> definirMap(HttpServletRequest req) {
+        Map<String, String> dados = new LinkedHashMap<>();
 
-		if (req.getParameter("id-acervo") != null) {
-			dados.put("id-acervo", req.getParameter("id-acervo"));
-		}
+        System.out.println(req.getParameter("id-alunos"));
 
-		if (req.getParameter("data-emprestimo") != null) {
-			dados.put("data-emprestimo", req.getParameter("data-emprestimo"));
-		}
-                
-		if (req.getParameter("data-prev-devol") != null) {
-			dados.put("data-prev-devol", req.getParameter("data-prev-devol"));
-		}
-		if (req.getParameter("data-devolucao") != null) {
-			dados.put("data-devolucao", req.getParameter("data-devolucao"));
-		}
-		if (req.getParameter("multa") != null) {
-			dados.put("multa", req.getParameter("multa"));
-		}
+        if (req.getParameter("id-alunos") != null) {
+            dados.put("id-alunos", req.getParameter("id-alunos"));
+        }
 
-		return dados;
-	}
+        if (req.getParameter("id-acervo") != null) {
+            dados.put("id-acervo", req.getParameter("id-acervo"));
+        }
+
+        if (req.getParameter("data-emprestimo") != null) {
+            dados.put("data-emprestimo", req.getParameter("data-emprestimo"));
+        }
+
+        if (req.getParameter("data-prev-devol") != null) {
+            dados.put("data-prev-devol", req.getParameter("data-prev-devol"));
+        }
+        if (req.getParameter("data-devolucao") != null) {
+            dados.put("data-devolucao", req.getParameter("data-devolucao"));
+        }
+        if (req.getParameter("multa") != null) {
+            dados.put("multa", req.getParameter("multa"));
+        }
+
+        return dados;
+    }
 
 }

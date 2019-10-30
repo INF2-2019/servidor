@@ -20,8 +20,8 @@ import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@WebServlet(name = "DeletarEmprestimos", urlPatterns = {"/biblioteca/emprestimos/deletar"})
-public class DeletarEmprestimos extends HttpServlet {
+@WebServlet(name = "DevolverEmprestimos", urlPatterns = {"/biblioteca/emprestimos/devolver"})
+public class DevolverEmprestimos extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Headers.XMLHeaders(response);
@@ -38,8 +38,9 @@ public class DeletarEmprestimos extends HttpServlet {
 
         String id = request.getParameter("id");
         try {
-            emprestimoRep.deletar(id);
-            View sucessoView = new SucessoView("Deletado com sucesso.");
+            double multa = emprestimoRep.devolver(id);
+            View sucessoView = new SucessoView("Devolvido com sucesso.", multa);
+            
             sucessoView.render(out);
         } catch (NumberFormatException excecaoFormatoErrado) {
             response.setStatus(400);

@@ -21,285 +21,292 @@ public class EmprestimoRepository {
     SimpleDateFormat simpleFormat;
 
     public EmprestimoRepository(Connection con) {
-	this.con = con;
+        this.con = con;
         simpleFormat = new SimpleDateFormat("yyyy-MM-dd");
     }
 
     public void deletar(String id) throws SQLException, ParseException {
-	String sql;
-		int idParsed = Integer.parseUnsignedInt(id);
-                double multa=0.00;
-		sql = "SELECT * FROM `emprestimos` WHERE `id`= ?";
-		 //System.out.println("AAAAAA");
+        String sql;
+        PreparedStatement stat;
+        int idParsed = Integer.parseUnsignedInt(id);
+        sql = "DELETE FROM `emprestimos` WHERE `id` = ?";
 
-                  java.util.Date dataDevolucao = new java.util.Date();
-                  PreparedStatement stat = con.prepareStatement(sql);
-		  //System.out.println(dataDevolucao);
-		  //System.out.println(dataDevolucao.getTime());
-                  stat.setInt(1, idParsed);
-                  ResultSet resultadoBusca = stat.executeQuery();
-		  resultadoBusca.next();
-		  EmprestimoModel emprestimo = resultSetParaDisciplina(resultadoBusca);
-		  
-                  if(!dataDevolucao.after(emprestimo.getDataPrevDevol())) multa=0.00;
-                  else{
-		      //System.out.println(emprestimo.getDataPrevDevol());
-		      //System.out.println(emprestimo.getDataEmprestimo());
-                      long tempoEmprestimo = dataDevolucao.getTime() - emprestimo.getDataPrevDevol().getTime();
-		      //System.out.println(tempoEmprestimo);
-                      int days = (int) (tempoEmprestimo/86400000)-1;
-		      //System.out.println(days);
-                      multa = days*EmprestimoModel.multaPerDay;
-                  }
-		  
-		
-		//System.out.println(multa);
-                  
-                  
-                sql = "UPDATE `emprestimos` SET `data-devolucao` = ?, `multa` = ? WHERE `id` = ?";
+        stat = con.prepareStatement(sql);
+        stat.setInt(1, idParsed);
+        stat.executeUpdate();
+    }
 
-		stat = con.prepareStatement(sql);
-		stat.setDate(1, new java.sql.Date(dataDevolucao.getTime()));
-                stat.setDouble(2, multa);
-                stat.setInt(3, idParsed);
-		stat.executeUpdate();
+    public double devolver(String id) throws SQLException, ParseException {
+        String sql;
+        int idParsed = Integer.parseUnsignedInt(id);
+        double multa = 0.00;
+        sql = "SELECT * FROM `emprestimos` WHERE `id`= ?";
+        //System.out.println("AAAAAA");
+
+        java.util.Date dataDevolucao = new java.util.Date();
+        PreparedStatement stat = con.prepareStatement(sql);
+        //System.out.println(dataDevolucao);
+        //System.out.println(dataDevolucao.getTime());
+        stat.setInt(1, idParsed);
+        ResultSet resultadoBusca = stat.executeQuery();
+        resultadoBusca.next();
+        EmprestimoModel emprestimo = resultSetParaDisciplina(resultadoBusca);
+
+        if (!dataDevolucao.after(emprestimo.getDataPrevDevol())) {
+            multa = 0.00;
+        } else {
+            //System.out.println(emprestimo.getDataPrevDevol());
+            //System.out.println(emprestimo.getDataEmprestimo());
+            long tempoEmprestimo = dataDevolucao.getTime() - emprestimo.getDataPrevDevol().getTime();
+            //System.out.println(tempoEmprestimo);
+            int days = (int) (tempoEmprestimo / 86400000) - 1;
+            //System.out.println(days);
+            multa = days * EmprestimoModel.multaPerDay;
+        }
+
+        //System.out.println(multa);
+        sql = "UPDATE `emprestimos` SET `data-devolucao` = ?, `multa` = ? WHERE `id` = ?";
+
+        stat = con.prepareStatement(sql);
+        stat.setDate(1, new java.sql.Date(dataDevolucao.getTime()));
+        stat.setDouble(2, multa);
+        stat.setInt(3, idParsed);
+        stat.executeUpdate();
+        
+        return multa;
     }
     // TODO: Adequar ao sistema de datas
 
     public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException, ParseException {
 
-	/*if (valores.size() != 6) {
+        /*if (valores.size() != 6) {
 	    return false;
 	}*/
-        
-	int idAlunos = 0;
+        int idAlunos = 0;
         //System.out.println(valores.get("id-alunos"));
-	if (valores.containsKey("id-alunos")) {
-	    idAlunos = Integer.parseUnsignedInt(valores.get("id-alunos"));
-	}
+        if (valores.containsKey("id-alunos")) {
+            idAlunos = Integer.parseUnsignedInt(valores.get("id-alunos"));
+        }
         //System.out.println(valores.get("id-alunos"));
-	int idAcervo = 0;
+        int idAcervo = 0;
 
-	if (valores.containsKey("id-acervo")) {
-	    idAcervo = Integer.parseUnsignedInt(valores.get("id-acervo"));
-	}
+        if (valores.containsKey("id-acervo")) {
+            idAcervo = Integer.parseUnsignedInt(valores.get("id-acervo"));
+        }
 
-	Date dataEmprestimo = new Date();
+        Date dataEmprestimo = new Date();
 
-	if (valores.containsKey("data-emprestimo")) {
-	    dataEmprestimo = simpleFormat.parse(valores.get("data-emprestimo"));
-	}
-        
-	
+        if (valores.containsKey("data-emprestimo")) {
+            dataEmprestimo = simpleFormat.parse(valores.get("data-emprestimo"));
+        }
+
         Date dataPrevDevol = new Date(dataEmprestimo.getYear(), dataEmprestimo.getMonth(), dataEmprestimo.getDate() + EmprestimoModel.tempoEmprestimo);
-       
 
-	if (valores.containsKey("data-prev-devol")) {
-	    dataPrevDevol = simpleFormat.parse(valores.get("data-prev-devol"));
-	}
+        if (valores.containsKey("data-prev-devol")) {
+            dataPrevDevol = simpleFormat.parse(valores.get("data-prev-devol"));
+        }
 
-	Date dataDevolucao = new Date(0);
+        Date dataDevolucao = new Date(0);
 
-	if (valores.containsKey("data-devolucao")) {
-	    dataDevolucao = simpleFormat.parse(valores.get("data-devolucao"));
-	}
+        if (valores.containsKey("data-devolucao")) {
+            dataDevolucao = simpleFormat.parse(valores.get("data-devolucao"));
+        }
 
-	double multa = 0.00;
+        double multa = 0.00;
 
-	if (valores.containsKey("multa")) {
-	    multa = Double.parseDouble(valores.get("multa"));
-	}
-	PreparedStatement ps = con.prepareStatement("INSERT INTO `emprestimos` (`id-alunos`, `id-acervo`, `data-emprestimo`, `data-prev-devol`, `data-devolucao`, `multa`) VALUES (?, ?, ?, ?, ?, ?)");
-	ps.setInt(1, idAlunos);
-	ps.setInt(2, idAcervo);
-	ps.setDate(3, new java.sql.Date(dataEmprestimo.getTime()));
-	ps.setDate(4, new java.sql.Date(dataPrevDevol.getTime()));
-	ps.setDate(5, new java.sql.Date(dataDevolucao.getTime()));
-	ps.setDouble(6, multa);
+        if (valores.containsKey("multa")) {
+            multa = Double.parseDouble(valores.get("multa"));
+        }
+        PreparedStatement ps = con.prepareStatement("INSERT INTO `emprestimos` (`id-alunos`, `id-acervo`, `data-emprestimo`, `data-prev-devol`, `data-devolucao`, `multa`) VALUES (?, ?, ?, ?, ?, ?)");
+        ps.setInt(1, idAlunos);
+        ps.setInt(2, idAcervo);
+        ps.setDate(3, new java.sql.Date(dataEmprestimo.getTime()));
+        ps.setDate(4, new java.sql.Date(dataPrevDevol.getTime()));
+        ps.setDate(5, new java.sql.Date(dataDevolucao.getTime()));
+        ps.setDouble(6, multa);
 
-	int sucesso = ps.executeUpdate();
+        int sucesso = ps.executeUpdate();
 
-	return sucesso != 0;
+        return sucesso != 0;
 
     }
 
     public boolean atualizar(SortedMap<String, String> filtros, String id) throws SQLException, NumberFormatException, ParseException {
-	int idParsed = Integer.parseUnsignedInt(id);
-	if (filtros.containsKey("id-alunos")) {
-	    Integer.parseUnsignedInt(filtros.get("id-alunos"));
-	}
+        int idParsed = Integer.parseUnsignedInt(id);
+        if (filtros.containsKey("id-alunos")) {
+            Integer.parseUnsignedInt(filtros.get("id-alunos"));
+        }
 
-	if (filtros.containsKey("id-acervo")) {
-	    Integer.parseUnsignedInt(filtros.get("id-acervo"));
-	}
+        if (filtros.containsKey("id-acervo")) {
+            Integer.parseUnsignedInt(filtros.get("id-acervo"));
+        }
 
-	if (filtros.containsKey("data-emprestimo")) {
-	    Date.parse(filtros.get("data-emprestimo"));
-	}
+        if (filtros.containsKey("data-emprestimo")) {
+            Date.parse(filtros.get("data-emprestimo"));
+        }
 
-	if (filtros.containsKey("data-prev-devol")) {
-	    Date.parse(filtros.get("data-pre-devol"));
-	}
+        if (filtros.containsKey("data-prev-devol")) {
+            Date.parse(filtros.get("data-pre-devol"));
+        }
 
-	if (filtros.containsKey("data-devolucao")) {
-	    Date.parse(filtros.get("data-devolucao"));
-	}
+        if (filtros.containsKey("data-devolucao")) {
+            Date.parse(filtros.get("data-devolucao"));
+        }
 
-	if (filtros.containsKey("multa")) {
-	    Double.parseDouble(filtros.get("multa"));
-	}
+        if (filtros.containsKey("multa")) {
+            Double.parseDouble(filtros.get("multa"));
+        }
 
-	EmprestimoModel emprestimo = consultarId(Integer.toString(idParsed));
-	Object[] vals = emprestimo.retornarValoresRestantes(filtros);
-	String[] keys = {"id", "id-alunos", "id-acervo", "data-emprestimo", "data-prev-devol", "data-devolucao", "multa"};
-	Map<String, Object> valores = new LinkedHashMap<>();
+        EmprestimoModel emprestimo = consultarId(Integer.toString(idParsed));
+        Object[] vals = emprestimo.retornarValoresRestantes(filtros);
+        String[] keys = {"id", "id-alunos", "id-acervo", "data-emprestimo", "data-prev-devol", "data-devolucao", "multa"};
+        Map<String, Object> valores = new LinkedHashMap<>();
 
-	for (int i = 0; i < keys.length; i++) {
-	    valores.put(keys[i], vals[i]);
-	}
-	return atualizarPorId(valores);
+        for (int i = 0; i < keys.length; i++) {
+            valores.put(keys[i], vals[i]);
+        }
+        return atualizarPorId(valores);
     }
 
     public boolean atualizarPorId(Map<String, Object> parametros) throws NumberFormatException, SQLException, ParseException {
-	int id = Integer.parseUnsignedInt(parametros.get("id").toString());
-	int idAlunos = Integer.parseUnsignedInt(parametros.get("id-alunos").toString());
-	int idAcervo = Integer.parseUnsignedInt(parametros.get("id-acervo").toString());
-	
-	Date dataEmprestimo = (Date) (parametros.get("data-emprestimo"));
-	
-	Date dataPrevDevol = (Date) (parametros.get("data-prev-devol"));
-	
-	Date dataDevolucao = (Date) (parametros.get("data-devolucao"));
-	double multa = Double.parseDouble(parametros.get("multa").toString());
+        int id = Integer.parseUnsignedInt(parametros.get("id").toString());
+        int idAlunos = Integer.parseUnsignedInt(parametros.get("id-alunos").toString());
+        int idAcervo = Integer.parseUnsignedInt(parametros.get("id-acervo").toString());
 
-	PreparedStatement ps = con.prepareStatement("UPDATE `emprestimos` SET `id-alunos` = ?, `id-acervo` = ?, `data-emprestimo` = ?, `data-prev-devol` = ?, `data-devolucao` = ?, `multa` = ? WHERE `id` = ?");
-	ps.setInt(1, idAlunos);
-	ps.setInt(2, idAcervo);
-	ps.setDate(3, new java.sql.Date(dataEmprestimo.getTime()));
-	ps.setDate(4, new java.sql.Date(dataPrevDevol.getTime()));
-	ps.setDate(5, new java.sql.Date(dataDevolucao.getTime()));
-	ps.setDouble(6, multa);
-	ps.setInt(7, id);
+        Date dataEmprestimo = (Date) (parametros.get("data-emprestimo"));
 
-	int sucesso = ps.executeUpdate();
+        Date dataPrevDevol = (Date) (parametros.get("data-prev-devol"));
 
-	return sucesso != 0;
+        Date dataDevolucao = (Date) (parametros.get("data-devolucao"));
+        double multa = Double.parseDouble(parametros.get("multa").toString());
+
+        PreparedStatement ps = con.prepareStatement("UPDATE `emprestimos` SET `id-alunos` = ?, `id-acervo` = ?, `data-emprestimo` = ?, `data-prev-devol` = ?, `data-devolucao` = ?, `multa` = ? WHERE `id` = ?");
+        ps.setInt(1, idAlunos);
+        ps.setInt(2, idAcervo);
+        ps.setDate(3, new java.sql.Date(dataEmprestimo.getTime()));
+        ps.setDate(4, new java.sql.Date(dataPrevDevol.getTime()));
+        ps.setDate(5, new java.sql.Date(dataDevolucao.getTime()));
+        ps.setDouble(6, multa);
+        ps.setInt(7, id);
+
+        int sucesso = ps.executeUpdate();
+
+        return sucesso != 0;
     }
 
     public Set<EmprestimoModel> consultar(Map<String, String> filtros) throws NumberFormatException, SQLException, ParseException {
-	String sql;
-	Set<EmprestimoModel> emprestimoResultado = new LinkedHashSet<>();
-	sql = "SELECT * FROM `emprestimos` ORDER BY `id`";
-	int idAlunos = -1, idAcervo = -1;
-	java.sql.Date dataEmprestimo = new java.sql.Date(0), dataPrevDevol = new java.sql.Date(0), dataDevolucao = new java.sql.Date(0);
-	double multa = -1;
-        
+        String sql;
+        Set<EmprestimoModel> emprestimoResultado = new LinkedHashSet<>();
+        sql = "SELECT * FROM `emprestimos` ORDER BY `id`";
+        int idAlunos = -1, idAcervo = -1;
+        java.sql.Date dataEmprestimo = new java.sql.Date(0), dataPrevDevol = new java.sql.Date(0), dataDevolucao = new java.sql.Date(0);
+        double multa = -1;
 
-	if (filtros.containsKey("id-alunos")) {
-	    // Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
-	    idAlunos = Integer.parseUnsignedInt(filtros.get("id-alunos"));
-	}
+        if (filtros.containsKey("id-alunos")) {
+            // Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
+            idAlunos = Integer.parseUnsignedInt(filtros.get("id-alunos"));
+        }
 
-	if (filtros.containsKey("id-acervo")) {
-	    // Se lançar a exceção NumberFormatException, o valor não é um inteiro sem
-	    idAcervo = Integer.parseUnsignedInt(filtros.get("id-acervo"));
-	}
-        
-        if(filtros.containsKey("data-emprestimo")){
+        if (filtros.containsKey("id-acervo")) {
+            // Se lançar a exceção NumberFormatException, o valor não é um inteiro sem
+            idAcervo = Integer.parseUnsignedInt(filtros.get("id-acervo"));
+        }
+
+        if (filtros.containsKey("data-emprestimo")) {
             dataEmprestimo = new java.sql.Date(simpleFormat.parse(filtros.get("data-emprestimo")).getTime());
         }
-        
-        if(filtros.containsKey("data-prev-devol")){
+
+        if (filtros.containsKey("data-prev-devol")) {
             dataPrevDevol = new java.sql.Date(simpleFormat.parse(filtros.get("data-prev-devol")).getTime());
         }
-        
-        if(filtros.containsKey("data-devolucao")){
+
+        if (filtros.containsKey("data-devolucao")) {
             dataDevolucao = new java.sql.Date(simpleFormat.parse(filtros.get("data-devolucao")).getTime());
         }
-        
-        if(filtros.containsKey("multa")){
+
+        if (filtros.containsKey("multa")) {
             multa = Double.parseDouble(filtros.get("multa"));
         }
-        
-	ResultSet resultadoBusca = con.prepareCall(sql).executeQuery();
 
-	boolean adicionar;
-	while (resultadoBusca.next()) {
-	    adicionar = true;
+        ResultSet resultadoBusca = con.prepareCall(sql).executeQuery();
 
-	EmprestimoModel emprestimo = resultSetParaDisciplina(resultadoBusca);
+        boolean adicionar;
+        while (resultadoBusca.next()) {
+            adicionar = true;
+
+            EmprestimoModel emprestimo = resultSetParaDisciplina(resultadoBusca);
             if (filtros.containsKey("id-alunos")) {
-                if(idAlunos != emprestimo.getIdAlunos()){
+                if (idAlunos != emprestimo.getIdAlunos()) {
                     adicionar = false;
                 }
             }
 
             if (filtros.containsKey("id-acervo")) {
-                if(idAcervo != emprestimo.getIdAcervo()){
+                if (idAcervo != emprestimo.getIdAcervo()) {
                     adicionar = false;
                 }
             }
 
-            if(filtros.containsKey("data-emprestimo")){
-                if(dataEmprestimo != emprestimo.getDataEmprestimo()){
+            if (filtros.containsKey("data-emprestimo")) {
+                if (dataEmprestimo != emprestimo.getDataEmprestimo()) {
                     adicionar = false;
                 }
             }
 
-            if(filtros.containsKey("data-prev-devol")){
-                if(dataPrevDevol != emprestimo.getDataPrevDevol()){
+            if (filtros.containsKey("data-prev-devol")) {
+                if (dataPrevDevol != emprestimo.getDataPrevDevol()) {
                     adicionar = false;
                 }
             }
 
-            if(filtros.containsKey("data-devolucao")){
-                if(dataDevolucao != emprestimo.getDataDevolucao()){
+            if (filtros.containsKey("data-devolucao")) {
+                if (dataDevolucao != emprestimo.getDataDevolucao()) {
                     adicionar = false;
                 }
             }
 
-            if(filtros.containsKey("multa")){
-                if(multa != emprestimo.getMulta()){
+            if (filtros.containsKey("multa")) {
+                if (multa != emprestimo.getMulta()) {
                     adicionar = false;
                 }
             }
-	    if(adicionar){
-		emprestimoResultado.add(emprestimo);
-		System.out.println("aaaaaaaaaaa");
-	    }
-	}
+            if (adicionar) {
+                emprestimoResultado.add(emprestimo);
+                System.out.println("aaaaaaaaaaa");
+            }
+        }
 
-	return emprestimoResultado;
+        return emprestimoResultado;
     }
 
     private EmprestimoModel resultSetParaDisciplina(ResultSet res) throws SQLException, ParseException {
-	
-	int id = res.getInt("id");
-	int idAlunos = res.getInt("id-alunos");        
-	int idAcervo = res.getInt("id-acervo");
-	
-                  Date dataEmprestimo = simpleFormat.parse(res.getDate("data-emprestimo").toString());
-                  Date dataPrevDevol = simpleFormat.parse(res.getDate("data-prev-devol").toString());
-                  Date dataDevolucao = simpleFormat.parse(res.getDate("data-devolucao").toString());
-                  double multa = res.getDouble("multa");
-        
-	return new EmprestimoModel(id, idAlunos, idAcervo, dataEmprestimo, dataPrevDevol, dataDevolucao, multa);
+
+        int id = res.getInt("id");
+        int idAlunos = res.getInt("id-alunos");
+        int idAcervo = res.getInt("id-acervo");
+
+        Date dataEmprestimo = simpleFormat.parse(res.getDate("data-emprestimo").toString());
+        Date dataPrevDevol = simpleFormat.parse(res.getDate("data-prev-devol").toString());
+        Date dataDevolucao = simpleFormat.parse(res.getDate("data-devolucao").toString());
+        double multa = res.getDouble("multa");
+
+        return new EmprestimoModel(id, idAlunos, idAcervo, dataEmprestimo, dataPrevDevol, dataDevolucao, multa);
     }
 
     public EmprestimoModel consultarId(String idStr) throws NumberFormatException, SQLException, ParseException {
-	PreparedStatement ps = con.prepareStatement("SELECT * FROM `emprestimos` WHERE `id` = ?");
-	
-	// Se id não for um inteiro sem sinal, joga a exceção NumberFormatException
-	int id = Integer.parseUnsignedInt(idStr);
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM `emprestimos` WHERE `id` = ?");
 
-	ps.setInt(1, id);
+        // Se id não for um inteiro sem sinal, joga a exceção NumberFormatException
+        int id = Integer.parseUnsignedInt(idStr);
 
-	ResultSet resultado = ps.executeQuery();
+        ps.setInt(1, id);
 
-	if (resultado.next()) {
-	    return resultSetParaDisciplina(resultado);
-	}
-	return null;
+        ResultSet resultado = ps.executeQuery();
+
+        if (resultado.next()) {
+            return resultSetParaDisciplina(resultado);
+        }
+        return null;
 
     }
 

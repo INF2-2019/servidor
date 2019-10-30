@@ -12,113 +12,113 @@ public class EmprestimoModel extends Model {
     public static int tempoEmprestimo = 7;
 
     public EmprestimoModel(int id, int idAlunos, int idAcervo, Date dataEmprestimo, Date dataPrevDevol, Date dataDevolucao, double multa) {
-	this.id = id;
-	this.idAlunos = idAlunos;
-	this.idAcervo = idAcervo;
-	this.dataEmprestimo = dataEmprestimo;
-	this.dataPrevDevol = dataPrevDevol;
-	this.dataDevolucao = dataDevolucao;
-	this.multa = multa;
+        this.id = id;
+        this.idAlunos = idAlunos;
+        this.idAcervo = idAcervo;
+        this.dataEmprestimo = dataEmprestimo;
+        this.dataPrevDevol = dataPrevDevol;
+        this.dataDevolucao = dataDevolucao;
+        this.multa = multa;
     }
 
     public Object[] retornarValoresRestantes(Map<String, String> parametros) {
-	Object[] retorno = new Object[7];
-	retorno[0] = id;
+        Object[] retorno = new Object[7];
+        retorno[0] = id;
 
-	if (!parametros.containsKey("id-alunos")) {
-	    retorno[1] = idAlunos;
-	} else {
-	    retorno[1] = parametros.get("id-alunos");
-	}
+        if (!parametros.containsKey("id-alunos")) {
+            retorno[1] = idAlunos;
+        } else {
+            retorno[1] = parametros.get("id-alunos");
+        }
 
-	if (!parametros.containsKey("id-acervo")) {
-	    retorno[2] = idAcervo;
-	} else {
-	    retorno[2] = parametros.get("id-acervo");
-	}
+        if (!parametros.containsKey("id-acervo")) {
+            retorno[2] = idAcervo;
+        } else {
+            retorno[2] = parametros.get("id-acervo");
+        }
 
-	if (!parametros.containsKey("data-emprestimo")) {
-	    retorno[3] = dataEmprestimo;
-	} else {
-	    retorno[3] = parametros.get("data-emprestimo");
-	}
-	if (!parametros.containsKey("data-prev-devol")) {
-	    retorno[4] = dataPrevDevol;
-	} else {
-	    retorno[4] = parametros.get("data-prev-devol");
-	}
-	if (!parametros.containsKey("data-devolucao")) {
-	    retorno[5] = dataDevolucao;
-	} else {
-	    retorno[5] = parametros.get("data-devolucao");
-	}
-	if (!parametros.containsKey("multa")) {
-	    retorno[6] = multa;
-	} else {
-	    retorno[6] = parametros.get("multa");
-	}
+        if (!parametros.containsKey("data-emprestimo")) {
+            retorno[3] = dataEmprestimo;
+        } else {
+            retorno[3] = parametros.get("data-emprestimo");
+        }
+        if (!parametros.containsKey("data-prev-devol")) {
+            retorno[4] = dataPrevDevol;
+        } else {
+            retorno[4] = parametros.get("data-prev-devol");
+        }
+        if (!parametros.containsKey("data-devolucao")) {
+            retorno[5] = dataDevolucao;
+        } else {
+            retorno[5] = parametros.get("data-devolucao");
+        }
+        if (!parametros.containsKey("multa")) {
+            retorno[6] = multa;
+        } else {
+            retorno[6] = parametros.get("multa");
+        }
 
-	return retorno;
+        return retorno;
     }
 
     public EmprestimoModel(int idAlunos, int idAcervos, Date dataEmprestimo, Date dataPrevDevol, Date dataDevolucao, double multa) {
-	this(ID_INDEFINIDO, idAlunos, idAcervos, dataEmprestimo, dataPrevDevol, dataDevolucao, multa);
+        this(ID_INDEFINIDO, idAlunos, idAcervos, dataEmprestimo, dataPrevDevol, dataDevolucao, multa);
     }
 
     public int getId() {
-	return id;
+        return id;
     }
 
     public void setId(int id) {
-	this.id = id;
+        this.id = id;
     }
 
     public int getIdAlunos() {
-	return idAlunos;
+        return idAlunos;
     }
 
     public void setIdAlunos(int idAlunos) {
-	this.idAlunos = idAlunos;
+        this.idAlunos = idAlunos;
     }
 
     public int getIdAcervo() {
-	return idAcervo;
+        return idAcervo;
     }
 
     public void setIdAcervo(int idAcervo) {
-	this.idAcervo = idAcervo;
+        this.idAcervo = idAcervo;
     }
 
     public Date getDataEmprestimo() {
-	return dataEmprestimo;
+        return dataEmprestimo;
     }
 
     public void setDataEmprestimo(Date dataEmprestimo) {
-	this.dataEmprestimo = dataEmprestimo;
+        this.dataEmprestimo = dataEmprestimo;
     }
 
     public Date getDataPrevDevol() {
-	return dataPrevDevol;
+        return dataPrevDevol;
     }
 
     public void setDataPrevDevol(Date dataPrevDevol) {
-	this.dataPrevDevol = dataPrevDevol;
+        this.dataPrevDevol = dataPrevDevol;
     }
 
     public Date getDataDevolucao() {
-	return dataDevolucao;
+        return dataDevolucao;
     }
 
     public void setDataDevolucao(Date dataDevolucao) {
-	this.dataDevolucao = dataDevolucao;
+        this.dataDevolucao = dataDevolucao;
     }
 
     public double getMulta() {
-	return multa;
+        return multa;
     }
 
     public void setMulta(double multa) {
-	this.multa = multa;
+        this.multa = multa;
     }
 
 }
