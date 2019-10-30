@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * Classe para validação de parametros de requisições relativas ao acervo
  *
  * @author Jonata Novais Cirqueira
  */

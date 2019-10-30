@@ -3,6 +3,9 @@ package biblioteca.acervo;
 import org.apache.commons.mail.*;
 
 /**
+ * <h1> Envio de Email </h1>
+ * OBS: Para a classe funcionar devidamente pode ser necessário desabilitar o firewall de seu
+ * sistema operacional e seu anti-vírus.
  *
  * @author Jonata Novais Cirqueira
  * @author Nikolas Victor Mota
