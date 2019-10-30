@@ -28,45 +28,45 @@ import utils.Headers;
 @WebServlet(name = "AlterarFoto", urlPatterns = {"/diario/alunos/altfoto"})
 public class AlterarFoto extends HttpServlet {
 
-     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        Connection conexao = ConnectionFactory.getDiario();
-        AlunosRepository rep = new AlunosRepository(conexao);
-        PrintWriter out = response.getWriter();
-        Headers.XMLHeaders(response);
-        String id = request.getParameter("id");
-        String foto = request.getParameter("foto");
-        
-		
-        if (rep.checarAutorizacaoAluno(request, response, id) || rep.checarAutorizacaoADM(request, response)) {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		Connection conexao = ConnectionFactory.getDiario();
+		AlunosRepository rep = new AlunosRepository(conexao);
+		PrintWriter out = response.getWriter();
+		Headers.XMLHeaders(response);
+		String id = request.getParameter("id");
+		String foto = request.getParameter("foto");
 
-            try {
-                if(rep.alterarFoto(id, foto)) {
-                    View sucessoView = new SucessoView("Foto atualizada com sucesso.");
-                    sucessoView.render(out);
-                } else {
-                    out.println("<erro><mensagem>Não foi possível alterar a foto</mensagem></erro>");
-                }
-            } catch (SQLException excecaoSQL) {
-                response.setStatus(400);
-                System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
-                View erroView = new ErroView(excecaoSQL);
-                try {
-                        erroView.render(out);
-                } catch (RenderException e) {
-                        throw new ServletException(e);
-                }
-            } catch (RenderException e) {
-                throw new ServletException(e);
-            }
+		if (rep.checarAutorizacaoAluno(request, response, id) || rep.checarAutorizacaoADM(request, response)) {
 
-        } else {
-                response.setStatus(401);
-                out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
-        } 	
-            
-               
-    }
+			try {
+				if(rep.alterarFoto(id, foto)) {
+					View sucessoView = new SucessoView("Foto atualizada com sucesso.");
+					sucessoView.render(out);
+				} else {
+					out.println("<erro><mensagem>Não foi possível alterar a foto</mensagem></erro>");
+				}
+			} catch (SQLException excecaoSQL) {
+				response.setStatus(400);
+				System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+
+				View erroView = new ErroView(excecaoSQL);
+				try {
+						erroView.render(out);
+				} catch (RenderException e) {
+						throw new ServletException(e);
+				}
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+
+		} else {
+				response.setStatus(401);
+				out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
+	} 	
+
+
+	}
 
 }

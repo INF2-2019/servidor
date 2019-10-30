@@ -25,49 +25,49 @@ import utils.autenticador.DiarioCargos;
  * @author User
  */
 public class AlunosRepository {
-    private Connection con;
-    
-    public AlunosRepository(Connection con){
-        this.con = con;
-    }
-    
-    
-    public String deletarAlunos(String id) throws SQLException{
+	private Connection con;
+
+	public AlunosRepository(Connection con){
+		this.con = con;
+	}
+
+
+	public String deletarAlunos(String id) throws SQLException{
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM `matriculas` WHERE `id-alunos` = ?");
 		int idParsed = Integer.parseUnsignedInt(id);
 		ps.setInt(1, idParsed);
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()) 
 			return "mat";
-        String sql;
-        sql = "DELETE FROM `alunos` WHERE `id` = ?";
-        
-        PreparedStatement stat =  con.prepareStatement(sql);
-        stat.setInt(1, idParsed);
-       
-        int sucesso = stat.executeUpdate();
-        // Se deletou algo, retorna true, senão retorna false
+		String sql;
+		sql = "DELETE FROM `alunos` WHERE `id` = ?";
+
+		PreparedStatement stat =  con.prepareStatement(sql);
+		stat.setInt(1, idParsed);
+
+		int sucesso = stat.executeUpdate();
+		// Se deletou algo, retorna true, senão retorna false
 		if (sucesso != 0)
 			return "sucesso";
 		return "erro";
-    }
-    
-    public boolean inserirAlunos(String id, String nome, String email, String senha, String sexo, String nascimento, String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf, String foto  ) throws NumberFormatException, SQLException, NoSuchAlgorithmException, ParseException, InvalidKeySpecException {
-		
+	}
+
+	public boolean inserirAlunos(String id, String nome, String email, String senha, String sexo, String nascimento, String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf, String foto  ) throws NumberFormatException, SQLException, NoSuchAlgorithmException, ParseException, InvalidKeySpecException {
+
 
 		int idParsed = Integer.parseUnsignedInt(id);
 		int numeroParsed = Integer.parseUnsignedInt(numero);
 		int cepParsed = Integer.parseUnsignedInt(cep);
-		
+
 		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy"); 
 		 Date nascimentoDate = null;
 		 java.sql.Date data = null;
 		nascimentoDate = formato.parse(nascimento);
 		data = new java.sql.Date(nascimentoDate.getTime());
-		
+
 		String hashSenha = null;
 		hashSenha = hash(senha);
-		
+
 		PreparedStatement ps = con.prepareStatement("INSERT INTO `alunos` (`id`, `nome`, `email`, `senha`, `sexo`, `nascimento`, `logradouro`, `numero`, `complemento`, `bairro`, `cidade`, `cep`, `uf`, `foto`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 		ps.setInt(1, idParsed);
@@ -84,15 +84,15 @@ public class AlunosRepository {
 		ps.setInt(12, cepParsed);
 		ps.setString(13, uf);
 		ps.setString(14, foto);
-		
+
 
 		int sucesso = ps.executeUpdate();
 
 		return sucesso != 0;
 
 	}
-    
-    public boolean alterarAlunos(String id, String nome, String email, String senha, String sexo, String nascimento, String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf, String foto  ) throws NumberFormatException, SQLException, NoSuchAlgorithmException, ParseException {
+
+	public boolean alterarAlunos(String id, String nome, String email, String senha, String sexo, String nascimento, String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf, String foto  ) throws NumberFormatException, SQLException, NoSuchAlgorithmException, ParseException {
 		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy"); 
 		Date nascimentoDate = null;
 		java.sql.Date data = null;
@@ -160,7 +160,7 @@ public class AlunosRepository {
 			query += ",";
 		   query += " foto='"+foto+"'";
 		}
-		
+
 
 		query += " WHERE `id` = "+id+"";
 
@@ -168,16 +168,16 @@ public class AlunosRepository {
 
 		int sucesso = ps.executeUpdate();
 
-return sucesso != 0;
+	return sucesso != 0;
 
 	}
-	
+
 	public boolean checarAutorizacaoADM(HttpServletRequest request, HttpServletResponse response) {
 		DiarioAutenticador x = new DiarioAutenticador(request, response);
-		
+
 		return x.cargoLogado() == DiarioCargos.ADMIN;
 	}
-	
+
 	public String listarAlunos() throws SQLException {
 		String xml  = "";
 		Statement stmt = con.createStatement();
@@ -189,7 +189,7 @@ return sucesso != 0;
 		xml = viewConsulta.XMLConsultaAlunos(xml);
 		return xml;
 	}
-	
+
 	public String consultarPorId(String id) throws SQLException {
 		String xml = "";
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ?");
@@ -201,51 +201,51 @@ return sucesso != 0;
 		}
 		return xml;
 	}
-        
-        public boolean checarAutorizacaoAluno(HttpServletRequest request, HttpServletResponse response, String id) {
+
+		public boolean checarAutorizacaoAluno(HttpServletRequest request, HttpServletResponse response, String id) {
 		DiarioAutenticador x = new DiarioAutenticador(request, response);
 		int idParsed= Integer.parseUnsignedInt(id);
 		return x.cargoLogado() == DiarioCargos.ALUNO && x.idLogado() == idParsed;
 	}
-        
-        public Boolean alterarSenha(String id, String senha) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
-            String hashSenha = null;
-            int idParsed = Integer.parseUnsignedInt(id);
-            hashSenha = hash(senha);
-            String query = "UPDATE alunos SET senha= ? WHERE id = ?";
 
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, hashSenha);
-            ps.setInt(2, idParsed);
-            int sucesso = ps.executeUpdate();
-            return sucesso!=0;
-        }
-        
-        public Boolean alterarFoto(String id, String foto) throws SQLException {
-            int idParsed = Integer.parseUnsignedInt(id);            
-            String query = "UPDATE alunos SET foto= ? WHERE id = ?";
+	public Boolean alterarSenha(String id, String senha) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
+		String hashSenha = null;
+		int idParsed = Integer.parseUnsignedInt(id);
+		hashSenha = hash(senha);
+		String query = "UPDATE alunos SET senha= ? WHERE id = ?";
 
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, foto);
-            ps.setInt(2, idParsed);
-            int sucesso = ps.executeUpdate();
-            return sucesso!=0;
-        }
-		
-		public Boolean logarAluno(HttpServletRequest request, HttpServletResponse response, String id, String senha) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
-			int idParsed = Integer.parseUnsignedInt(id);
-			DiarioAutenticador x = new DiarioAutenticador(request, response);
-            String query = "SELECT * FROM `alunos` WHERE `id` = ?";
-			PreparedStatement ps = con.prepareStatement(query);
-			ps.setInt(1, idParsed);
-			ResultSet rs = ps.executeQuery();
-			rs.next();
-			if(Hasher.validar(senha, rs.getString("senha"))) {
-				x.logar(idParsed, DiarioCargos.ALUNO, false);
-				return true;
-			}
-			return false;
-				
+		PreparedStatement ps = con.prepareStatement(query);
+		ps.setString(1, hashSenha);
+		ps.setInt(2, idParsed);
+		int sucesso = ps.executeUpdate();
+		return sucesso!=0;
+	}
+
+	public Boolean alterarFoto(String id, String foto) throws SQLException {
+		int idParsed = Integer.parseUnsignedInt(id);            
+		String query = "UPDATE alunos SET foto= ? WHERE id = ?";
+
+		PreparedStatement ps = con.prepareStatement(query);
+		ps.setString(1, foto);
+		ps.setInt(2, idParsed);
+		int sucesso = ps.executeUpdate();
+		return sucesso!=0;
+	}
+
+	public Boolean logarAluno(HttpServletRequest request, HttpServletResponse response, String id, String senha) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
+		int idParsed = Integer.parseUnsignedInt(id);
+		DiarioAutenticador x = new DiarioAutenticador(request, response);
+		String query = "SELECT * FROM `alunos` WHERE `id` = ?";
+		PreparedStatement ps = con.prepareStatement(query);
+		ps.setInt(1, idParsed);
+		ResultSet rs = ps.executeQuery();
+		rs.next();
+		if(Hasher.validar(senha, rs.getString("senha"))) {
+			x.logar(idParsed, DiarioCargos.ALUNO, false);
+			return true;
 		}
-   
+		return false;
+
+	}
+
 }

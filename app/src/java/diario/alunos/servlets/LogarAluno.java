@@ -38,11 +38,11 @@ public class LogarAluno extends HttpServlet {
 
 		try {
 			if(rep.logarAluno(request, response, id, senha)) {
-				DiarioAutenticador x = new DiarioAutenticador(request, response);
-				conexao.close();
+				
 			}
 			else
 				out.println("<erro><mensagem>Senha incorreta</mensagem></erro>");
+			conexao.close();
 		} catch(SQLException ex) {
 			out.println("<erro><mensagem>Usuario inexistente</mensagem></erro>");
 		} catch (NoSuchAlgorithmException ex) {
@@ -50,7 +50,7 @@ public class LogarAluno extends HttpServlet {
 		} catch (InvalidKeySpecException ex) {
 			Logger.getLogger(LogarAluno.class.getName()).log(Level.SEVERE, null, ex);
 		}
-               
+             
     }
 
 }
