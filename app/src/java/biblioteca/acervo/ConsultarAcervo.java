@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
 
 @WebServlet(name = "ConsultarAcervo", urlPatterns = "/biblioteca/acervo/consultar")
 /**
@@ -26,6 +28,12 @@ public class ConsultarAcervo extends HttpServlet {
 
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
 		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
+
+		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
+		if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
+			resposta.setStatus(403);
+			return;
+		}
 
 		PrintWriter saida = resposta.getWriter();
 		saida.println("<acervo>");

@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
 
 @WebServlet(name = "inserir", urlPatterns = {"/biblioteca/acervo/inserir"})
 /**
@@ -32,6 +34,12 @@ public class InserirAcervo extends HttpServlet {
 
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
 		resposta.setContentType("application/xml;charset=UTF-8");
+
+		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
+		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			resposta.setStatus(403);
+			return;
+		}
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getBiblioteca()) {
