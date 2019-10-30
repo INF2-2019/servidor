@@ -36,9 +36,9 @@ public class ConsultarProfessor extends HttpServlet {
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
 		if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
-			resposta.setStatus(403);
-			return;
-		}
+//			resposta.setStatus(403);
+//			return;
+		}System.out.println("aaaaaaaaaaaa");
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
@@ -46,9 +46,17 @@ public class ConsultarProfessor extends HttpServlet {
 			if (conexao == null) {
 				throw new SQLException("Impossível se conectar ao banco de dados");
 			}
-
-			String sqlQuery = "SELECT * FROM `professores`";
-			ResultSet rs = conexao.createStatement().executeQuery(sqlQuery);
+			
+			ResultSet rs;
+			if(requisicao.getParameter("id") == null) {
+				String sqlQuery = "SELECT * FROM `professores`";
+				rs = conexao.createStatement().executeQuery(sqlQuery);
+			} else {
+				String sqlQuery = "SELECT * FROM `professores` WHERE `id` = ?";
+				PreparedStatement ps = conexao.prepareStatement(sqlQuery);
+				ps.setInt(1, Integer.parseInt(requisicao.getParameter("id")));
+				rs = ps.executeQuery();
+			}
 
 			saida.println("<professores>");
 			while (rs.next()) {
