@@ -127,7 +127,7 @@ public class ConsultarAcervo extends HttpServlet {
 		saida.println("<periodico>");
 		saida.println("  <id>" + item.getInt("id") + "</id>");
 		saida.println("  <periodicidade>" + item.getString("periodicidade") + "</periodicidade>");
-		saida.println("  <mes>" + item.getInt("mes") + "</mes>");
+		saida.println("  <mes>" + item.getString("mes") + "</mes>");
 		saida.println("  <volume>" + item.getInt("volume") + "</volume>");
 		saida.println("  <subtipo>" + item.getString("subtipo") + "</subtipo>");
 		saida.println("  <issn>" + item.getInt("issn") + "</issn>");

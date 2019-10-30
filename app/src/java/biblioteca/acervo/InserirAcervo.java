@@ -138,14 +138,15 @@ public class InserirAcervo extends HttpServlet {
 	private void inserirPeriodico(int idAcervo, HttpServletRequest requisicao, Connection conexao)
 			throws SQLException, NumberFormatException {
 		PreparedStatement ps = conexao.prepareStatement("INSERT INTO `periodicos` "
-				+ "(`id-acervo`, `periodicidade`, `mes`, `volume`, `subtipo`, `issn`) "
-				+ "VALUES (?, ?, ?, ?, ?, ?)");
-		ps.setInt(1, idAcervo);
-		ps.setString(2, requisicao.getParameter("periodicidade"));
-		ps.setString(3, requisicao.getParameter("mes"));
-		ps.setInt(4, Integer.parseInt(requisicao.getParameter("volume")));
-		ps.setString(5, requisicao.getParameter("subtipo"));
-		ps.setInt(6, Integer.parseInt(requisicao.getParameter("issn")));
+				+ "(`id`, `id-acervo`, `periodicidade`, `mes`, `volume`, `subtipo`, `issn`) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?)");
+		ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
+		ps.setInt(2, idAcervo);
+		ps.setString(3, requisicao.getParameter("periodicidade"));
+		ps.setString(4, requisicao.getParameter("mes"));
+		ps.setInt(5, Integer.parseInt(requisicao.getParameter("volume")));
+		ps.setString(6, requisicao.getParameter("subtipo"));
+		ps.setInt(7, Integer.parseInt(requisicao.getParameter("issn")));
 		ps.execute();
 		ps.close();
 	}
