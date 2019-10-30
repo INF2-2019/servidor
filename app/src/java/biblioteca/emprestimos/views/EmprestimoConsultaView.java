@@ -2,6 +2,7 @@ package biblioteca.emprestimos.views;
 
 import biblioteca.emprestimos.model.EmprestimoModel;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -46,6 +47,7 @@ public class EmprestimoConsultaView extends View<Set<EmprestimoModel>> {
     }
 
     private static Element criarElementoDocument(Document documento, EmprestimoModel e) {
+        SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         Element elemento = documento.createElement("emprestimo");
 
@@ -60,9 +62,9 @@ public class EmprestimoConsultaView extends View<Set<EmprestimoModel>> {
         id.appendChild(documento.createTextNode("" + e.getId()));
         idAlunos.appendChild(documento.createTextNode("" + e.getIdAlunos()));
         idAcervo.appendChild(documento.createTextNode("" + e.getIdAcervo()));
-        dataEmprestimo.appendChild(documento.createTextNode("" + e.getDataEmprestimo()));
-        dataPrevDevol.appendChild(documento.createTextNode("" + e.getDataPrevDevol()));
-        dataDevolucao.appendChild(documento.createTextNode("" + e.getDataDevolucao()));
+        dataEmprestimo.appendChild(documento.createTextNode("" + simpleFormat.format(e.getDataEmprestimo())));
+        dataPrevDevol.appendChild(documento.createTextNode("" + simpleFormat.format(e.getDataPrevDevol())));
+        dataDevolucao.appendChild(documento.createTextNode("" + simpleFormat.format(e.getDataDevolucao())));
         multa.appendChild(documento.createTextNode("" + e.getMulta()));
 
         elemento.appendChild(id);

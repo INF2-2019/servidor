@@ -41,7 +41,6 @@ public class EmprestimoRepository {
         int idParsed = Integer.parseUnsignedInt(id);
         double multa = 0.00;
         sql = "SELECT * FROM `emprestimos` WHERE `id`= ?";
-        //System.out.println("AAAAAA");
 
         java.util.Date dataDevolucao = new java.util.Date();
         PreparedStatement stat = con.prepareStatement(sql);
@@ -94,7 +93,7 @@ public class EmprestimoRepository {
             idAcervo = Integer.parseUnsignedInt(valores.get("id-acervo"));
         }
 
-        Date dataEmprestimo = new Date();
+        Date dataEmprestimo = new Date(new Date().getTime());
 
         if (valores.containsKey("data-emprestimo")) {
             dataEmprestimo = simpleFormat.parse(valores.get("data-emprestimo"));
@@ -286,8 +285,11 @@ public class EmprestimoRepository {
         int idAcervo = res.getInt("id-acervo");
 
         Date dataEmprestimo = simpleFormat.parse(res.getDate("data-emprestimo").toString());
+        dataEmprestimo.setTime(dataEmprestimo.getTime()+86400000);
         Date dataPrevDevol = simpleFormat.parse(res.getDate("data-prev-devol").toString());
+        dataPrevDevol.setTime(dataPrevDevol.getTime()+86400000);
         Date dataDevolucao = simpleFormat.parse(res.getDate("data-devolucao").toString());
+        dataDevolucao.setTime(dataDevolucao.getTime()+86400000);
         double multa = res.getDouble("multa");
 
         return new EmprestimoModel(id, idAlunos, idAcervo, dataEmprestimo, dataPrevDevol, dataDevolucao, multa);

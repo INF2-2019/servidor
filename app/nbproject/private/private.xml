@@ -3,10 +3,21 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/utils/Headers.java</file>
-            <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/biblioteca/emprestimos/repository/EmprestimoRepository.java</file>
+            <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/config/_bd.properties</file>
+            <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/biblioteca/emprestimos/InserirEmprestimos.java</file>
+            <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/biblioteca/emprestimos/ConsultarEmprestimos.java</file>
             <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/biblioteca/emprestimos/DeletarEmprestimos.java</file>
+            <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/biblioteca/emprestimos/model/EmprestimoModel.java</file>
+            <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/biblioteca/emprestimos/model/Model.java</file>
+            <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/biblioteca/emprestimos/views/RenderException.java</file>
+            <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/biblioteca/emprestimos/AtualizarEmprestimos.java</file>
+            <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/biblioteca/emprestimos/views/ErroView.java</file>
+            <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/biblioteca/emprestimos/views/View.java</file>
+            <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/biblioteca/emprestimos/repository/EmprestimoRepository.java</file>
+            <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/biblioteca/emprestimos/views/SucessoView.java</file>
+            <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/biblioteca/emprestimos/ConsultarPorId.java</file>
             <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/biblioteca/emprestimos/DevolverEmprestimos.java</file>
+            <file>file:/C:/Users/Aluno/Documents/NetBeansProjects/servidor/app/src/java/biblioteca/emprestimos/views/EmprestimoConsultaView.java</file>
         </group>
     </open-files>
 </project-private>
