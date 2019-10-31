@@ -19,6 +19,8 @@ import diario.cursos.view.RenderException;
 import diario.cursos.view.SucessoView;
 import diario.cursos.view.View;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.text.ParseException;
 import utils.ConnectionFactory;
 import utils.Headers;
 
@@ -79,11 +81,11 @@ public class InserirAlunos extends HttpServlet {
 				}
 			} catch (RenderException e) {
 				throw new ServletException(e);
-			} catch (NoSuchAlgorithmException ex) {
-				Logger.getLogger(InserirAlunos.class.getName()).log(Level.SEVERE, null, ex);
+			} catch (NoSuchAlgorithmException | ParseException | InvalidKeySpecException ex) {
+				out.println("<erro><mensagem>Erro severo</mensagem></erro>");
 			} 
 		} else {
-			response.setStatus(401);
+			response.setStatus(403);
 			out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
 		}
                

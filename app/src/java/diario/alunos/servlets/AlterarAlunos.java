@@ -17,6 +17,7 @@ import diario.cursos.view.RenderException;
 import diario.cursos.view.SucessoView;
 import diario.cursos.view.View;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 import utils.ConnectionFactory;
 import utils.Headers;
@@ -58,7 +59,7 @@ public class AlterarAlunos extends HttpServlet {
 				sucessoView.render(out);
 			} catch (NumberFormatException excecaoFormatoErrado) {
 				response.setStatus(400);
-				System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+				System.err.println("Numero inteiro invalido para o parametro. Erro: " + excecaoFormatoErrado.toString());
 
 				View erroView = new ErroView(excecaoFormatoErrado);
 				try {
@@ -68,7 +69,7 @@ public class AlterarAlunos extends HttpServlet {
 				}
 			} catch (SQLException excecaoSQL) {
 				response.setStatus(400);
-				System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+				System.err.println("Busca SQL invalida. Erro: " + excecaoSQL.toString());
 
 				View erroView = new ErroView(excecaoSQL);
 				try {
@@ -79,11 +80,13 @@ public class AlterarAlunos extends HttpServlet {
 			} catch (RenderException e) {
 				throw new ServletException(e);
 			} catch (NoSuchAlgorithmException | ParseException ex) {
-				Logger.getLogger(AlterarAlunos.class.getName()).log(Level.SEVERE, null, ex);
+				out.println("<erro><mensagem>Erro severo</mensagem></erro>");
+			} catch (InvalidKeySpecException ex) {
+				out.println("<erro><mensagem>Erro severo</mensagem></erro>");
 			}
 			 
 		} else {
-			response.setStatus(401);
+			response.setStatus(403);
 			out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
 		} 	
             

@@ -78,7 +78,7 @@ public class DeletarAlunos extends HttpServlet {
 			
 			
         } else {
-			response.setStatus(401);
+			response.setStatus(403);
 			out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
 		}
     }

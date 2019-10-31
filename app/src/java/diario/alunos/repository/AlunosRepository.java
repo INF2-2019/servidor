@@ -16,7 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
 import utils.Hasher;
-import static utils.Hasher.hash;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -66,7 +65,7 @@ public class AlunosRepository {
 		data = new java.sql.Date(nascimentoDate.getTime());
 
 		String hashSenha = null;
-		hashSenha = hash(senha);
+		hashSenha = Hasher.hash(senha);
 
 		PreparedStatement ps = con.prepareStatement("INSERT INTO `alunos` (`id`, `nome`, `email`, `senha`, `sexo`, `nascimento`, `logradouro`, `numero`, `complemento`, `bairro`, `cidade`, `cep`, `uf`, `foto`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
@@ -92,79 +91,167 @@ public class AlunosRepository {
 
 	}
 
-	public boolean alterarAlunos(String id, String nome, String email, String senha, String sexo, String nascimento, String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf, String foto  ) throws NumberFormatException, SQLException, NoSuchAlgorithmException, ParseException {
+	public boolean alterarAlunos(String id, String nome, String email, String senha, String sexo, String nascimento, String logradouro, String numero, String complemento, String bairro, String cidade, String cep, String uf, String foto  ) throws NumberFormatException, SQLException, NoSuchAlgorithmException, ParseException, InvalidKeySpecException {
 		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy"); 
 		Date nascimentoDate = null;
 		java.sql.Date data = null;
-		nascimentoDate = formato.parse(nascimento);
-		data = new java.sql.Date(nascimentoDate.getTime());
 		int adcs = 0;
+		int numeroParsed = 0;
+		int cepParsed = 0;
+		int idParsed = Integer.parseUnsignedInt(id);
+		int cont = 1;
+		String hashSenha = null;
+		hashSenha = Hasher.hash(senha);
+		boolean[] pars = new boolean[13];
+		for (int i = 0; i < 13; i++)
+			pars[i] = false;
 		String query = "UPDATE alunos SET";
 		if (!"".equals(nome)) {
-			query += " nome='"+nome+"'";
+			query += " nome= ?";
 			adcs++;
+			pars[0] = true;
 		}
 		if (!"".equals(email)) {
 		   if (adcs > 0) 
 			query += ",";
-		   query += " email='"+email+"'";
+		   query += " email= ?";
 		  adcs++;
+		  pars[1] = true;
+		}
+		if (!"".equals(senha)) {
+		   if (adcs > 0) 
+			query += ",";
+		   query += " senha= ?";
+		  adcs++;
+		  pars[2] = true;
 		}
 		if (!"".equals(sexo)) {
 		   if (adcs > 0) 
 			query += ",";
-		   query += " sexo='"+sexo+"'";
+		   query += " sexo= ?";
+		   pars[3] = true;
 		}
 		if (!"".equals(nascimento)) {
+			nascimentoDate = formato.parse(nascimento);
+			data = new java.sql.Date(nascimentoDate.getTime());
 		   if (adcs > 0) 
 			query += ",";
-		   query += " nascimento='"+data+"'";
+		   query += " nascimento= ?";
+		   pars[4] = true;
 		}
 		if (!"".equals(logradouro)) {
 		   if (adcs > 0) 
 			query += ",";
-		   query += " logradouro='"+logradouro+"'";
+		   query += " logradouro= ?";
+		   pars[5] = true;
 		}
 		if (!"".equals(numero)) {
+		numeroParsed = Integer.parseUnsignedInt(numero);
 		   if (adcs > 0) 
 			query += ",";
-		   query += " numero='"+Integer.parseUnsignedInt(numero)+"'";
+		   query += " numero= ?";
+		   pars[6] = true;
 		}
 		if (!"".equals(complemento)) {
-		   if (adcs > 0) 
-			query += ",";
-		   query += " complemento='"+complemento+"'";
+			if (adcs > 0) 
+				query += ",";
+			query += " complemento= ?";
+			pars[7] = true;
 		}
 		if (!"".equals(bairro)) {
-		   if (adcs > 0) 
-			query += ",";
-		   query += " bairro='"+bairro+"'";
+			if (adcs > 0) 
+			 query += ",";
+			query += " bairro= ?";
+			pars[8] = true;
 		}
 		if (!"".equals(cidade)) {
-		   if (adcs > 0) 
-			query += ",";
-		   query += " cidade='"+cidade+"'";
+			if (adcs > 0) 
+			 query += ",";
+			query += " cidade= ?";
+			pars[9] = true;
 		}
 		if (!"".equals(cep)) {
-		   if (adcs > 0) 
-			query += ",";
-		   query += " numero='"+Integer.parseUnsignedInt(cep)+"'";
+			cepParsed = Integer.parseUnsignedInt(cep);
+			if (adcs > 0) 
+			 query += ",";
+			query += " cep= ?";
+			pars[10] = true;
 		}
 		if (!"".equals(uf)) {
 		   if (adcs > 0) 
 			query += ",";
-		   query += " uf='"+uf+"'";
+		   query += " uf= ?";
+		   pars[11] = true;
 		}
 		if (!"".equals(foto)) {
 		   if (adcs > 0) 
 			query += ",";
-		   query += " foto='"+foto+"'";
+		   query += " foto= ?";
+		   pars[12] = true;
 		}
 
 
-		query += " WHERE `id` = "+id+"";
+		query += " WHERE `id` = ?";
 
-		PreparedStatement ps = con.prepareStatement(query);    
+		PreparedStatement ps = con.prepareStatement(query);
+		
+		if (pars[0]) {
+			ps.setString(cont, nome);
+			cont++;
+		}
+		if (pars[1]) {
+			ps.setString(cont, email);
+			cont++;
+		}
+		
+		if (pars[2]) {
+			ps.setString(cont, hashSenha);
+			cont++;
+		}
+		
+		if (pars[3]) {
+			ps.setString(cont, sexo);
+			cont++;
+		}
+		
+		if (pars[4]) {
+			ps.setDate(cont, data);
+			cont++;
+		}
+		
+		if (pars[5]) {
+			ps.setString(cont, logradouro);
+			cont++;
+		}
+		if (pars[6]) {
+			ps.setInt(cont, numeroParsed);
+			cont++;
+		}
+		if (pars[7]) {
+			ps.setString(cont, complemento);
+			cont++;
+		}
+		if (pars[8]) {
+			ps.setString(cont, bairro);
+			cont++;
+		}
+		if (pars[9]) {
+			ps.setString(cont, cidade);
+			cont++;
+		}
+		if (pars[10]) {
+			ps.setInt(cont, cepParsed);
+			cont++;
+		}
+		if (pars[11]) {
+			ps.setString(cont, uf);
+			cont++;
+		}
+		if (pars[12]) {
+			ps.setString(cont, foto);
+			cont++;
+		}
+		ps.setInt(cont, idParsed);
 
 		int sucesso = ps.executeUpdate();
 
@@ -197,7 +284,19 @@ public class AlunosRepository {
 		ps.setInt(1, idParsed);
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()) {
-			xml += viewConsulta.XMLAlunoCompleto(rs.getInt("id"), rs.getString("nome"),  rs.getString("email"), rs.getString("sexo"), rs.getDate("nascimento"), rs.getString("logradouro"), rs.getInt("numero"), rs.getString("complemento"), rs.getString("bairro"),rs.getString("cidade"), rs.getInt("cep"),rs.getString("uf"), rs.getString("foto"));
+			xml += viewConsulta.XMLAlunoCompleto(rs.getInt("id"), 
+			rs.getString("nome"),  
+			rs.getString("email"), 
+			rs.getString("sexo"), 
+			rs.getDate("nascimento"), 
+			rs.getString("logradouro"), 
+			rs.getInt("numero"), 
+			rs.getString("complemento"), 
+			rs.getString("bairro"),
+			rs.getString("cidade"), 
+			rs.getInt("cep"),
+			rs.getString("uf"), 
+			rs.getString("foto"));
 		}
 		return xml;
 	}
@@ -211,7 +310,7 @@ public class AlunosRepository {
 	public Boolean alterarSenha(String id, String senha) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
 		String hashSenha = null;
 		int idParsed = Integer.parseUnsignedInt(id);
-		hashSenha = hash(senha);
+		hashSenha = Hasher.hash(senha);
 		String query = "UPDATE alunos SET senha= ? WHERE id = ?";
 
 		PreparedStatement ps = con.prepareStatement(query);
