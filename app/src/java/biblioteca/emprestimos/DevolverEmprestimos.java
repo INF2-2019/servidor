@@ -23,50 +23,50 @@ import java.util.logging.Logger;
 @WebServlet(name = "DevolverEmprestimos", urlPatterns = {"/biblioteca/emprestimos/devolver"})
 public class DevolverEmprestimos extends HttpServlet {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Headers.XMLHeaders(response);
-        Connection conexao = ConnectionFactory.getBiblioteca();
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Headers.XMLHeaders(response);
+		Connection conexao = ConnectionFactory.getBiblioteca();
 
-        PrintWriter out = response.getWriter();
+		PrintWriter out = response.getWriter();
 
-        if (conexao == null) {
-            System.err.println("Falha ao conectar ao bd"); // Adicionar XML de erro
-            return;
-        }
+		if (conexao == null) {
+			System.err.println("Falha ao conectar ao bd"); // Adicionar XML de erro
+			return;
+		}
 
-        EmprestimoRepository emprestimoRep = new EmprestimoRepository(conexao);
+		EmprestimoRepository emprestimoRep = new EmprestimoRepository(conexao);
 
-        String id = request.getParameter("id");
-        try {
-            double multa = emprestimoRep.devolver(id);
-            View sucessoView = new SucessoView("Devolvido com sucesso.", multa);
-            
-            sucessoView.render(out);
-        } catch (NumberFormatException excecaoFormatoErrado) {
-            response.setStatus(400);
-            System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+		String id = request.getParameter("id");
+		try {
+			double multa = emprestimoRep.devolver(id);
+			View sucessoView = new SucessoView("Devolvido com sucesso.", multa);
 
-            View erroView = new ErroView(excecaoFormatoErrado);
-            try {
-                erroView.render(out);
-            } catch (RenderException e) {
-                throw new ServletException(e);
-            }
-        } catch (SQLException excecaoSQL) {
-            response.setStatus(400);
-            System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+			sucessoView.render(out);
+		} catch (NumberFormatException excecaoFormatoErrado) {
+			response.setStatus(400);
+			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
 
-            View erroView = new ErroView(excecaoSQL);
-            try {
-                erroView.render(out);
-            } catch (RenderException e) {
-                throw new ServletException(e);
-            }
-        } catch (RenderException e) {
-            throw new ServletException(e);
-        } catch (ParseException ex) {
-            Logger.getLogger(DevolverEmprestimos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+			View erroView = new ErroView(excecaoFormatoErrado);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+		} catch (SQLException excecaoSQL) {
+			response.setStatus(400);
+			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+
+			View erroView = new ErroView(excecaoSQL);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+		} catch (RenderException e) {
+			throw new ServletException(e);
+		} catch (ParseException ex) {
+			Logger.getLogger(DevolverEmprestimos.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 
 }

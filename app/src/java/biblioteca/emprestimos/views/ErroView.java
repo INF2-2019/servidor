@@ -9,36 +9,40 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.PrintWriter;
+import biblioteca.emprestimos.views.InacessivelException;
 
 public class ErroView extends View {
 
-    public ErroView(Exception excecao) {
-        super(excecao);
-    }
+	public ErroView(Exception excecao) {
+		super(excecao);
+	}
 
-    @Override
-    public void render(PrintWriter writer) throws RenderException {
-        try {
-            writer.write(Conversores.converterDocumentEmXMLString(criarErroXML((Exception) data)));
-        } catch (ParserConfigurationException | TransformerException ex) {
-            throw new RenderException(ex);
-        }
-    }
+	@Override
+	public void render(PrintWriter writer) throws RenderException {
+		try {
+			writer.write(Conversores.converterDocumentEmXMLString(criarErroXML((Exception) data)));
+		} catch (ParserConfigurationException | TransformerException ex) {
+			throw new RenderException(ex);
+		}
+	}
 
-    private static Document criarErroXML(Exception excecao) throws ParserConfigurationException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder construtor = dbf.newDocumentBuilder();
-        Document documento = construtor.newDocument();
+	private static Document criarErroXML(Exception excecao) throws ParserConfigurationException {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder construtor = dbf.newDocumentBuilder();
+		Document documento = construtor.newDocument();
 
-        Element erro = documento.createElement("erro");
-        Element msg = documento.createElement("informacao");
+		Element erro = documento.createElement("erro");
+		Element msg = documento.createElement("informacao");
+		if (excecao instanceof InacessivelException) {
+			msg.appendChild(documento.createTextNode("Este livro, atualmente, já está emprestado."));
+		} else {
+			msg.appendChild(documento.createTextNode("Os parâmetros inseridos são inválidos."));
+		}
+		erro.appendChild(msg);
 
-        msg.appendChild(documento.createTextNode("Os parâmetros inseridos são inválidos."));
-        erro.appendChild(msg);
+		documento.appendChild(erro);
 
-        documento.appendChild(erro);
-
-        return documento;
-    }
+		return documento;
+	}
 
 }

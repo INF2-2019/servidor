@@ -29,85 +29,85 @@ import utils.Headers;
 @WebServlet(name = "ConsultarEmprestimos", urlPatterns = {"/biblioteca/emprestimos/consultar"})
 public class ConsultarEmprestimos extends HttpServlet {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Headers.XMLHeaders(response);
-        Connection conexao = ConnectionFactory.getBiblioteca();
-        PrintWriter out = response.getWriter();
-        if (conexao == null) {
-            System.err.println("Falha ao conectar ao bd");
-            View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
-            try {
-                erroView.render(out);
-            } catch (RenderException e) {
-                throw new ServletException(e);
-            }
-            return;
-        }
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Headers.XMLHeaders(response);
+		Connection conexao = ConnectionFactory.getBiblioteca();
+		PrintWriter out = response.getWriter();
+		if (conexao == null) {
+			System.err.println("Falha ao conectar ao bd");
+			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+			return;
+		}
 
-        EmprestimoRepository emprestimoRep = new EmprestimoRepository(conexao);
+		EmprestimoRepository emprestimoRep = new EmprestimoRepository(conexao);
 
-        Set<EmprestimoModel> resultado;
-        Map<String, String> filtros = definirMap(request); // criando um Map para armazenar os filtros de maneira pratica
-        try {
-            resultado = new HashSet<>();
-            resultado = emprestimoRep.consultar(filtros);
-            View EmprestimoConsultaView = new EmprestimoConsultaView(resultado);
-            EmprestimoConsultaView.render(out);
-        } catch (NumberFormatException excecaoFormatoErrado) {
-            response.setStatus(400);
-            System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
-            View erroView = new ErroView(excecaoFormatoErrado);
-            try {
-                erroView.render(out);
-            } catch (RenderException e) {
-                throw new ServletException(e);
-            }
-        } catch (SQLException excecaoSQL) {
-            response.setStatus(400);
-            System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
-            View erroView = new ErroView(excecaoSQL);
-            try {
-                erroView.render(out);
-            } catch (RenderException e) {
-                throw new ServletException(e);
-            }
-            try {
-                conexao.close();
-            } catch (SQLException erro) {
-                System.err.println("Erro ao fechar banco de dados. Erro: " + erro.toString());
-            }
-        } catch (RenderException ex) {
-            throw new ServletException(ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConsultarEmprestimos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+		Set<EmprestimoModel> resultado;
+		Map<String, String> filtros = definirMap(request); // criando um Map para armazenar os filtros de maneira pratica
+		try {
+			resultado = new HashSet<>();
+			resultado = emprestimoRep.consultar(filtros);
+			View EmprestimoConsultaView = new EmprestimoConsultaView(resultado);
+			EmprestimoConsultaView.render(out);
+		} catch (NumberFormatException excecaoFormatoErrado) {
+			response.setStatus(400);
+			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+			View erroView = new ErroView(excecaoFormatoErrado);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+		} catch (SQLException excecaoSQL) {
+			response.setStatus(400);
+			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+			View erroView = new ErroView(excecaoSQL);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+			try {
+				conexao.close();
+			} catch (SQLException erro) {
+				System.err.println("Erro ao fechar banco de dados. Erro: " + erro.toString());
+			}
+		} catch (RenderException ex) {
+			throw new ServletException(ex);
+		} catch (ParseException ex) {
+			Logger.getLogger(ConsultarEmprestimos.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 
-    public Map<String, String> definirMap(HttpServletRequest req) {
-        Map<String, String> dados = new LinkedHashMap<>();
+	public Map<String, String> definirMap(HttpServletRequest req) {
+		Map<String, String> dados = new LinkedHashMap<>();
 
-        if (req.getParameter("id-alunos") != null) {
-            dados.put("id-alunos", req.getParameter("id-alunos"));
-        }
+		if (req.getParameter("id-alunos") != null) {
+			dados.put("id-alunos", req.getParameter("id-alunos"));
+		}
 
-        if (req.getParameter("id-acervo") != null) {
-            dados.put("id-acervo", req.getParameter("id-acervo"));
-        }
+		if (req.getParameter("id-acervo") != null) {
+			dados.put("id-acervo", req.getParameter("id-acervo"));
+		}
 
-        if (req.getParameter("data-emprestimo") != null) {
-            dados.put("data-emprestimo", req.getParameter("data-emprestimo"));
-        }
+		if (req.getParameter("data-emprestimo") != null) {
+			dados.put("data-emprestimo", req.getParameter("data-emprestimo"));
+		}
 
-        if (req.getParameter("data-prev-devol") != null) {
-            dados.put("data-prev-devol", req.getParameter("data-prev-devol"));
-        }
-        if (req.getParameter("data-devolucao") != null) {
-            dados.put("data-devolucao", req.getParameter("data-devolucao"));
-        }
-        if (req.getParameter("multa") != null) {
-            dados.put("multa", req.getParameter("multa"));
-        }
+		if (req.getParameter("data-prev-devol") != null) {
+			dados.put("data-prev-devol", req.getParameter("data-prev-devol"));
+		}
+		if (req.getParameter("data-devolucao") != null) {
+			dados.put("data-devolucao", req.getParameter("data-devolucao"));
+		}
+		if (req.getParameter("multa") != null) {
+			dados.put("multa", req.getParameter("multa"));
+		}
 
-        return dados;
-    }
+		return dados;
+	}
 }

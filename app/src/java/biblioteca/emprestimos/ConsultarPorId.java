@@ -27,57 +27,57 @@ import utils.Headers;
 @WebServlet(name = "ConsultarPorId", urlPatterns = {"/biblioteca/emprestimos/consultarporid"})
 public class ConsultarPorId extends HttpServlet {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Headers.XMLHeaders(response);
-        Connection conexao = ConnectionFactory.getBiblioteca();
-        PrintWriter out = response.getWriter();
-        if (conexao == null) {
-            System.err.println("Falha ao conectar ao bd");
-            View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
-            try {
-                erroView.render(out);
-            } catch (RenderException e) {
-                throw new ServletException(e);
-            }
-            return;
-        }
-        EmprestimoRepository disciplinaRep = new EmprestimoRepository(conexao);
-        Set<EmprestimoModel> resultado;
-        try {
-            resultado = new HashSet<>();
-            resultado.add(disciplinaRep.consultarId(request.getParameter("id")));
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Headers.XMLHeaders(response);
+		Connection conexao = ConnectionFactory.getBiblioteca();
+		PrintWriter out = response.getWriter();
+		if (conexao == null) {
+			System.err.println("Falha ao conectar ao bd");
+			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+			return;
+		}
+		EmprestimoRepository disciplinaRep = new EmprestimoRepository(conexao);
+		Set<EmprestimoModel> resultado;
+		try {
+			resultado = new HashSet<>();
+			resultado.add(disciplinaRep.consultarId(request.getParameter("id")));
 
-            View EmprestimoConsultaView = new EmprestimoConsultaView(resultado);
-            EmprestimoConsultaView.render(out);
+			View EmprestimoConsultaView = new EmprestimoConsultaView(resultado);
+			EmprestimoConsultaView.render(out);
 
-        } catch (NumberFormatException excecaoFormatoErrado) {
-            response.setStatus(400);
-            System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
-            View erroView = new ErroView(excecaoFormatoErrado);
-            try {
-                erroView.render(out);
-            } catch (RenderException e) {
-                throw new ServletException(e);
-            }
-        } catch (SQLException excecaoSQL) {
-            response.setStatus(400);
-            System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
-            View erroView = new ErroView(excecaoSQL);
-            try {
-                erroView.render(out);
-            } catch (RenderException e) {
-                throw new ServletException(e);
-            }
-            try {
-                conexao.close();
-            } catch (SQLException erro) {
-                System.err.println("Erro ao fechar banco de dados. Erro: " + erro.toString());
-            }
-        } catch (RenderException ex) {
-            throw new ServletException(ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConsultarPorId.class.getName()).log(Level.SEVERE, null, ex);
-        }
+		} catch (NumberFormatException excecaoFormatoErrado) {
+			response.setStatus(400);
+			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+			View erroView = new ErroView(excecaoFormatoErrado);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+		} catch (SQLException excecaoSQL) {
+			response.setStatus(400);
+			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+			View erroView = new ErroView(excecaoSQL);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+			try {
+				conexao.close();
+			} catch (SQLException erro) {
+				System.err.println("Erro ao fechar banco de dados. Erro: " + erro.toString());
+			}
+		} catch (RenderException ex) {
+			throw new ServletException(ex);
+		} catch (ParseException ex) {
+			Logger.getLogger(ConsultarPorId.class.getName()).log(Level.SEVERE, null, ex);
+		}
 
-    }
+	}
 }
