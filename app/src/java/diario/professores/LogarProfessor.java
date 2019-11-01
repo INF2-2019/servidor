@@ -50,7 +50,6 @@ public class LogarProfessor extends HttpServlet {
 			if (senha == null) {
 				throw new ExcecaoParametrosIncorretos("'senha' é um parâmetro obrigatório");
 			}
-			System.out.println("teste1");
 
 			// Valida credenciais
 			PreparedStatement ps = conexao.prepareStatement("SELECT `senha` FROM `professores` WHERE `id` = ?");
@@ -59,11 +58,9 @@ public class LogarProfessor extends HttpServlet {
 			if (!professor.first() || !Hasher.validar(senha, professor.getString("senha"))) {
 				throw new ExcecaoParametrosIncorretos("Credenciais inválidas");
 			}
-			System.out.println("teste2");
 
 			DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
 			autenticador.logar(Integer.parseInt(siape), DiarioCargos.PROFESSOR, manter);
-			System.out.println("teste3");
 
 			saida.println("<sucesso>");
 			saida.println("  <mensagem>Logado com sucesso</mensagem>");
