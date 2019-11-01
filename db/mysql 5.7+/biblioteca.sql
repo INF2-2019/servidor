@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `partes` (
 
 DROP TABLE IF EXISTS `periodicos`;
 CREATE TABLE IF NOT EXISTS `periodicos` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL,
   `id-acervo` INT NOT NULL,
   `periodicidade` VARCHAR(255) NOT NULL,
   `mes` VARCHAR(255) NOT NULL,
