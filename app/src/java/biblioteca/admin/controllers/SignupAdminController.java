@@ -23,7 +23,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebServlet(name = "SignupAdminBibliooteca", urlPatterns = "/biblioteca/admin/cadastrar")
+@WebServlet(name = "SignupAdminBiblioteca", urlPatterns = "/biblioteca/admin/cadastrar")
 public class SignupAdminController extends HttpServlet {
 	private final static String SEM_NOME = "O parâmetro nome é obrigatório!";
 	private final static String SEM_USUARIO = "O parâmetro usuário é obrigatório!";
