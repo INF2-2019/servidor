@@ -1,15 +1,15 @@
-package diario.admin.controllers;
+package biblioteca.admin.controllers;
 
-import diario.admin.models.Admin;
-import diario.admin.repositories.AdminRepository;
-import diario.admin.views.ErroView;
-import diario.admin.views.RenderException;
-import diario.admin.views.SucessoView;
+import biblioteca.admin.models.Admin;
+import biblioteca.admin.repositories.AdminRepository;
+import biblioteca.admin.views.ErroView;
+import biblioteca.admin.views.RenderException;
+import biblioteca.admin.views.SucessoView;
 import utils.ConnectionFactory;
 import utils.Hasher;
 import utils.Headers;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
+import utils.autenticador.BibliotecaAutenticador;
+import utils.autenticador.BibliotecaCargos;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +23,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebServlet(name = "SignupAdminController", urlPatterns = "/diario/admin/cadastrar")
+@WebServlet(name = "SignupAdminBibliooteca", urlPatterns = "/biblioteca/admin/cadastrar")
 public class SignupAdminController extends HttpServlet {
 	private final static String SEM_NOME = "O parâmetro nome é obrigatório!";
 	private final static String SEM_USUARIO = "O parâmetro usuário é obrigatório!";
@@ -36,7 +36,7 @@ public class SignupAdminController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Headers.XMLHeaders(response);
 		PrintWriter out = response.getWriter();
-		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
 
 		String
 			nomeParam = request.getParameter("nome"),
@@ -45,7 +45,7 @@ public class SignupAdminController extends HttpServlet {
 			senhaParam = request.getParameter("senha");
 
 		try {
-			if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			if (autenticador.cargoLogado() != BibliotecaCargos.ADMIN) {
 				response.setStatus(403);
 				new ErroView(SOMENTE_ADMIN).render(out);
 				return;
@@ -72,7 +72,7 @@ public class SignupAdminController extends HttpServlet {
 				return;
 			}
 
-			try (Connection db = ConnectionFactory.getDiario()) {
+			try (Connection db = ConnectionFactory.getBiblioteca()) {
 				if (db == null) {
 					throw new SQLException("Null database connection");
 				}

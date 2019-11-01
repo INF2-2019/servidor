@@ -1,4 +1,4 @@
-package diario.admin.views;
+package biblioteca.admin.views;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
