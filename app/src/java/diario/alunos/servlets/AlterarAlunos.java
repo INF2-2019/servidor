@@ -79,9 +79,8 @@ public class AlterarAlunos extends HttpServlet {
 				}
 			} catch (RenderException e) {
 				throw new ServletException(e);
-			} catch (NoSuchAlgorithmException | ParseException ex) {
-				out.println("<erro><mensagem>Erro severo</mensagem></erro>");
-			} catch (InvalidKeySpecException ex) {
+			} catch (NoSuchAlgorithmException | ParseException | InvalidKeySpecException ex) {
+				response.setStatus(500);
 				out.println("<erro><mensagem>Erro severo</mensagem></erro>");
 			}
 			 
