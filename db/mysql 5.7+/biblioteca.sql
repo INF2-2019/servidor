@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `operador` (
 
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE IF NOT EXISTS `admin` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(255) NOT NULL,
   `usuario` VARCHAR(255) NOT NULL, 
   `email` VARCHAR(255) NOT NULL UNIQUE,
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `autores` (
   `ordem` INT NOT NULL,
   `qualificacao` ENUM(
     'PRINCIPAL', 
-    'SECUNDATRIO', 
+    'SECUNDARIO', 
     'ORGANIZADOR', 
     'COORDENADOR', 
     'COMPILADOR', 
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `livros` (
   `id-obra` INT NOT NULL,
   `id-acervo` INT NOT NULL,
   `edicao` INT NOT NULL,
-  `isbn` INT NOT NULL
+  `isbn` BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS `midias`;
@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `emprestimos` (
   `data-emprestimo` DATE NOT NULL,
   `data-prev-devol` DATE NOT NULL,
   `data-devolucao` DATE NOT NULL,
-  `multa` DECIMAL(5,2) NOT NULL,
+  `multa` DECIMAL(7,2) NOT NULL,
   PRIMARY KEY (id)
 );
 
