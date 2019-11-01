@@ -36,9 +36,9 @@ public class ConsultarProfessor extends HttpServlet {
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
 		if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
-//			resposta.setStatus(403);
-//			return;
-		}System.out.println("aaaaaaaaaaaa");
+			resposta.setStatus(403);
+			return;
+		}
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
