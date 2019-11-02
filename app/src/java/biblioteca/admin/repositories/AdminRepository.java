@@ -1,6 +1,6 @@
-package diario.admin.repositories;
+package biblioteca.admin.repositories;
 
-import diario.admin.models.Admin;
+import biblioteca.admin.models.Admin;
 
 import java.sql.*;
 
