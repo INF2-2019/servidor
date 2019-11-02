@@ -1,4 +1,4 @@
-package diario.admin.views;
+package biblioteca.admin.views;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -9,52 +9,52 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.PrintWriter;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-public class SucessoView extends View<String> {
-	private Map<String, String> params = new LinkedHashMap<>();
+public class ErroView extends View<String> {
+	private String causa;
 
-	public SucessoView(String s) {
-		super(s);
+	public ErroView(String mensagem) {
+		super(mensagem);
+	}
+
+	public ErroView(String mensagem, String causa) {
+		super(mensagem);
+		this.causa = causa;
 	}
 
 	@Override
 	public void render(PrintWriter writer) throws RenderException {
 		try {
-			Document dom = gerarDocument(this.data);
+			Document dom = gerarDocument(this.data, this.causa);
 			writer.println(Conversores.converterDocumentEmXMLString(dom));
 		} catch (ParserConfigurationException | TransformerException ex) {
 			throw new RenderException(ex);
 		}
 	}
 
-	public void addParameter(String tag, String value) {
-		params.put(tag, value);
-	}
-
-	public void removeParameter(String tag) {
-		params.remove(tag);
-	}
-
 	public Document gerarDocument(String mensagem) throws ParserConfigurationException {
+		return gerarDocument(mensagem, null);
+	}
+
+	public Document gerarDocument(String mensagem, String causaStr) throws ParserConfigurationException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
 		Document dom = db.newDocument();
 
-		Element root = dom.createElement("sucesso");
+		Element root = dom.createElement("erro");
 		dom.appendChild(root);
 
 		Element msg = dom.createElement("mensagem");
 		root.appendChild(msg);
 		msg.setTextContent(mensagem);
 
-		for (String key : params.keySet()) {
-			Element cur = dom.createElement(key);
-			root.appendChild(cur);
-			cur.setTextContent(params.get(key));
+		if (causaStr != null) {
+			Element causa = dom.createElement("causa");
+			root.appendChild(causa);
+			causa.setTextContent(causaStr);
 		}
 
 		return dom;
 	}
+
 }

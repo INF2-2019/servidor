@@ -7,7 +7,7 @@ USE diario;
 
 DROP TABLE IF EXISTS `alunos`;
 CREATE TABLE IF NOT EXISTS `alunos` (
-  `id` INT NOT NULL,
+  `id` BIGINT NOT NULL,
   `nome` VARCHAR(127) NOT NULL,
   `email` VARCHAR(127) NOT NULL UNIQUE,
   `senha` VARCHAR(170) NOT NULL,
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `etapas` (
 DROP TABLE IF EXISTS `matriculas`;
 CREATE TABLE IF NOT EXISTS `matriculas` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `id-alunos` INT NOT NULL,
+  `id-alunos` BIGINT NOT NULL,
   `id-disciplinas` INT NOT NULL,
   `ano` INT NOT NULL,
   `ativo` BOOLEAN NOT NULL,
