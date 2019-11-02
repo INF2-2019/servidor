@@ -1,5 +1,6 @@
 package biblioteca.emprestimos;
 
+import biblioteca.emprestimos.model.EmprestimoModel;
 import biblioteca.emprestimos.repository.EmprestimoRepository;
 import biblioteca.emprestimos.views.SucessoView;
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class AtualizarEmprestimos extends HttpServlet {
 
 		EmprestimoRepository disciplinaRep = new EmprestimoRepository(con);
 		String id = req.getParameter("id");
-		SortedMap<String, String> filtros = definirMap(req);
+		SortedMap<String, String> filtros = EmprestimoModel.definirMap(req);
 		try {
 			disciplinaRep.atualizar(filtros, id);
 			View sucessoView = new SucessoView("Atualizado com sucesso.");
@@ -74,32 +75,4 @@ public class AtualizarEmprestimos extends HttpServlet {
 
 	}
 
-	public SortedMap<String, String> definirMap(HttpServletRequest req) {
-		SortedMap<String, String> dados = new TreeMap<String, String>();
-
-		// definir os valores do map condicionalmente, conforme a requisição
-		if (req.getParameter("id-alunos") != null) {
-			dados.put("id-alunos", req.getParameter("id-alunos"));
-		}
-
-		if (req.getParameter("id-acervo") != null) {
-			dados.put("id-acervo", req.getParameter("id-acervo"));
-		}
-		System.out.println(req.getParameter("id-acervo"));
-		if (req.getParameter("data-emprestimo") != null) {
-			dados.put("data-emprestimo", req.getParameter("data-emprestimo"));
-		}
-
-		if (req.getParameter("data-prev-devol") != null) {
-			dados.put("data-prev-devol", req.getParameter("data-prev-devol"));
-		}
-		if (req.getParameter("data-devolucao") != null) {
-			dados.put("data-devolucao", req.getParameter("data-devolucao"));
-		}
-		if (req.getParameter("multa") != null) {
-			dados.put("multa", req.getParameter("multa"));
-		}
-
-		return dados;
-	}
 }

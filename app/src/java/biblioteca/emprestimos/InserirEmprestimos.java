@@ -1,5 +1,6 @@
 package biblioteca.emprestimos;
 
+import biblioteca.emprestimos.model.EmprestimoModel;
 import biblioteca.emprestimos.repository.EmprestimoRepository;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -42,10 +43,9 @@ public class InserirEmprestimos extends HttpServlet {
 			}
 			return;
 		}
-		Map<String, String> dados = definirMap(request);
+		Map<String, String> dados = EmprestimoModel.definirMap(request);
 
 		try {
-			//System.out.println("AAAAAA");
 			emprestimoRep.inserir(dados);
 			View sucessoView = new SucessoView("Inserido com sucesso.");
 			sucessoView.render(out);
@@ -85,34 +85,4 @@ public class InserirEmprestimos extends HttpServlet {
 			}
 		}
 	}
-
-	public Map<String, String> definirMap(HttpServletRequest req) {
-		Map<String, String> dados = new LinkedHashMap<>();
-
-		//System.out.println(req.getParameter("id-alunos"));
-		if (req.getParameter("id-alunos") != null) {
-			dados.put("id-alunos", req.getParameter("id-alunos"));
-		}
-
-		if (req.getParameter("id-acervo") != null) {
-			dados.put("id-acervo", req.getParameter("id-acervo"));
-		}
-
-		if (req.getParameter("data-emprestimo") != null) {
-			dados.put("data-emprestimo", req.getParameter("data-emprestimo"));
-		}
-
-		if (req.getParameter("data-prev-devol") != null) {
-			dados.put("data-prev-devol", req.getParameter("data-prev-devol"));
-		}
-		if (req.getParameter("data-devolucao") != null) {
-			dados.put("data-devolucao", req.getParameter("data-devolucao"));
-		}
-		if (req.getParameter("multa") != null) {
-			dados.put("multa", req.getParameter("multa"));
-		}
-
-		return dados;
-	}
-
 }

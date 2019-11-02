@@ -2,6 +2,9 @@ package biblioteca.emprestimos.model;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import javax.servlet.http.HttpServletRequest;
 
 public class EmprestimoModel extends Model {
 
@@ -119,6 +122,19 @@ public class EmprestimoModel extends Model {
 
 	public void setMulta(double multa) {
 		this.multa = multa;
+	}
+
+	public static SortedMap<String, String> definirMap(HttpServletRequest req) {
+		final String[] params = {"id-alunos", "id-acervo", "data-emprestimo", "data-prev-devol", "data-devolucao", "multa"};
+		SortedMap<String, String> dados = new TreeMap<String, String>();
+
+		// definir os valores do map condicionalmente, conforme a requisição
+		for (String param : params) {
+			if (req.getParameter(param) != null) {
+				dados.put(param, req.getParameter(param));
+			}
+		}
+		return dados;
 	}
 
 }

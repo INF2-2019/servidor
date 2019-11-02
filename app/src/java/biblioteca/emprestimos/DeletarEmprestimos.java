@@ -30,7 +30,13 @@ public class DeletarEmprestimos extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		if (conexao == null) {
-			System.err.println("Falha ao conectar ao bd"); // Adicionar XML de erro
+			System.err.println("Falha ao conectar ao bd");
+			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
 			return;
 		}
 

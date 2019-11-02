@@ -45,8 +45,6 @@ public class EmprestimoRepository {
 
 		java.util.Date dataDevolucao = new java.util.Date();
 		PreparedStatement stat = con.prepareStatement(sql);
-		//System.out.println(dataDevolucao);
-		//System.out.println(dataDevolucao.getTime());
 		stat.setInt(1, idParsed);
 		ResultSet resultadoBusca = stat.executeQuery();
 		resultadoBusca.next();
@@ -55,16 +53,11 @@ public class EmprestimoRepository {
 		if (!dataDevolucao.after(emprestimo.getDataPrevDevol())) {
 			multa = 0.00;
 		} else {
-			//System.out.println(emprestimo.getDataPrevDevol());
-			//System.out.println(emprestimo.getDataEmprestimo());
 			long tempoEmprestimo = dataDevolucao.getTime() - emprestimo.getDataPrevDevol().getTime();
-			//System.out.println(tempoEmprestimo);
 			int days = (int) (tempoEmprestimo / 86400000) - 1;
-			//System.out.println(days);
 			multa = days * EmprestimoModel.multaPerDay;
 		}
 
-		//System.out.println(multa);
 		sql = "UPDATE `emprestimos` SET `data-devolucao` = ?, `multa` = ? WHERE `id` = ?";
 
 		stat = con.prepareStatement(sql);
@@ -80,14 +73,12 @@ public class EmprestimoRepository {
 	public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException, ParseException, InacessivelException {
 
 		/*if (valores.size() != 6) {
-	    return false;
-	}*/
+			return false;
+		}*/
 		int idAlunos = 0;
-		//System.out.println(valores.get("id-alunos"));
 		if (valores.containsKey("id-alunos")) {
 			idAlunos = Integer.parseUnsignedInt(valores.get("id-alunos"));
 		}
-		//System.out.println(valores.get("id-alunos"));
 		int idAcervo = 0;
 
 		if (valores.containsKey("id-acervo")) {
@@ -279,7 +270,6 @@ public class EmprestimoRepository {
 			}
 			if (adicionar) {
 				emprestimoResultado.add(emprestimo);
-				//System.out.println("aaaaaaaaaaa");
 			}
 		}
 
