@@ -1,7 +1,8 @@
 package diario.professores;
 
 /**
- * Exceção para erro nos prâmetros de uma requisição
+ * <h1> Exceção de Parâmetros Incorretos</h1>
+ * Exceção para erro nos parâmetros enviados de uma requisição
  *
  * @author Jonata Novais Cirqueria
  * @author Nikolas Victor Mota

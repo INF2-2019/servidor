@@ -9,6 +9,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * <h1> Classe de Validação de Parâmetros </h1>
+ * Tem métodos para validação do formato de todos os parâmetros necessários para inclusão/alteração
+ * de professores, além de validar se um dado departamento existe
  *
  * @author Jonata Novais Cirqueira
  */

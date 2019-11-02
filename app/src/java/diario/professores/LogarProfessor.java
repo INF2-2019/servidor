@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.NotAuthorizedException;
 
 /**
+ * <h1> Servlet de Log-in</h1>
+ * Servlet destinado a log-in dos Professores
  *
  * @author Jonata Novais Cirqueira
  */
