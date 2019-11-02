@@ -1,10 +1,7 @@
 package utils;
 
-//import com.sun.tools.internal.ws.processor.generator.CustomExceptionGenerator;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.PortUnreachableException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -28,25 +25,26 @@ public class ConnectionFactory {
 
 		try {
 			Class.forName(driver);
-			return DriverManager.getConnection(url + database + "?useTimezone=true&serverTimezone=UTC&useSSL=false", usuario, senha);
-		} catch(ClassNotFoundException e) {
+			return DriverManager.getConnection(url + database + "?useTimezone=true&serverTimezone=UTC&useSSL=false", usuario,
+					senha);
+		} catch (ClassNotFoundException e) {
 			System.err.println("Driver não encontrado: " + e);
 			return null;
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			System.err.println("Falha ao conectar ao banco de dados: " + e);
 			return null;
 		}
 	}
 
-	private static Properties loadProperties(){
+	private static Properties loadProperties() {
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		InputStream stream = loader.getResourceAsStream("config/bd.properties");
 		Properties properties = new Properties();
 
-		if(stream != null){
+		if (stream != null) {
 			try {
 				properties.load(stream);
-			}catch (IOException ex){
+			} catch (IOException ex) {
 				System.err.println("Falha ao carregar configurações do BD, usando os valores padrão...");
 			}
 		}
