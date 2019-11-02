@@ -19,7 +19,7 @@ import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
-@WebServlet(name = "Transfere", urlPatterns = {"/diario/transferencia/transfere"})
+@WebServlet(name = "TransfereAluno", urlPatterns = {"/diario/transferencia/transfere"})
 public class Transfere extends HttpServlet {
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -29,11 +29,13 @@ public class Transfere extends HttpServlet {
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 		if(autenticador.cargoLogado() != DiarioCargos.ADMIN) {
-			response.setStatus(401);
+			response.setStatus(403);
 			return;
 		}
 
 		try(PrintWriter out = response.getWriter()) {
+			Exception excecao = null;
+			
 			try {
 
 				if(request.getParameter("cpf") == null) {
@@ -62,12 +64,23 @@ public class Transfere extends HttpServlet {
 					throw new ServletException(e);
 				}
 
-			} catch(ParametrosIncorretosException | AlunoInativoException | SQLException | ServletException ex) {
-				ErroView erroView = new ErroView(ex);
-				try {
-					erroView.render(out);
-				} catch(RenderException e) {
-					throw new ServletException(e);
+			} catch(ParametrosIncorretosException ex) {
+				response.setStatus(402);
+				excecao = ex;
+			} catch(AlunoInativoException ex) {
+				response.setStatus(400);
+				excecao = ex;
+			} catch(SQLException ex) {
+				response.setStatus(500);
+				excecao = ex;
+			} finally {
+				if(excecao != null) {
+					ErroView erroView = new ErroView(excecao);
+					try {
+						erroView.render(out);
+					} catch(RenderException e) {
+						throw new ServletException(e);
+					}
 				}
 			}
 		}
