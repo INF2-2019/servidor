@@ -67,12 +67,16 @@ public class AtualizarProfessor extends HttpServlet {
 			saida.println("  <mensagem>Registro alterado com sucesso</mensagem>");
 			saida.println("</sucesso>");
 
-		} catch (Exception e) {
-
+		} catch (ExcecaoParametrosIncorretos e) {
+			resposta.setStatus(400);
 			saida.println("<erro>");
 			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
 			saida.println("</erro>");
-
+		} catch (Exception e) {
+			resposta.setStatus(500);
+			saida.println("<erro>");
+			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
+			saida.println("</erro>");
 		}
 
 	}

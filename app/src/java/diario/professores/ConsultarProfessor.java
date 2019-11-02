@@ -46,9 +46,9 @@ public class ConsultarProfessor extends HttpServlet {
 			if (conexao == null) {
 				throw new SQLException("Impossível se conectar ao banco de dados");
 			}
-			
+
 			ResultSet rs;
-			if(requisicao.getParameter("id") == null) {
+			if (requisicao.getParameter("id") == null) {
 				String sqlQuery = "SELECT * FROM `professores`";
 				rs = conexao.createStatement().executeQuery(sqlQuery);
 			} else {
@@ -70,8 +70,9 @@ public class ConsultarProfessor extends HttpServlet {
 			}
 			saida.println("</professores>");
 
-		} catch (Exception e) {
+		} catch (SQLException e) {
 
+			resposta.setStatus(500);
 			saida.println("<erro>");
 			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
 			saida.println("</erro>");

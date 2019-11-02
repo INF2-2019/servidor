@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -60,12 +59,16 @@ public class RemoverProfessor extends HttpServlet {
 			saida.println("  <mensagem>Registro deletado com sucesso</mensagem>");
 			saida.println("</sucesso>");
 
-		} catch (Exception e) {
-
+		} catch (ExcecaoParametrosIncorretos e) {
+			resposta.setStatus(400);
 			saida.println("<erro>");
 			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
 			saida.println("</erro>");
-
+		} catch (Exception e) {
+			resposta.setStatus(500);
+			saida.println("<erro>");
+			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
+			saida.println("</erro>");
 		}
 
 	}

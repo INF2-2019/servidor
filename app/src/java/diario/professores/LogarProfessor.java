@@ -7,7 +7,6 @@ import utils.Hasher;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.NotAuthorizedException;
 
 /**
  *
@@ -56,7 +56,7 @@ public class LogarProfessor extends HttpServlet {
 			ps.setInt(1, Integer.parseInt(siape));
 			ResultSet professor = ps.executeQuery();
 			if (!professor.first() || !Hasher.validar(senha, professor.getString("senha"))) {
-				throw new ExcecaoParametrosIncorretos("Credenciais inválidas");
+				throw new NotAuthorizedException("Credenciais inválidas");
 			}
 
 			DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
@@ -66,12 +66,21 @@ public class LogarProfessor extends HttpServlet {
 			saida.println("  <mensagem>Logado com sucesso</mensagem>");
 			saida.println("</sucesso>");
 
-		} catch (Exception e) {
-
+		} catch (ExcecaoParametrosIncorretos e) {
+			resposta.setStatus(400);
 			saida.println("<erro>");
 			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
 			saida.println("</erro>");
-
+		} catch (NotAuthorizedException e) {
+			resposta.setStatus(403);
+			saida.println("<erro>");
+			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
+			saida.println("</erro>");
+		} catch (Exception e) {
+			resposta.setStatus(500);
+			saida.println("<erro>");
+			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
+			saida.println("</erro>");
 		}
 
 	}
