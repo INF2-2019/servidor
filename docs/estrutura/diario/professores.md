@@ -29,7 +29,7 @@ A funcionalidade *excluir* requer a passagem apenas do parâmetro `id` (SIAPE). 
 
 ##### Consultar
 
-A funcionalidade *consultar* não requer passagem de parâmetros. Retorna um XML com os dados dos professores ou um XML de erro.
+A funcionalidade *consultar* não requer passagem de parâmetros mas aceita o parâmetro opcional 'id' para retornar apenas o professor com este id. Retorna um XML com os dados dos professores ou um XML de erro.
 
 ## Estrutura dos XML de resposta
 

@@ -26,10 +26,8 @@ import utils.autenticador.DiarioCargos;
  */
 public class AtualizarProfessor extends HttpServlet {
 
-	private static final String[] params = {"id", "id-depto", "nome", "senha", "email", "titulacao"};
-
 	@Override
-	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
+	protected void doPost(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws IOException {
 
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
@@ -48,8 +46,8 @@ public class AtualizarProfessor extends HttpServlet {
 				throw new SQLException("Impossível se conectar ao banco de dados");
 			}
 
-			validarParametros(requisicao.getParameterMap());
-			InsercaoProfessor.validarDepartamento(requisicao.getParameter("id-depto"), conexao);
+			Validacao.validarParametros(requisicao.getParameterMap());
+			Validacao.validarDepartamento(requisicao.getParameter("id-depto"), conexao);
 
 			String statement = "UPDATE `professores` SET "
 					+ "`id-depto` = ?, `nome` = ?, `senha` = ?, "
@@ -69,12 +67,16 @@ public class AtualizarProfessor extends HttpServlet {
 			saida.println("  <mensagem>Registro alterado com sucesso</mensagem>");
 			saida.println("</sucesso>");
 
-		} catch (Exception e) {
-
+		} catch (ExcecaoParametrosIncorretos e) {
+			resposta.setStatus(400);
 			saida.println("<erro>");
 			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
 			saida.println("</erro>");
-
+		} catch (Exception e) {
+			resposta.setStatus(500);
+			saida.println("<erro>");
+			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
+			saida.println("</erro>");
 		}
 
 	}
@@ -82,27 +84,6 @@ public class AtualizarProfessor extends HttpServlet {
 	@Override
 	public String getServletInfo() {
 		return "Servlet dedicado a atualizar registros da tabela 'professores'";
-	}
-
-	private void validarParametros(Map<String, String[]> parametros) throws ExcecaoParametrosIncorretos {
-		if (parametros.size() < 6) {
-			throw new ExcecaoParametrosIncorretos("Parâmetros insuficientes");
-		}
-		if (parametros.size() > 6) {
-			throw new ExcecaoParametrosIncorretos("Parâmetros em excesso");
-		}
-
-		for (Map.Entry<String, String[]> iterador : parametros.entrySet()) {
-			boolean valido = false;
-			for (String param : params) {
-				if (iterador.getKey().equals(param)) {
-					valido = true;
-				}
-			}
-			if (!valido) {
-				throw new ExcecaoParametrosIncorretos("Parâmetro desconhecido: " + iterador.getKey());
-			}
-		}
 	}
 
 }

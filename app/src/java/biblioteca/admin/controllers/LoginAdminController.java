@@ -1,16 +1,16 @@
-package diario.admin.controllers;
+package biblioteca.admin.controllers;
 
-import diario.admin.models.Admin;
-import diario.admin.repositories.AdminNotFoundException;
-import diario.admin.repositories.AdminRepository;
-import diario.admin.views.ErroView;
-import diario.admin.views.RenderException;
-import diario.admin.views.SucessoView;
+import biblioteca.admin.models.Admin;
+import biblioteca.admin.repositories.AdminNotFoundException;
+import biblioteca.admin.repositories.AdminRepository;
+import biblioteca.admin.views.ErroView;
+import biblioteca.admin.views.RenderException;
+import biblioteca.admin.views.SucessoView;
 import utils.ConnectionFactory;
 import utils.Hasher;
 import utils.Headers;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
+import utils.autenticador.BibliotecaAutenticador;
+import utils.autenticador.BibliotecaCargos;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,7 +24,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebServlet(name = "LoginAdmin", urlPatterns = "/diario/admin/login")
+@WebServlet(name = "LoginAdminBiblioteca", urlPatterns = "/biblioteca/admin/login")
 public class LoginAdminController extends HttpServlet {
 
 	private final static String SEM_LOGIN = "O campo login é obrigatório!";
@@ -55,7 +55,7 @@ public class LoginAdminController extends HttpServlet {
 			}
 
 			try {
-				Connection connection = ConnectionFactory.getDiario();
+				Connection connection = ConnectionFactory.getBiblioteca();
 				if (connection == null) {
 					throw new SQLException();
 				}
@@ -68,10 +68,10 @@ public class LoginAdminController extends HttpServlet {
 					throw new AdminNotFoundException();
 				}
 
-				DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+				BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
 
 				// Adicionar manter logado
-				autenticador.logar(original.getId(), DiarioCargos.ADMIN, manter);
+				autenticador.logar(original.getId(), BibliotecaCargos.ADMIN, manter);
 
 				response.setStatus(200);
 				new SucessoView(LOGADO).render(out);

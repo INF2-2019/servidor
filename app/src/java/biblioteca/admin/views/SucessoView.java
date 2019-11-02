@@ -1,4 +1,4 @@
-package diario.admin.views;
+package biblioteca.admin.views;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
