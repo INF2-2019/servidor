@@ -14,139 +14,139 @@ Traduções:
 
 ## `admin`
 
-| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA | IS_GENERATED |
-| ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | ----- | ------------ |
-| id          | 1                | `-`            | NO          | int(11)      | PRI        | `-`   | NEVER        |
-| nome        | 2                | `-`            | NO          | varchar(255) | `-`        | `-`   | NEVER        |
-| usuario     | 3                | `-`            | NO          | varchar(255) | UNI        | `-`   | NEVER        |
-| email       | 4                | `-`            | NO          | varchar(255) | UNI        | `-`   | NEVER        |
-| senha       | 5                | `-`            | NO          | varchar(255) | `-`        | `-`   | NEVER        |
+| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          |
+| ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- |
+| id          | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment |
+| nome        | 2                | `-`            | NO          | varchar(255) | `-`        | `-`            |
+| usuario     | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            |
+| email       | 4                | `-`            | NO          | varchar(255) | UNI        | `-`            |
+| senha       | 5                | `-`            | NO          | varchar(255) | `-`        | `-`            |
 
 ## `alunos`
 
-| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE   | COLUMN_KEY | EXTRA | IS_GENERATED |
-| ----------- | ---------------- | -------------- | ----------- | ------------- | ---------- | ----- | ------------ |
-| id          | 1                | `-`            | NO          | int(11)       | PRI        | `-`   | NEVER        |
-| nome        | 2                | `-`            | NO          | varchar(255)  | `-`        | `-`   | NEVER        |
-| email       | 3                | `-`            | NO          | varchar(255)  | UNI        | `-`   | NEVER        |
-| senha       | 4                | `-`            | NO          | varchar(255)  | `-`        | `-`   | NEVER        |
-| sexo        | 5                | `-`            | NO          | enum('M','F') | `-`        | `-`   | NEVER        |
-| nascimento  | 6                | `-`            | NO          | date          | `-`        | `-`   | NEVER        |
-| logradouro  | 7                | `-`            | NO          | varchar(255)  | `-`        | `-`   | NEVER        |
-| numero      | 8                | `-`            | NO          | int(11)       | `-`        | `-`   | NEVER        |
-| complemento | 9                | NULL           | YES         | varchar(255)  | `-`        | `-`   | NEVER        |
-| bairro      | 10               | `-`            | NO          | varchar(255)  | `-`        | `-`   | NEVER        |
-| cidade      | 11               | `-`            | NO          | varchar(255)  | `-`        | `-`   | NEVER        |
-| cep         | 12               | `-`            | NO          | int(11)       | `-`        | `-`   | NEVER        |
-| uf          | 13               | `-`            | NO          | varchar(255)  | `-`        | `-`   | NEVER        |
-| foto        | 14               | `-`            | NO          | text          | `-`        | `-`   | NEVER        |
+| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE   | COLUMN_KEY | EXTRA |
+| ----------- | ---------------- | -------------- | ----------- | ------------- | ---------- | ----- |
+| id          | 1                | `-`            | NO          | bigint(20)    | PRI        | `-`   |
+| nome        | 2                | `-`            | NO          | varchar(255)  | `-`        | `-`   |
+| email       | 3                | `-`            | NO          | varchar(255)  | UNI        | `-`   |
+| senha       | 4                | `-`            | NO          | varchar(255)  | `-`        | `-`   |
+| sexo        | 5                | `-`            | NO          | enum('M','F') | `-`        | `-`   |
+| nascimento  | 6                | `-`            | NO          | date          | `-`        | `-`   |
+| logradouro  | 7                | `-`            | NO          | varchar(255)  | `-`        | `-`   |
+| numero      | 8                | `-`            | NO          | int(11)       | `-`        | `-`   |
+| complemento | 9                | `-`            | YES         | varchar(255)  | `-`        | `-`   |
+| bairro      | 10               | `-`            | NO          | varchar(255)  | `-`        | `-`   |
+| cidade      | 11               | `-`            | NO          | varchar(255)  | `-`        | `-`   |
+| cep         | 12               | `-`            | NO          | int(11)       | `-`        | `-`   |
+| uf          | 13               | `-`            | NO          | varchar(255)  | `-`        | `-`   |
+| foto        | 14               | `-`            | NO          | text          | `-`        | `-`   |
 
 ## `atividades`
 
-| COLUMN_NAME    | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          | IS_GENERATED |
-| -------------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- | ------------ |
-| id             | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment | NEVER        |
-| id-disciplinas | 2                | `-`            | NO          | int(11)      | `-`        | `-`            | NEVER        |
-| nome           | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            | NEVER        |
-| data           | 4                | `-`            | NO          | date         | `-`        | `-`            | NEVER        |
-| valor          | 5                | `-`            | NO          | decimal(5,2) | `-`        | `-`            | NEVER        |
+| COLUMN_NAME    | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          |
+| -------------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- |
+| id             | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment |
+| id-disciplinas | 2                | `-`            | NO          | int(11)      | `-`        | `-`            |
+| nome           | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            |
+| data           | 4                | `-`            | NO          | date         | `-`        | `-`            |
+| valor          | 5                | `-`            | NO          | decimal(5,2) | `-`        | `-`            |
 
 ## `campi`
 
-| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          | IS_GENERATED |
-| ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- | ------------ |
-| id          | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment | NEVER        |
-| nome        | 2                | `-`            | NO          | varchar(255) | `-`        | `-`            | NEVER        |
-| cidade      | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            | NEVER        |
-| uf          | 4                | `-`            | NO          | varchar(255) | `-`        | `-`            | NEVER        |
+| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          |
+| ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- |
+| id          | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment |
+| nome        | 2                | `-`            | NO          | varchar(255) | `-`        | `-`            |
+| cidade      | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            |
+| uf          | 4                | `-`            | NO          | varchar(255) | `-`        | `-`            |
 
 ## `conteudos`
 
-| COLUMN_NAME    | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE | COLUMN_KEY | EXTRA          | IS_GENERATED |
-| -------------- | ---------------- | -------------- | ----------- | ----------- | ---------- | -------------- | ------------ |
-| id             | 1                | `-`            | NO          | int(11)     | PRI        | auto_increment | NEVER        |
-| id-etapas      | 2                | `-`            | NO          | int(11)     | `-`        | `-`            | NEVER        |
-| id-disciplinas | 3                | `-`            | NO          | int(11)     | `-`        | `-`            | NEVER        |
-| conteudos      | 4                | `-`            | NO          | text        | `-`        | `-`            | NEVER        |
-| datas          | 5                | `-`            | NO          | date        | `-`        | `-`            | NEVER        |
+| COLUMN_NAME    | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          |
+| -------------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- |
+| id             | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment |
+| id-etapas      | 2                | `-`            | NO          | int(11)      | `-`        | `-`            |
+| id-disciplinas | 3                | `-`            | NO          | int(11)      | `-`        | `-`            |
+| conteudos      | 4                | `-`            | NO          | text         | `-`        | `-`            |
+| data           | 5                | `-`            | NO          | date         | `-`        | `-`            |
+| valor          | 6                | `-`            | NO          | decimal(5,2) | `-`        | `-`            |
 
 ## `cursos`
 
-| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          | IS_GENERATED |
-| ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- | ------------ |
-| id          | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment | NEVER        |
-| id-depto    | 2                | `-`            | NO          | int(11)      | `-`        | `-`            | NEVER        |
-| nome        | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            | NEVER        |
-| horas-total | 4                | `-`            | NO          | int(11)      | `-`        | `-`            | NEVER        |
-| modalidade  | 5                | `-`            | NO          | varchar(255) | `-`        | `-`            | NEVER        |
+| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          |
+| ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- |
+| id          | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment |
+| id-depto    | 2                | `-`            | NO          | int(11)      | `-`        | `-`            |
+| nome        | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            |
+| horas-total | 4                | `-`            | NO          | int(11)      | `-`        | `-`            |
+| modalidade  | 5                | `-`            | NO          | varchar(255) | `-`        | `-`            |
 
 ## `departamentos`
 
-| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          | IS_GENERATED |
-| ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- | ------------ |
-| id          | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment | NEVER        |
-| id-campi    | 2                | `-`            | NO          | int(11)      | `-`        | `-`            | NEVER        |
-| nome        | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            | NEVER        |
+| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          |
+| ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- |
+| id          | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment |
+| id-campi    | 2                | `-`            | NO          | int(11)      | `-`        | `-`            |
+| nome        | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            |
 
 ## `diario`
 
-| COLUMN_NAME   | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA | IS_GENERATED |
-| ------------- | ---------------- | -------------- | ----------- | ------------ | ---------- | ----- | ------------ |
-| id-conteudos  | 1                | `-`            | NO          | int(11)      | `-`        | `-`   | NEVER        |
-| id-matriculas | 2                | `-`            | NO          | int(11)      | `-`        | `-`   | NEVER        |
-| id-atividades | 3                | `-`            | NO          | int(11)      | `-`        | `-`   | NEVER        |
-| faltas        | 4                | `-`            | NO          | int(11)      | `-`        | `-`   | NEVER        |
-| nota          | 5                | `-`            | NO          | decimal(5,2) | `-`        | `-`   | NEVER        |
+| COLUMN_NAME   | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA |
+| ------------- | ---------------- | -------------- | ----------- | ------------ | ---------- | ----- |
+| id-conteudos  | 1                | `-`            | NO          | int(11)      | `-`        | `-`   |
+| id-matriculas | 2                | `-`            | NO          | int(11)      | `-`        | `-`   |
+| faltas        | 3                | `-`            | NO          | int(11)      | `-`        | `-`   |
+| nota          | 4                | `-`            | NO          | decimal(5,2) | `-`        | `-`   |
 
 ## `disciplinas`
 
-| COLUMN_NAME       | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          | IS_GENERATED |
-| ----------------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- | ------------ |
-| id                | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment | NEVER        |
-| id-turmas         | 2                | `-`            | NO          | int(11)      | `-`        | `-`            | NEVER        |
-| nome              | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            | NEVER        |
-| carga-horaria-min | 4                | `-`            | NO          | int(11)      | `-`        | `-`            | NEVER        |
+| COLUMN_NAME       | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          |
+| ----------------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- |
+| id                | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment |
+| id-turmas         | 2                | `-`            | NO          | int(11)      | `-`        | `-`            |
+| nome              | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            |
+| carga-horaria-min | 4                | `-`            | NO          | int(11)      | `-`        | `-`            |
 
 ## `etapas`
 
-| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          | IS_GENERATED |
-| ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- | ------------ |
-| id          | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment | NEVER        |
-| ano         | 2                | `-`            | NO          | int(11)      | `-`        | `-`            | NEVER        |
-| valor       | 3                | `-`            | NO          | decimal(5,2) | `-`        | `-`            | NEVER        |
+| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          |
+| ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- |
+| id          | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment |
+| ano         | 2                | `-`            | NO          | int(11)      | `-`        | `-`            |
+| valor       | 3                | `-`            | NO          | decimal(5,2) | `-`        | `-`            |
 
 ## `matriculas`
 
-| COLUMN_NAME    | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE | COLUMN_KEY | EXTRA          | IS_GENERATED |
-| -------------- | ---------------- | -------------- | ----------- | ----------- | ---------- | -------------- | ------------ |
-| id             | 1                | `-`            | NO          | int(11)     | PRI        | auto_increment | NEVER        |
-| id-alunos      | 2                | `-`            | NO          | int(11)     | `-`        | `-`            | NEVER        |
-| id-disciplinas | 3                | `-`            | NO          | int(11)     | `-`        | `-`            | NEVER        |
-| ano            | 4                | `-`            | NO          | int(11)     | `-`        | `-`            | NEVER        |
-| ativo          | 5                | `-`            | NO          | tinyint(1)  | `-`        | `-`            | NEVER        |
-
-## `professores`
-
-| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE           | COLUMN_KEY | EXTRA | IS_GENERATED |
-| ----------- | ---------------- | -------------- | ----------- | --------------------- | ---------- | ----- | ------------ |
-| id          | 1                | `-`            | NO          | int(11)               | PRI        | `-`   | NEVER        |
-| id-depto    | 2                | `-`            | NO          | int(11)               | `-`        | `-`   | NEVER        |
-| nome        | 3                | `-`            | NO          | varchar(255)          | `-`        | `-`   | NEVER        |
-| senha       | 4                | `-`            | NO          | varchar(255)          | `-`        | `-`   | NEVER        |
-| email       | 5                | `-`            | NO          | varchar(255)          | UNI        | `-`   | NEVER        |
-| titulacao   | 6                | `-`            | NO          | enum('M','D','E','G') | `-`        | `-`   | NEVER        |
+| COLUMN_NAME    | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE | COLUMN_KEY | EXTRA          |
+| -------------- | ---------------- | -------------- | ----------- | ----------- | ---------- | -------------- |
+| id             | 1                | `-`            | NO          | int(11)     | PRI        | auto_increment |
+| id-alunos      | 2                | `-`            | NO          | bigint(20)  | `-`        | `-`            |
+| id-disciplinas | 3                | `-`            | NO          | int(11)     | `-`        | `-`            |
+| ano            | 4                | `-`            | NO          | int(11)     | `-`        | `-`            |
+| ativo          | 5                | `-`            | NO          | tinyint(1)  | `-`        | `-`            |
 
 ## `prof_disciplinas`
 
-| COLUMN_NAME    | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE | COLUMN_KEY | EXTRA | IS_GENERATED |
-| -------------- | ---------------- | -------------- | ----------- | ----------- | ---------- | ----- | ------------ |
-| id-professores | 1                | `-`            | NO          | int(11)     | `-`        | `-`   | NEVER        |
-| id-disciplinas | 2                | `-`            | NO          | int(11)     | `-`        | `-`   | NEVER        |
+| COLUMN_NAME    | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE | COLUMN_KEY | EXTRA |
+| -------------- | ---------------- | -------------- | ----------- | ----------- | ---------- | ----- |
+| id-professores | 1                | `-`            | NO          | int(11)     | `-`        | `-`   |
+| id-disciplinas | 2                | `-`            | NO          | int(11)     | `-`        | `-`   |
+
+## `professores`
+
+| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE           | COLUMN_KEY | EXTRA |
+| ----------- | ---------------- | -------------- | ----------- | --------------------- | ---------- | ----- |
+| id          | 1                | `-`            | NO          | int(11)               | PRI        | `-`   |
+| id-depto    | 2                | `-`            | NO          | int(11)               | `-`        | `-`   |
+| nome        | 3                | `-`            | NO          | varchar(255)          | `-`        | `-`   |
+| senha       | 4                | `-`            | NO          | varchar(255)          | `-`        | `-`   |
+| email       | 5                | `-`            | NO          | varchar(255)          | UNI        | `-`   |
+| titulacao   | 6                | `-`            | NO          | enum('M','D','E','G') | `-`        | `-`   |
 
 ## `turmas`
 
-| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          | IS_GENERATED |
-| ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- | ------------ |
-| id          | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment | NEVER        |
-| id-cursos   | 2                | `-`            | NO          | int(11)      | `-`        | `-`            | NEVER        |
-| nome        | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            | NEVER        |
+| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          |
+| ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- |
+| id          | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment |
+| id-cursos   | 2                | `-`            | NO          | int(11)      | `-`        | `-`            |
+| nome        | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            |

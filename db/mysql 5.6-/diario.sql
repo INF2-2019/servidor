@@ -85,7 +85,7 @@ DROP TABLE IF EXISTS `etapas`;
 CREATE TABLE IF NOT EXISTS `etapas` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `ano` INT NOT NULL,
-  `valor` DECIMAL(3, 2) NOT NULL,
+  `valor` DECIMAL(5, 2) NOT NULL,
   PRIMARY KEY(id)
 );
 
@@ -113,23 +113,14 @@ CREATE TABLE IF NOT EXISTS `turmas` (
   PRIMARY KEY(id)
 );
 
-DROP TABLE IF EXISTS `atividades`;
-CREATE TABLE IF NOT EXISTS `atividades` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `id-disciplinas` INT NOT NULL,
-  `nome` VARCHAR(127) NOT NULL,
-  `data` DATE NOT NULL,
-  `valor` DECIMAL(3, 2) NOT NULL,
-  PRIMARY KEY(id)
-);
-
 DROP TABLE IF EXISTS `conteudos`;
 CREATE TABLE IF NOT EXISTS `conteudos` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `id-etapas` INT NOT NULL,
   `id-disciplinas` INT NOT NULL,
   `conteudos` TEXT NOT NULL,
-  `datas` DATE NOT NULL,
+  `data` DATE NOT NULL,
+  `valor` DECIMAL(5, 2) NOT NULL,
   PRIMARY KEY(id)
 );
 
@@ -139,5 +130,5 @@ CREATE TABLE IF NOT EXISTS `diario` (
   `id-matriculas` INT NOT NULL,
   `id-atividades` INT NOT NULL,
   `faltas` INT NOT NULL,
-  `nota` DECIMAL(3, 2) NOT NULL
+  `nota` DECIMAL(5, 2) NOT NULL
 );
