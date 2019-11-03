@@ -38,7 +38,7 @@ public class EmprestarReservas extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
 
-		if (autenticador.cargoLogado() != BibliotecaCargos.ADMIN) {
+		if (autenticador.cargoLogado() == BibliotecaCargos.CONVIDADO) {
 			response.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
 			try {

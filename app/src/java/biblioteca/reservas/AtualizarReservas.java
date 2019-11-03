@@ -36,7 +36,7 @@ public class AtualizarReservas extends HttpServlet {
 		PrintWriter out = res.getWriter();
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(req, res);
 		
-		if (autenticador.cargoLogado() == BibliotecaCargos.ADMIN) {
+		if (autenticador.cargoLogado() != BibliotecaCargos.ADMIN) {
 			res.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
 			try {
