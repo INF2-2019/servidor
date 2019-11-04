@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+package diario.diario.conteudos;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import utils.ConnectionFactory;
 
 /**
  *
@@ -26,51 +23,46 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(urlPatterns = {"/diario/diario/conteudo/consulta"})
 public class Consulta extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    final String SERVIDOR_SQL = "jdbc:mysql://localhost:3307/diario",
-	    USUARIO_ADMIN_SQL = "root",
-	    SENHA_ADMIN_SQL = "123456";
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
             
-            
-        response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-           try{
-            String query;
-           query = "SELECT * FROM conteudos";
-           DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-		Connection conexao = DriverManager.getConnection(SERVIDOR_SQL, USUARIO_ADMIN_SQL, SENHA_ADMIN_SQL);
+            try{
+                
+                String query;
+                query = "SELECT * FROM conteudos";
+                
+                boolean mostra_valor = true;
+                
+                if(ChecaParametro.parametroExiste(request, "especifico")){
+                    String oq = request.getParameter("especifico");
+                    if("conteudo".equals(oq)){
+                        query += " WHERE valor=0";
+                        mostra_valor = false;
+                    } else if("atividade".equals(oq)){
+                        query += " WHERE valor>0";
+                    } else {
+                        out.print(RespostaXML.erro("'especifico' não esta formatado corretamente", "O 'especifico' pode ser ou 'conteudo' ou 'atividade'"));
+                        return;
+                    }
+                } 
+                
+                Connection conexao = ConnectionFactory.getDiario();
 		PreparedStatement st = conexao.prepareStatement(query);
 
 		ResultSet resultado = st.executeQuery();
-                
-                while (resultado.next()) {
-		    int etapa = resultado.getInt("idEtapas");
-                    String disciplina = resultado.getString("idDisciplinas"),
-		    conteudo = resultado.getString("conteudos");
-                    Date data = resultado.getDate("datas");
-
-		    out.println("Etapa: " + etapa + ", disciplina: " + disciplina + ", conteudo: '" + conteudo + "', data: " + data);
-		}
+                if(mostra_valor)
+                    out.print(RespostaXML.retornaSet(resultado,"id-etapas","id-disciplinas","conteudos","data","valor"));
+                else
+                    out.print(RespostaXML.retornaSet(resultado,"id-etapas","id-disciplinas","conteudos","data"));
 
 		st.close();
 		conexao.close();
 
-           }catch (SQLException e) {
-		out.println("ERRO DE LEITURA/CONEXÃO NA TABELA 'CONTEUDOS' - " + e.getMessage());
-		return;
+            }catch (SQLException e) {
+		out.print(RespostaXML.erro("Erro no banco de dados!", e.getMessage()));
+                e.printStackTrace();
 	    }
            
         }
@@ -91,7 +83,7 @@ public class Consulta extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(conteudosDados.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Consulta.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -109,7 +101,7 @@ public class Consulta extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(conteudosDados.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Consulta.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -9,6 +9,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -22,24 +24,30 @@ import utils.ConnectionFactory;
  *
  * @author Marcus
  */
-@WebServlet(urlPatterns = {"/diario/diario/conteudo/inserir"})
-public class Inserir extends HttpServlet {
+@WebServlet(urlPatterns = {"/diario/diario/conteudo/atualizar"})
+public class Atualizar extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
         try (PrintWriter out = response.getWriter()) {
             
-                String parametro_falta = ChecaParametro.parametroFaltante(request, "etapa","disciplina","conteudo","data");
-                if(parametro_falta!=null){
-                    out.print(RespostaXML.erro("Erro com '"+parametro_falta+"'", "O parametro '"+parametro_falta+"' é obrigatório!"));
+                if(ChecaParametro.parametroExiste(request, "id")){
+                    out.print(RespostaXML.erro("ID é obrigatório!", "O parametro 'id' é obrigatório!"));
                     return;
                 }
                 
-                if(!ChecaParametro.parametroEInteiro(request, "etapa")){
-                    out.print(RespostaXML.erro("'etapa' não é inteiro", "Falha no formato do parametro 'etapa'"));
-                    return;
-                }
+                String query = "UPDATE conteudos SET ";
+                List<String> modificacoes = new ArrayList<String>(); 
+                
+                if(ChecaParametro.parametroExiste(request, "etapa")){
+                    if(!ChecaParametro.parametroEInteiro(request, "etapa")){
+                        out.print(RespostaXML.erro("'etapa' deve ser inteiro!", "Falha no formato do parametro 'etapa'"));
+                        return;
+                    } else {
+                        modificacoes.add("etapa");
+                    }
+                } 
                 
                 if(!ChecaParametro.parametroEInteiro(request, "disciplina")){
                     out.print(RespostaXML.erro("'disciplina' não é inteiro", "Falha no formato do parametro 'disciplina'"));
@@ -72,9 +80,6 @@ public class Inserir extends HttpServlet {
                         valor = Double.valueOf(valor_string);
                     }
                 } 
-                
-                // Query SQL de inserção na tabela DESCARTES
-		String query = "INSERT INTO conteudos(`id-etapas`,`id-disciplinas`, conteudos , data, valor) VALUES (?,?,?,?,?)";
 
 		// Conecta e executa Query SQL
 		Connection conexao = ConnectionFactory.getDiario();
@@ -116,7 +121,7 @@ public class Inserir extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(Inserir.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Atualizar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -134,7 +139,7 @@ public class Inserir extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(Inserir.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Atualizar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
