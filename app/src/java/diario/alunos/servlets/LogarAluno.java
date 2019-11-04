@@ -21,10 +21,7 @@ import utils.ConnectionFactory;
 import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 
-/**
- *
- * @author User
- */
+
 @WebServlet(name = "LogarAluno", urlPatterns = {"/diario/alunos/logar"})
 public class LogarAluno extends HttpServlet {
 
@@ -37,20 +34,20 @@ public class LogarAluno extends HttpServlet {
 		Headers.XMLHeaders(response);
 
 		try {
-			if(rep.logarAluno(request, response, id, senha)) {
-				
-			}
-			else
+			if (rep.logarAluno(request, response, id, senha)) {
+
+			} else {
 				out.println("<erro><mensagem>Senha incorreta</mensagem></erro>");
+			}
 			conexao.close();
-		} catch(SQLException ex) {
+		} catch (SQLException ex) {
 			out.println("<erro><mensagem>Usuario inexistente</mensagem></erro>");
 		} catch (NoSuchAlgorithmException ex) {
 			Logger.getLogger(LogarAluno.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (InvalidKeySpecException ex) {
 			Logger.getLogger(LogarAluno.class.getName()).log(Level.SEVERE, null, ex);
 		}
-             
-    }
+
+	}
 
 }

@@ -16,10 +16,7 @@ import java.sql.Statement;
 import utils.ConnectionFactory;
 import utils.Headers;
 
-/**
- *
- * @author User
- */
+
 @WebServlet(name = "ListarAlunos", urlPatterns = {"/diario/alunos/listar"})
 public class ListarAlunos extends HttpServlet {
 
@@ -34,10 +31,10 @@ public class ListarAlunos extends HttpServlet {
 			xml = rep.listarAlunos();
 			out.println(xml);
 			conexao.close();
-		} catch(SQLException ex) {
+		} catch (SQLException ex) {
 			out.println("<erro><mensagem>Falha ao listar alunos do banco de dados</mensagem></erro>");
 		}
-               
-    }
+
+	}
 
 }

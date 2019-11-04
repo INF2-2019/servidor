@@ -1,6 +1,5 @@
 package diario.alunos.servlets;
 
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -20,27 +19,23 @@ import java.sql.ResultSet;
 import utils.ConnectionFactory;
 import utils.Headers;
 
-/**
- *
- * @author User
- */
+
 @WebServlet(name = "DeletarAlunos", urlPatterns = {"/diario/alunos/deletar"})
 public class DeletarAlunos extends HttpServlet {
 
-     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        Connection conexao = ConnectionFactory.getDiario();
-        AlunosRepository rep = new AlunosRepository(conexao);
-        PrintWriter out = response.getWriter();
-        Headers.XMLHeaders(response);
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		Connection conexao = ConnectionFactory.getDiario();
+		AlunosRepository rep = new AlunosRepository(conexao);
+		PrintWriter out = response.getWriter();
+		Headers.XMLHeaders(response);
 		String id = request.getParameter("id");
-        
-       if (rep.checarAutorizacaoADM(request, response)) {
-			
 
-			try{
+		if (rep.checarAutorizacaoADM(request, response)) {
+
+			try {
 				String result = rep.deletarAlunos(id);
-				if("sucesso".equals(result)) {
+				if ("sucesso".equals(result)) {
 					View sucessoView = new SucessoView("Deletado com sucesso.");
 					sucessoView.render(out);
 				} else if ("mat".equals(result)) {
@@ -73,14 +68,11 @@ public class DeletarAlunos extends HttpServlet {
 					throw new ServletException(e);
 				}
 			}
-			
-			
-			
-			
-        } else {
+
+		} else {
 			response.setStatus(403);
 			out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
 		}
-    }
+	}
 
 }

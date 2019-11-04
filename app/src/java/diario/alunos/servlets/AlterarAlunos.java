@@ -22,22 +22,19 @@ import java.text.ParseException;
 import utils.ConnectionFactory;
 import utils.Headers;
 
-/**
- *
- * @author User
- */
+
 @WebServlet(name = "AlterarAlunos", urlPatterns = {"/diario/alunos/alterar"})
 public class AlterarAlunos extends HttpServlet {
 
-     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        Connection conexao = ConnectionFactory.getDiario();
-        AlunosRepository rep = new AlunosRepository(conexao);
-        PrintWriter out = response.getWriter();
-        Headers.XMLHeaders(response);
-		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		Connection conexao = ConnectionFactory.getDiario();
+		AlunosRepository rep = new AlunosRepository(conexao);
+		PrintWriter out = response.getWriter();
+		Headers.XMLHeaders(response);
+
 		if (rep.checarAutorizacaoADM(request, response)) {
-        
+
 			String id = request.getParameter("id");
 			String nome = request.getParameter("nome");
 			String email = request.getParameter("email");
@@ -49,7 +46,7 @@ public class AlterarAlunos extends HttpServlet {
 			String complemento = request.getParameter("complemento");
 			String bairro = request.getParameter("bairro");
 			String cidade = request.getParameter("cidade");
-			String cep = request.getParameter("cep");		
+			String cep = request.getParameter("cep");
 			String uf = request.getParameter("uf");
 			String foto = request.getParameter("foto");
 
@@ -83,13 +80,12 @@ public class AlterarAlunos extends HttpServlet {
 				response.setStatus(500);
 				out.println("<erro><mensagem>Erro severo</mensagem></erro>");
 			}
-			 
+
 		} else {
 			response.setStatus(403);
 			out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
-		} 	
-            
-               
-    }
+		}
+
+	}
 
 }

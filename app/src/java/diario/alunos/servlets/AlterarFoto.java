@@ -21,10 +21,7 @@ import java.text.ParseException;
 import utils.ConnectionFactory;
 import utils.Headers;
 
-/**
- *
- * @author User
- */
+
 @WebServlet(name = "AlterarFoto", urlPatterns = {"/diario/alunos/altfoto"})
 public class AlterarFoto extends HttpServlet {
 
@@ -37,11 +34,10 @@ public class AlterarFoto extends HttpServlet {
 		String id = request.getParameter("id");
 		String foto = request.getParameter("foto");
 
-
 		if (rep.checarAutorizacaoAluno(request, response, id) || rep.checarAutorizacaoADM(request, response)) {
 
 			try {
-				if(rep.alterarFoto(id, foto)) {
+				if (rep.alterarFoto(id, foto)) {
 					View sucessoView = new SucessoView("Foto atualizada com sucesso.");
 					sucessoView.render(out);
 				} else {
@@ -53,19 +49,18 @@ public class AlterarFoto extends HttpServlet {
 
 				View erroView = new ErroView(excecaoSQL);
 				try {
-						erroView.render(out);
+					erroView.render(out);
 				} catch (RenderException e) {
-						throw new ServletException(e);
+					throw new ServletException(e);
 				}
 			} catch (RenderException e) {
 				throw new ServletException(e);
 			}
 
 		} else {
-				response.setStatus(401);
-				out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
-	} 	
-
+			response.setStatus(401);
+			out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
+		}
 
 	}
 

@@ -16,10 +16,7 @@ import java.sql.ResultSet;
 import utils.ConnectionFactory;
 import utils.Headers;
 
-/**
- *
- * @author User
- */
+
 @WebServlet(name = "ConsultarAlunos", urlPatterns = {"/diario/alunos/consultar"})
 public class ConsultarPorId extends HttpServlet {
 
@@ -34,10 +31,10 @@ public class ConsultarPorId extends HttpServlet {
 			xml = rep.consultarPorId(id);
 			out.println(xml);
 			conexao.close();
-		} catch(SQLException ex) {
+		} catch (SQLException ex) {
 			out.println("<erro><mensagem>Falha ao consultar alunos do banco de dados</mensagem></erro>");
 		}
-		
-    }
+
+	}
 
 }

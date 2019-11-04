@@ -24,38 +24,34 @@ import java.text.ParseException;
 import utils.ConnectionFactory;
 import utils.Headers;
 
-/**
- *
- * @author User
- */
+
 @WebServlet(name = "InserirAlunos", urlPatterns = {"/diario/alunos/inserir"})
 public class InserirAlunos extends HttpServlet {
 
-     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        Connection conexao = ConnectionFactory.getDiario();
-        AlunosRepository rep = new AlunosRepository(conexao);
-        PrintWriter out = response.getWriter();
-        Headers.XMLHeaders(response);
-		
-		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		Connection conexao = ConnectionFactory.getDiario();
+		AlunosRepository rep = new AlunosRepository(conexao);
+		PrintWriter out = response.getWriter();
+		Headers.XMLHeaders(response);
+
 		if (rep.checarAutorizacaoADM(request, response)) {
-        
+
 			String id = request.getParameter("id");
 			String nome = request.getParameter("nome");
 			String email = request.getParameter("email");
 			String senha = request.getParameter("senha");
 			String sexo = request.getParameter("sexo");
-			String nascimento = request.getParameter("nascimento"); 
+			String nascimento = request.getParameter("nascimento");
 			String logradouro = request.getParameter("logradouro");
 			String numero = request.getParameter("numero");
 			String complemento = request.getParameter("complemento");
 			String bairro = request.getParameter("bairro");
 			String cidade = request.getParameter("cidade");
-			String cep = request.getParameter("cep");		
+			String cep = request.getParameter("cep");
 			String uf = request.getParameter("uf");
 			String foto = request.getParameter("foto");
-				try {
+			try {
 				boolean sucesso = rep.inserirAlunos(id, nome, email, senha, sexo, nascimento, logradouro, numero, complemento, bairro, cidade, cep, uf, foto);
 				View sucessoView = new SucessoView("Inserido com sucesso.");
 				sucessoView.render(out);
@@ -83,12 +79,12 @@ public class InserirAlunos extends HttpServlet {
 				throw new ServletException(e);
 			} catch (NoSuchAlgorithmException | ParseException | InvalidKeySpecException ex) {
 				out.println("<erro><mensagem>Erro severo</mensagem></erro>");
-			} 
+			}
 		} else {
 			response.setStatus(403);
 			out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
 		}
-               
-    }
+
+	}
 
 }

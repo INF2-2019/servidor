@@ -22,54 +22,50 @@ import java.text.ParseException;
 import utils.ConnectionFactory;
 import utils.Headers;
 
-/**
- *
- * @author User
- */
+
 @WebServlet(name = "AlterarSenha", urlPatterns = {"/diario/alunos/senha"})
 public class AlterarSenha extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-		   throws ServletException, IOException {
-	   Connection conexao = ConnectionFactory.getDiario();
-	   AlunosRepository rep = new AlunosRepository(conexao);
-	   PrintWriter out = response.getWriter();
-	   Headers.XMLHeaders(response);
-	   String id = request.getParameter("id");
-	   String senha = request.getParameter("senha");
+			throws ServletException, IOException {
+		Connection conexao = ConnectionFactory.getDiario();
+		AlunosRepository rep = new AlunosRepository(conexao);
+		PrintWriter out = response.getWriter();
+		Headers.XMLHeaders(response);
+		String id = request.getParameter("id");
+		String senha = request.getParameter("senha");
 
-	   if (rep.checarAutorizacaoAluno(request, response, id) || rep.checarAutorizacaoADM(request, response)) {
+		if (rep.checarAutorizacaoAluno(request, response, id) || rep.checarAutorizacaoADM(request, response)) {
 
-		try {
-			if(rep.alterarSenha(id, senha)) {
-			   View sucessoView = new SucessoView("Senha atualizada com sucesso.");
-			   sucessoView.render(out);
-		   } else {
-			   out.println("<erro><mensagem>Não foi possível alterar a senha</mensagem></erro>");
-			}
-		} catch (SQLException excecaoSQL) {
-		   response.setStatus(400);
-		   System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+			try {
+				if (rep.alterarSenha(id, senha)) {
+					View sucessoView = new SucessoView("Senha atualizada com sucesso.");
+					sucessoView.render(out);
+				} else {
+					out.println("<erro><mensagem>Não foi possível alterar a senha</mensagem></erro>");
+				}
+			} catch (SQLException excecaoSQL) {
+				response.setStatus(400);
+				System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
-		   View erroView = new ErroView(excecaoSQL);
-		   try {
-				erroView.render(out);
-		   } catch (RenderException e) {
+				View erroView = new ErroView(excecaoSQL);
+				try {
+					erroView.render(out);
+				} catch (RenderException e) {
+					throw new ServletException(e);
+				}
+			} catch (RenderException e) {
 				throw new ServletException(e);
-		   }
-		   } catch (RenderException e) {
-			throw new ServletException(e);
-		   } catch (NoSuchAlgorithmException ex) {
-			Logger.getLogger(AlterarSenha.class.getName()).log(Level.SEVERE, null, ex);
-		   } catch (InvalidKeySpecException ex) {
-			Logger.getLogger(AlterarSenha.class.getName()).log(Level.SEVERE, null, ex);
-		   }
+			} catch (NoSuchAlgorithmException ex) {
+				Logger.getLogger(AlterarSenha.class.getName()).log(Level.SEVERE, null, ex);
+			} catch (InvalidKeySpecException ex) {
+				Logger.getLogger(AlterarSenha.class.getName()).log(Level.SEVERE, null, ex);
+			}
 
 		} else {
-		   response.setStatus(401);
-		   out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
-		} 	
-
+			response.setStatus(401);
+			out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
+		}
 
 	}
 
