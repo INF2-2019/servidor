@@ -65,7 +65,7 @@ public class Transfere extends HttpServlet {
 				}
 
 			} catch(ParametrosIncorretosException ex) {
-				response.setStatus(402);
+				response.setStatus(422);
 				excecao = ex;
 			} catch(AlunoInativoException ex) {
 				response.setStatus(400);
