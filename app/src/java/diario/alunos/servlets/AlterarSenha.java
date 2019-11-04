@@ -56,14 +56,12 @@ public class AlterarSenha extends HttpServlet {
 				}
 			} catch (RenderException e) {
 				throw new ServletException(e);
-			} catch (NoSuchAlgorithmException ex) {
-				Logger.getLogger(AlterarSenha.class.getName()).log(Level.SEVERE, null, ex);
-			} catch (InvalidKeySpecException ex) {
-				Logger.getLogger(AlterarSenha.class.getName()).log(Level.SEVERE, null, ex);
+			} catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+				out.println("<erro><mensagem>Erro severo</mensagem></erro>");
 			}
 
 		} else {
-			response.setStatus(401);
+			response.setStatus(403);
 			out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
 		}
 

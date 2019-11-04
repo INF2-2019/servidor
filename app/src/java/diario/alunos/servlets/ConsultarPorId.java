@@ -32,6 +32,7 @@ public class ConsultarPorId extends HttpServlet {
 			out.println(xml);
 			conexao.close();
 		} catch (SQLException ex) {
+			response.setStatus(400);
 			out.println("<erro><mensagem>Falha ao consultar alunos do banco de dados</mensagem></erro>");
 		}
 
