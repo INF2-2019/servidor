@@ -71,10 +71,10 @@ public class EmprestimoRepository {
 	// TODO: Adequar ao sistema de datas
 
 	public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException, ParseException, InacessivelException, AlunoException {
-            
+
                 PreparedStatement ps;
                 ResultSet resultadoBusca;
-                
+
 		long idAlunos = 00000000000L;
                 String SidAlunos;
 		if (valores.containsKey("id-alunos")) {
@@ -86,21 +86,21 @@ public class EmprestimoRepository {
                 ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
                 ps.setLong(1, idAlunos);
                 resultadoBusca = ps.executeQuery();
-                
+
                 if(!resultadoBusca.next()) throw new AlunoException("Não existe esse aluno.");
-                
+
 		int idAcervo = 0;
 
 		if (valores.containsKey("id-acervo")) {
 			idAcervo = Integer.parseUnsignedInt(valores.get("id-acervo"));
 		}
-                
+
                 ps = con.prepareStatement("SELECT * FROM `acervo` WHERE `id` = ? ");
                 ps.setInt(1, idAcervo);
                 resultadoBusca = ps.executeQuery();
-                
+
                 if(!resultadoBusca.next()) throw new AlunoException("Não existe esse acervo.");
-                
+
 
 		ps = con.prepareStatement("SELECT * FROM `emprestimos` WHERE `id-acervo` = ? AND `data-devolucao`= '1970-01-01'");
 		ps.setInt(1, idAcervo);
@@ -194,17 +194,17 @@ public class EmprestimoRepository {
 
 		Date dataDevolucao = (Date) (parametros.get("data-devolucao"));
 		double multa = Double.parseDouble(parametros.get("multa").toString());
-                
-                
+
+
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
                 ps.setLong(1, idAlunos);
                 ResultSet resultadoBusca = ps.executeQuery();
-                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse aluno.");                
+                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse aluno.");
                 ps = con.prepareStatement("SELECT * FROM `acervo` WHERE `id` = ? ");
                 ps.setInt(1, idAcervo);
                 resultadoBusca = ps.executeQuery();
                 if(!resultadoBusca.next()) throw new AlunoException("Não existe esse acervo.");
-                
+
                 ps = con.prepareStatement("UPDATE `emprestimos` SET `id-alunos` = ?, `id-acervo` = ?, `data-emprestimo` = ?, `data-prev-devol` = ?, `data-devolucao` = ?, `multa` = ? WHERE `id` = ?");
 		ps.setLong(1, idAlunos);
 		ps.setInt(2, idAcervo);

@@ -17,8 +17,8 @@ import biblioteca.emprestimos.views.View;
 import biblioteca.emprestimos.views.SucessoView;
 import biblioteca.emprestimos.views.ErroView;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import utils.autenticador.BibliotecaAutenticador;
+import utils.autenticador.BibliotecaCargos;
 
 @WebServlet(name = "DevolverEmprestimos", urlPatterns = {"/biblioteca/emprestimos/devolver"})
 public class DevolverEmprestimos extends HttpServlet {
@@ -29,8 +29,21 @@ public class DevolverEmprestimos extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
+		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
+
+		if ((autenticador.cargoLogado() != BibliotecaCargos.ADMIN) || (autenticador.cargoLogado() != BibliotecaCargos.OPERADOR)) {
+			response.setStatus(403);
+			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+			return;
+		}
+
 		if (conexao == null) {
-			System.err.println("Falha ao conectar ao bd");
+			response.setStatus(500);
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {
 				erroView.render(out);
@@ -50,9 +63,7 @@ public class DevolverEmprestimos extends HttpServlet {
 			sucessoView.render(out);
 		} catch (NumberFormatException excecaoFormatoErrado) {
 			response.setStatus(400);
-			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
-
-			View erroView = new ErroView(excecaoFormatoErrado);
+			View erroView = new ErroView(new Exception("Número inteiro inválido para o parâmetro."));
 			try {
 				erroView.render(out);
 			} catch (RenderException e) {
@@ -60,9 +71,7 @@ public class DevolverEmprestimos extends HttpServlet {
 			}
 		} catch (SQLException excecaoSQL) {
 			response.setStatus(500);
-			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
-
-			View erroView = new ErroView(excecaoSQL);
+			View erroView = new ErroView(new Exception("Falha ao realizar a pesquisa no banco de dados."));
 			try {
 				erroView.render(out);
 			} catch (RenderException e) {
@@ -71,7 +80,13 @@ public class DevolverEmprestimos extends HttpServlet {
 		} catch (RenderException e) {
 			throw new ServletException(e);
 		} catch (ParseException ex) {
-			Logger.getLogger(DevolverEmprestimos.class.getName()).log(Level.SEVERE, null, ex);
+			response.setStatus(400);
+			View erroView = new ErroView(new Exception("Alguma informação fornecida está desformatada."));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
 		}
 	}
 

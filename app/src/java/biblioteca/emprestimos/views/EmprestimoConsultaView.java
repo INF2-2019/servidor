@@ -77,14 +77,16 @@ public class EmprestimoConsultaView extends View<Set<EmprestimoModel>> {
 
 		return elemento;
 	}
-        
-        private static String formataIdAluno(long cpf){
-            String scpf = String.valueOf(cpf);
-            if(scpf.length()==11) return scpf;
-            for(int i=scpf.length();i<11;i++){
-                scpf = "0"+scpf;
-            }
-            return scpf;
-        }
+
+	private static String formataIdAluno(long cpf) {
+		String scpf = String.valueOf(cpf);
+		if (scpf.length() == 11) {
+			return scpf;
+		}
+		for (int i = scpf.length(); i < 11; i++) {
+			scpf = "0" + scpf;
+		}
+		return scpf;
+	}
 
 }

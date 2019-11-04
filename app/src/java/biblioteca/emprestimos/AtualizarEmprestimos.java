@@ -16,13 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 import utils.ConnectionFactory;
 import utils.Headers;
 import java.util.SortedMap;
-import java.util.TreeMap;
 import biblioteca.emprestimos.views.View;
 import biblioteca.emprestimos.views.ErroView;
 import biblioteca.emprestimos.views.RenderException;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import utils.autenticador.BibliotecaAutenticador;
+import utils.autenticador.BibliotecaCargos;
 
 @WebServlet(name = "AtualizarEmprestimos", urlPatterns = {"/biblioteca/emprestimos/atualizar"})
 public class AtualizarEmprestimos extends HttpServlet {
@@ -31,7 +30,22 @@ public class AtualizarEmprestimos extends HttpServlet {
 		Headers.XMLHeaders(res);
 		Connection con = ConnectionFactory.getBiblioteca();
 		PrintWriter out = res.getWriter();
+
+		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(req, res);
+
+		if ((autenticador.cargoLogado() != BibliotecaCargos.ADMIN) || (autenticador.cargoLogado() != BibliotecaCargos.OPERADOR)) {
+			res.setStatus(403);
+			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+			return;
+		}
+
 		if (con == null) {
+			res.setStatus(500);
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {
 				erroView.render(out);
@@ -43,17 +57,15 @@ public class AtualizarEmprestimos extends HttpServlet {
 
 		EmprestimoRepository disciplinaRep = new EmprestimoRepository(con);
 		String id = req.getParameter("id");
-		
+
 		try {
-                        SortedMap<String, String> filtros = EmprestimoModel.definirMap(req);
+			SortedMap<String, String> filtros = EmprestimoModel.definirMap(req);
 			disciplinaRep.atualizar(filtros, id);
 			View sucessoView = new SucessoView("Atualizado com sucesso.");
 			sucessoView.render(out);
 		} catch (NumberFormatException excecaoFormatoErrado) {
 			res.setStatus(400);
-			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
-
-			View erroView = new ErroView(excecaoFormatoErrado);
+			View erroView = new ErroView(new Exception("Número inteiro inválido para o parâmetro."));
 			try {
 				erroView.render(out);
 			} catch (RenderException e) {
@@ -61,9 +73,7 @@ public class AtualizarEmprestimos extends HttpServlet {
 			}
 		} catch (SQLException excecaoSQL) {
 			res.setStatus(500);
-			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
-
-			View erroView = new ErroView(excecaoSQL);
+			View erroView = new ErroView(new Exception("Falha ao realizar a pesquisa no banco de dados."));
 			try {
 				erroView.render(out);
 			} catch (RenderException e) {
@@ -72,10 +82,22 @@ public class AtualizarEmprestimos extends HttpServlet {
 		} catch (RenderException e) {
 			throw new ServletException(e);
 		} catch (ParseException ex) {
-			Logger.getLogger(AtualizarEmprestimos.class.getName()).log(Level.SEVERE, null, ex);
+			res.setStatus(500);
+			View erroView = new ErroView(new Exception("Alguma informação fornecida está desformatada."));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
 		} catch (AlunoException ex) {
-                Logger.getLogger(AtualizarEmprestimos.class.getName()).log(Level.SEVERE, null, ex);
-            }
+			res.setStatus(400);
+			View erroView = new ErroView(ex);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+		}
 
 	}
 
