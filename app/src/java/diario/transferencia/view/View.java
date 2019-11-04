@@ -1,4 +1,4 @@
-package diario.admin.views;
+package diario.transferencia.view;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -19,4 +19,5 @@ public abstract class View<D> {
 		render(printWriter);
 		return data.toString();
 	}
+;
 }
