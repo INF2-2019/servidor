@@ -5,6 +5,14 @@ Lê sobre "Empréstimos", "Reservas" e "Alunos".
 
 ## Como utilizar
 
+##### Parâmetros
+
+- **Gerais**: id (int); id-campi (int); nome (string); tipo (string); local (string); ano (int); editora (string); paginas (int); id-obra (int);
+- **Acadêmicos**: programa (string);
+- **Livros**: edicao (int); isbn (long int);
+- **Mídias**: tempo (string no formato 23:59:59); subtipo (um dentre 'CD', 'DVD', 'FITA', 'PENDRIVE');
+- **Periódicos**: periodicidade (string); mes (string); volume (int); subtipo (string); issn (int)
+
 #### Inserir
 
 - **Acesso**: {endereço_hospedado}/biblioteca/acervo/inserir
