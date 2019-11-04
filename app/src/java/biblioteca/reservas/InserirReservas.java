@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import biblioteca.reservas.repository.ReservaRepository;
+import biblioteca.reservas.views.AlunoException;
 import utils.ConnectionFactory;
 import utils.Headers;
 
@@ -100,7 +101,9 @@ public class InserirReservas extends HttpServlet {
 			} catch (RenderException e) {
 				throw new ServletException(e);
 			}
-		}
+		} catch (AlunoException ex) {
+                Logger.getLogger(InserirReservas.class.getName()).log(Level.SEVERE, null, ex);
+            }
 	}
 
 	public Map<String, String> definirMap(HttpServletRequest req) {

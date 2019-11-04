@@ -9,6 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import biblioteca.reservas.model.ReservaModel;
+import biblioteca.reservas.views.AlunoException;
 import biblioteca.reservas.views.ExcecaoEmprestimoCadastrado;
 import biblioteca.reservas.views.ExcecaoreservaExistente;
 import java.util.SortedMap;
@@ -85,7 +86,7 @@ public class ReservaRepository {
 		Date dataDevolucao = new Date(0);
 		double multa = 0.00;
 		 ps = con.prepareStatement("INSERT INTO `emprestimos` (`id-alunos`, `id-acervo`, `data-emprestimo`, `data-prev-devol`, `data-devolucao`, `multa`) VALUES (?, ?, ?, ?, ?, ?)");
-		ps.setInt(1, reserva.getIdAlunos());
+		ps.setLong(1, reserva.getIdAlunos());
 		ps.setInt(2, reserva.getIdAcervo());
 		ps.setDate(3, new java.sql.Date(dataEmprestimo.getTime()));
 		ps.setDate(4, new java.sql.Date(dataPrevDevol.getTime()));
@@ -94,27 +95,44 @@ public class ReservaRepository {
 		ps.executeUpdate();
 	}
 
-	public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException, ParseException, ExcecaoreservaExistente {
-		System.out.println(valores.size());
+	public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException, ParseException, ExcecaoreservaExistente, AlunoException {
+		
+                PreparedStatement ps;
+                ResultSet resultadoBusca;
 		if (valores.size() < 2) {
 			return false;
 		}
 
-		int idAlunos = 0;
-
+		long idAlunos = 0L;
+                String SidAlunos = "";
+                
 		if (valores.containsKey("id-alunos")) {
-			idAlunos = Integer.parseUnsignedInt(valores.get("id-alunos"));
+                    SidAlunos = valores.get("id-alunos");
+                    if(SidAlunos.length()!=11) throw new AlunoException("Número inválido para um CPF.");
+                    idAlunos = Long.parseUnsignedLong(valores.get("id-alunos"));
 		}
-
+                else throw new AlunoException("O id(CPF) do aluno é obrigatório");
+                //Verifica a existência do aluno
+                ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
+                ps.setLong(1, idAlunos);
+                resultadoBusca = ps.executeQuery();
+                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse aluno.");
+                
 		int idAcervo = 0;
 
 		if (valores.containsKey("id-acervo")) {
 			idAcervo = Integer.parseUnsignedInt(valores.get("id-acervo"));
 		}
-		PreparedStatement ps = con.prepareStatement("SELECT * FROM `reservas` WHERE `id-acervo` = ? AND `tempo-espera`= ?");
+                //Verifica a existência do acervo
+                ps = con.prepareStatement("SELECT * FROM `acervo` WHERE `id` = ? ");
+                ps.setInt(1, idAcervo);
+                resultadoBusca = ps.executeQuery();
+                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse acervo.");
+                
+		ps = con.prepareStatement("SELECT * FROM `reservas` WHERE `id-acervo` = ? AND `tempo-espera`= ?");
 		ps.setInt(1, idAcervo);
 		ps.setInt(2, 0);
-		ResultSet resultadoBusca = ps.executeQuery();
+		resultadoBusca = ps.executeQuery();
 
 		while (resultadoBusca.next()) {
 			throw new ExcecaoreservaExistente("Ja existe uma reserva sobre o item no Acervo");
@@ -141,7 +159,7 @@ public class ReservaRepository {
 
 		ps = con.prepareStatement("INSERT INTO `reservas` (`id-aluno`, `id-acervo`, `data-reserva`,`tempo-espera`,`emprestou`) VALUES (?, ?, ?, ?, ?)");
 
-		ps.setInt(1, idAlunos);
+		ps.setLong(1, idAlunos);
 		ps.setInt(2, idAcervo);
 		ps.setDate(3, new java.sql.Date(dataReserva.getTime()));
 		ps.setInt(4, tempoEspera);
@@ -156,7 +174,7 @@ public class ReservaRepository {
 	public boolean atualizar(Map<String, String> filtros, String id) throws SQLException, NumberFormatException, ParseException {
 		int idParsed = Integer.parseUnsignedInt(id);
 		if (filtros.containsKey("id-alunos")) {
-			Integer.parseUnsignedInt(filtros.get("id-alunos"));
+			Long.parseUnsignedLong(filtros.get("id-alunos"));
 		}
 
 		if (filtros.containsKey("id-acervo")) {
@@ -186,13 +204,13 @@ public class ReservaRepository {
 
 	public boolean atualizarPorId(Map<String, Object> parametros) throws NumberFormatException, SQLException, ParseException {
 		int id = Integer.parseUnsignedInt(parametros.get("id").toString());
-		int idAluno = Integer.parseUnsignedInt(parametros.get("id-alunos").toString());
+		long idAluno = Long.parseUnsignedLong(parametros.get("id-alunos").toString());
 		int idAcervo = Integer.parseUnsignedInt(parametros.get("id-acervo").toString());
 		int tempoEspera = Integer.parseUnsignedInt(parametros.get("tempo-espera").toString());
 		Date dataReserva = simpleFormat.parse(parametros.get("data-reserva").toString());
 		Boolean emprestou = Boolean.parseBoolean(parametros.get("emprestou").toString());
 		PreparedStatement ps = con.prepareStatement("UPDATE `reservas` SET `id-aluno` = ?, `id-acervo` = ?, `tempo-espera` = ?, `data-reserva` = ?, `emprestou` = ?  WHERE `id` = ?");
-		ps.setInt(1, idAluno);
+		ps.setLong(1, idAluno);
 		ps.setInt(2, idAcervo);
 		ps.setInt(3, tempoEspera);
 		ps.setDate(4, new java.sql.Date(dataReserva.getTime()));
@@ -208,12 +226,13 @@ public class ReservaRepository {
 		String sql;
 		Set<ReservaModel> disciplinaResultado = new LinkedHashSet<>();
 		sql = "SELECT * FROM `reservas` ORDER BY `id`";
-		int idAluno = -1, idAcervo = -1, tempoEspera = -1;
+		long idAluno = -1L;
+                int idAcervo = -1, tempoEspera = -1;
 		boolean emprestou = false;
 		java.sql.Date dataReserva = new java.sql.Date(0);
 		if (filtros.containsKey("id-alunos")) {
 			// Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
-			idAluno = Integer.parseUnsignedInt(filtros.get("id-alunos"));
+			idAluno = Long.parseUnsignedLong(filtros.get("id-alunos"));
 		}
 		if (filtros.containsKey("tempo-espera")) {
 			// Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
@@ -272,7 +291,7 @@ public class ReservaRepository {
 
 	private ReservaModel resultSetParaDisciplina(ResultSet res) throws SQLException, ParseException {
 		int id = res.getInt("id");
-		int idAlunos = res.getInt("id-aluno");
+		long idAlunos = res.getLong("id-aluno");
 		int idAcervo = res.getInt("id-acervo");
 		int tempoEspera = res.getInt("tempo-espera");
 		Date dataReserva = simpleFormat.parse(res.getDate("data-reserva").toString());

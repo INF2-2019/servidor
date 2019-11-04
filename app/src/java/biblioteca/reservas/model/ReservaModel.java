@@ -5,11 +5,12 @@ import java.util.Map;
 
 public class ReservaModel extends Model {
 
-	int id, idAlunos, idAcervo, TempoEspera;
+	int id, idAcervo, TempoEspera; 
+        long idAlunos;
 	Date dataReserva;
 	boolean emprestou;
 
-	public ReservaModel(int id, int idAlunos, int idAcervo, int TempoEspera, Date dataReserva, boolean emprestou) {
+	public ReservaModel(int id, long idAlunos, int idAcervo, int TempoEspera, Date dataReserva, boolean emprestou) {
 		this.id = id;
 		this.idAlunos = idAlunos;
 		this.idAcervo = idAcervo;
@@ -52,7 +53,7 @@ public class ReservaModel extends Model {
 		return retorno;
 	}
 
-	public ReservaModel(int idAlunos, int idAcervo, int TempoEspera, Date dataReserva, boolean emprestou) {
+	public ReservaModel(long idAlunos, int idAcervo, int TempoEspera, Date dataReserva, boolean emprestou) {
 		this.id = ID_INDEFINIDO;
 		this.idAlunos = idAlunos;
 		this.idAcervo = idAcervo;
@@ -65,11 +66,11 @@ public class ReservaModel extends Model {
 		return id;
 	}
  
-	public int getIdAlunos() {
+	public long getIdAlunos() {
 		return idAlunos;
 	}
 
-	public void setIdAlunos(int idAlunos) {
+	public void setIdAlunos(long idAlunos) {
 		this.idAlunos = idAlunos;
 	}
 
