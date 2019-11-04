@@ -33,11 +33,16 @@ public class ErroView extends View {
 
 		Element erro = documento.createElement("erro");
 		Element msg = documento.createElement("informacao");
-		if (excecao instanceof InacessivelException) {
+		
+                
+                if (excecao instanceof InacessivelException) {
 			msg.appendChild(documento.createTextNode("Este livro, atualmente, já está emprestado."));
-		} else {
-			msg.appendChild(documento.createTextNode("Os parâmetros inseridos são inválidos."));
+		} else if(excecao instanceof AlunoException) {
+			msg.appendChild(documento.createTextNode(excecao.getMessage()));
 		}
+                else{
+                    msg.appendChild(documento.createTextNode("Os parâmetros inseridos são inválidos."));
+                }
 		erro.appendChild(msg);
 
 		documento.appendChild(erro);

@@ -60,7 +60,7 @@ public class EmprestimoConsultaView extends View<Set<EmprestimoModel>> {
 		Element multa = documento.createElement("multa");
 
 		id.appendChild(documento.createTextNode("" + e.getId()));
-		idAlunos.appendChild(documento.createTextNode("" + e.getIdAlunos()));
+		idAlunos.appendChild(documento.createTextNode("" + formataIdAluno(e.getIdAlunos())));
 		idAcervo.appendChild(documento.createTextNode("" + e.getIdAcervo()));
 		dataEmprestimo.appendChild(documento.createTextNode("" + simpleFormat.format(e.getDataEmprestimo())));
 		dataPrevDevol.appendChild(documento.createTextNode("" + simpleFormat.format(e.getDataPrevDevol())));
@@ -77,5 +77,14 @@ public class EmprestimoConsultaView extends View<Set<EmprestimoModel>> {
 
 		return elemento;
 	}
+        
+        private static String formataIdAluno(long cpf){
+            String scpf = String.valueOf(cpf);
+            if(scpf.length()==11) return scpf;
+            for(int i=scpf.length();i<11;i++){
+                scpf = "0"+scpf;
+            }
+            return scpf;
+        }
 
 }

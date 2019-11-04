@@ -2,6 +2,7 @@ package biblioteca.emprestimos;
 
 import biblioteca.emprestimos.model.EmprestimoModel;
 import biblioteca.emprestimos.repository.EmprestimoRepository;
+import biblioteca.emprestimos.views.AlunoException;
 import biblioteca.emprestimos.views.SucessoView;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -42,8 +43,9 @@ public class AtualizarEmprestimos extends HttpServlet {
 
 		EmprestimoRepository disciplinaRep = new EmprestimoRepository(con);
 		String id = req.getParameter("id");
-		SortedMap<String, String> filtros = EmprestimoModel.definirMap(req);
+		
 		try {
+                        SortedMap<String, String> filtros = EmprestimoModel.definirMap(req);
 			disciplinaRep.atualizar(filtros, id);
 			View sucessoView = new SucessoView("Atualizado com sucesso.");
 			sucessoView.render(out);
@@ -58,7 +60,7 @@ public class AtualizarEmprestimos extends HttpServlet {
 				throw new ServletException(e);
 			}
 		} catch (SQLException excecaoSQL) {
-			res.setStatus(400);
+			res.setStatus(500);
 			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
 			View erroView = new ErroView(excecaoSQL);
@@ -71,7 +73,9 @@ public class AtualizarEmprestimos extends HttpServlet {
 			throw new ServletException(e);
 		} catch (ParseException ex) {
 			Logger.getLogger(AtualizarEmprestimos.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		} catch (AlunoException ex) {
+                Logger.getLogger(AtualizarEmprestimos.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
 	}
 

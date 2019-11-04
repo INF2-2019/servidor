@@ -1,6 +1,7 @@
 package biblioteca.emprestimos.repository;
 
 import biblioteca.emprestimos.model.EmprestimoModel;
+import biblioteca.emprestimos.views.AlunoException;
 import biblioteca.emprestimos.views.InacessivelException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -70,24 +71,41 @@ public class EmprestimoRepository {
 	}
 	// TODO: Adequar ao sistema de datas
 
-	public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException, ParseException, InacessivelException {
-
-		/*if (valores.size() != 6) {
-			return false;
-		}*/
-		int idAlunos = 0;
+	public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException, ParseException, InacessivelException, AlunoException {
+            
+                PreparedStatement ps;
+                ResultSet resultadoBusca;
+                
+		long idAlunos = 00000000000L;
+                String SidAlunos;
 		if (valores.containsKey("id-alunos")) {
-			idAlunos = Integer.parseUnsignedInt(valores.get("id-alunos"));
+			SidAlunos = (valores.get("id-alunos"));
+                        if(SidAlunos.length()!=11) throw new AlunoException("Número inválido para um CPF.");
+                        idAlunos = Long.parseLong(SidAlunos);
 		}
+                else throw new AlunoException("O id(CPF) do aluno é obrigatório");
+                ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
+                ps.setLong(1, idAlunos);
+                resultadoBusca = ps.executeQuery();
+                
+                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse aluno.");
+                
 		int idAcervo = 0;
 
 		if (valores.containsKey("id-acervo")) {
 			idAcervo = Integer.parseUnsignedInt(valores.get("id-acervo"));
 		}
+                
+                ps = con.prepareStatement("SELECT * FROM `acervo` WHERE `id` = ? ");
+                ps.setInt(1, idAcervo);
+                resultadoBusca = ps.executeQuery();
+                
+                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse acervo.");
+                
 
-		PreparedStatement ps = con.prepareStatement("SELECT * FROM `emprestimos` WHERE `id-acervo` = ? AND `data-devolucao`= '1970-01-01'");
+		ps = con.prepareStatement("SELECT * FROM `emprestimos` WHERE `id-acervo` = ? AND `data-devolucao`= '1970-01-01'");
 		ps.setInt(1, idAcervo);
-		ResultSet resultadoBusca = ps.executeQuery();
+		resultadoBusca = ps.executeQuery();
 		while (resultadoBusca.next()) {
 			throw new InacessivelException("Este livro, atualmente, já está emprestado");
 		}
@@ -116,7 +134,7 @@ public class EmprestimoRepository {
 			multa = Double.parseDouble(valores.get("multa"));
 		}
 		ps = con.prepareStatement("INSERT INTO `emprestimos` (`id-alunos`, `id-acervo`, `data-emprestimo`, `data-prev-devol`, `data-devolucao`, `multa`) VALUES (?, ?, ?, ?, ?, ?)");
-		ps.setInt(1, idAlunos);
+		ps.setLong(1, idAlunos);
 		ps.setInt(2, idAcervo);
 		ps.setDate(3, new java.sql.Date(dataEmprestimo.getTime()));
 		ps.setDate(4, new java.sql.Date(dataPrevDevol.getTime()));
@@ -129,7 +147,7 @@ public class EmprestimoRepository {
 
 	}
 
-	public boolean atualizar(SortedMap<String, String> filtros, String id) throws SQLException, NumberFormatException, ParseException {
+	public boolean atualizar(SortedMap<String, String> filtros, String id) throws SQLException, NumberFormatException, ParseException, AlunoException {
 		int idParsed = Integer.parseUnsignedInt(id);
 		if (filtros.containsKey("id-alunos")) {
 			Integer.parseUnsignedInt(filtros.get("id-alunos"));
@@ -166,9 +184,9 @@ public class EmprestimoRepository {
 		return atualizarPorId(valores);
 	}
 
-	public boolean atualizarPorId(Map<String, Object> parametros) throws NumberFormatException, SQLException, ParseException {
+	public boolean atualizarPorId(Map<String, Object> parametros) throws NumberFormatException, SQLException, ParseException, AlunoException {
 		int id = Integer.parseUnsignedInt(parametros.get("id").toString());
-		int idAlunos = Integer.parseUnsignedInt(parametros.get("id-alunos").toString());
+		long idAlunos = Long.parseUnsignedLong(parametros.get("id-alunos").toString());
 		int idAcervo = Integer.parseUnsignedInt(parametros.get("id-acervo").toString());
 
 		Date dataEmprestimo = (Date) (parametros.get("data-emprestimo"));
@@ -177,16 +195,25 @@ public class EmprestimoRepository {
 
 		Date dataDevolucao = (Date) (parametros.get("data-devolucao"));
 		double multa = Double.parseDouble(parametros.get("multa").toString());
-
-		PreparedStatement ps = con.prepareStatement("UPDATE `emprestimos` SET `id-alunos` = ?, `id-acervo` = ?, `data-emprestimo` = ?, `data-prev-devol` = ?, `data-devolucao` = ?, `multa` = ? WHERE `id` = ?");
-		ps.setInt(1, idAlunos);
+                
+                
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
+                ps.setLong(1, idAlunos);
+                ResultSet resultadoBusca = ps.executeQuery();
+                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse aluno.");                
+                ps = con.prepareStatement("SELECT * FROM `acervo` WHERE `id` = ? ");
+                ps.setInt(1, idAcervo);
+                resultadoBusca = ps.executeQuery();
+                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse acervo.");
+                
+                ps = con.prepareStatement("UPDATE `emprestimos` SET `id-alunos` = ?, `id-acervo` = ?, `data-emprestimo` = ?, `data-prev-devol` = ?, `data-devolucao` = ?, `multa` = ? WHERE `id` = ?");
+		ps.setLong(1, idAlunos);
 		ps.setInt(2, idAcervo);
 		ps.setDate(3, new java.sql.Date(dataEmprestimo.getTime()));
 		ps.setDate(4, new java.sql.Date(dataPrevDevol.getTime()));
 		ps.setDate(5, new java.sql.Date(dataDevolucao.getTime()));
 		ps.setDouble(6, multa);
 		ps.setInt(7, id);
-
 		int sucesso = ps.executeUpdate();
 
 		return sucesso != 0;
@@ -196,13 +223,14 @@ public class EmprestimoRepository {
 		String sql;
 		Set<EmprestimoModel> emprestimoResultado = new LinkedHashSet<>();
 		sql = "SELECT * FROM `emprestimos` ORDER BY `id`";
-		int idAlunos = -1, idAcervo = -1;
+		int idAcervo = -1;
+                Long idAlunos = -1L;
 		java.sql.Date dataEmprestimo = new java.sql.Date(0), dataPrevDevol = new java.sql.Date(0), dataDevolucao = new java.sql.Date(0);
 		double multa = -1;
 
 		if (filtros.containsKey("id-alunos")) {
 			// Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
-			idAlunos = Integer.parseUnsignedInt(filtros.get("id-alunos"));
+			idAlunos = Long.parseLong(filtros.get("id-alunos"));
 		}
 
 		if (filtros.containsKey("id-acervo")) {
@@ -279,7 +307,7 @@ public class EmprestimoRepository {
 	private EmprestimoModel resultSetParaDisciplina(ResultSet res) throws SQLException, ParseException {
 
 		int id = res.getInt("id");
-		int idAlunos = res.getInt("id-alunos");
+		Long idAlunos = res.getLong("id-alunos");
 		int idAcervo = res.getInt("id-acervo");
 
 		Date dataEmprestimo = simpleFormat.parse(res.getDate("data-emprestimo").toString());
