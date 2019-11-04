@@ -37,7 +37,10 @@ public class InsereTurma extends HttpServlet {
         
         PrintWriter out = res.getWriter();
         try{
-            if(tr.insereTurma(id, idCursos, nome)){
+			if(id == null || idCursos == null || nome == null){
+				out.println(retornaErro("Parâmetros insufucientes"));
+			}
+			else if(tr.insereTurma(id, idCursos, nome)){
                 out.println(retornaSucesso("Turma "+id+" inserida com sucesso."));
             }
             else{

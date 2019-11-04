@@ -38,7 +38,10 @@ public class DeletaTurma extends HttpServlet {
         
         PrintWriter out = res.getWriter();
         try{
-            if(tr.deletaTurma(id)){
+			if(id == null){
+				out.println(retornaErro("Parâmetros insufucientes"));
+			}
+			else if(tr.deletaTurma(id)){
                 out.println(retornaSucesso("Turma "+id+" removida com sucesso."));
             }
             else{

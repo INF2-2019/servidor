@@ -37,7 +37,10 @@ public class AlteraTurma extends HttpServlet {
         
         PrintWriter out = res.getWriter();
         try{
-            if(tr.alteraTurma(id, idCursos, nome)){
+			if(id == null || idCursos == null || nome == null){
+				out.println(retornaErro("Parâmetros insufucientes"));
+			}
+			else if(tr.alteraTurma(id, idCursos, nome)){
                 out.println(retornaSucesso("Turma "+id+" alterada com sucesso."));
             }
             else{

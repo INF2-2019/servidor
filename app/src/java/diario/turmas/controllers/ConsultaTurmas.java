@@ -30,7 +30,7 @@ public class ConsultaTurmas extends HttpServlet {
         
         Connection con = ConnectionFactory.getDiario();
         
-        DiarioAutenticador aut = new DiarioAutenticador(req, res);;;
+        DiarioAutenticador aut = new DiarioAutenticador(req, res);
         if(aut.cargoLogado() == CONVIDADO){
             res.setStatus(403);
             return;
