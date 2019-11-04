@@ -29,15 +29,14 @@ public class ConsultarAcervo extends HttpServlet {
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
 		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
 
-		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
-		if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
-			resposta.setStatus(403);
-			return;
-		}
-
 		PrintWriter saida = resposta.getWriter();
 		saida.println("<acervo>");
 		try (Connection conexao = ConnectionFactory.getBiblioteca()) {
+
+			DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
+			if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
+				throw new ExcecaoParametrosIncorretos("Você não tem permissão para essa operação");
+			}
 
 			if (conexao == null) {
 				throw new SQLException("Impossível se conectar ao banco de dados");
@@ -77,12 +76,16 @@ public class ConsultarAcervo extends HttpServlet {
 				saida.println("</item>");
 			}
 
-		} catch (Exception e) {
-
+		} catch (SQLException e) {
+			resposta.setStatus(500);
 			saida.println("<erro>");
 			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
 			saida.println("</erro>");
-
+		} catch (Exception e) {
+			resposta.setStatus(400);
+			saida.println("<erro>");
+			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
+			saida.println("</erro>");
 		} finally {
 			saida.println("</acervo>");
 		}

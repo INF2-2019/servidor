@@ -111,7 +111,7 @@ public class Validacao {
 		ps.setInt(1, idObra);
 		ResultSet resultado = ps.executeQuery();
 		if (resultado.first()) {
-			throw new ExcecaoParametrosIncorretos("Já existe uma obra com este ID p");
+			throw new ExcecaoParametrosIncorretos("Já existe uma obra com este ID: " + idObra);
 		}
 
 		final String[] TABELAS = {"livros", "midias", "academicos"};
@@ -121,7 +121,7 @@ public class Validacao {
 			ps.setInt(1, idObra);
 			resultado = ps.executeQuery();
 			if (resultado.first()) {
-				throw new ExcecaoParametrosIncorretos("Já existe uma obra com este ID");
+				throw new ExcecaoParametrosIncorretos("Já existe uma obra com este ID: " + idObra);
 			}
 		}
 

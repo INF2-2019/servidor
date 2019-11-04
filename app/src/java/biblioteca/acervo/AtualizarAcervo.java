@@ -30,15 +30,14 @@ public class AtualizarAcervo extends HttpServlet {
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
 		resposta.setContentType("application/xml;charset=UTF-8");
 
-		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
-		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
-//			resposta.setStatus(403);
-//			return;
-		}
-
 		PrintWriter saida = resposta.getWriter();
 
 		try (Connection conexao = ConnectionFactory.getBiblioteca()) {
+
+			DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
+			if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+				throw new ExcecaoParametrosIncorretos("Você não tem permissão para essa operação");
+			}
 
 			if (conexao == null) {
 				throw new SQLException("Impossível se conectar ao banco de dados");
@@ -46,7 +45,7 @@ public class AtualizarAcervo extends HttpServlet {
 
 			/*VALIDAÇÕES*/
 			if (requisicao.getParameter("id") == null) {
-				throw new ExcecaoParametrosIncorretos("Parâmetro obrigaótrio: 'id'");
+				throw new ExcecaoParametrosIncorretos("Parâmetro obrigatório: 'id'");
 			}
 			Validacao.validarParametros(requisicao);
 			Validacao.validarIdCampi(Integer.parseInt(requisicao.getParameter("id-campi")), conexao);
@@ -128,12 +127,16 @@ public class AtualizarAcervo extends HttpServlet {
 			saida.println("  <mensagem>Registro alterado com sucesso</mensagem>");
 			saida.println("</sucesso>");
 
-		} catch (Exception e) {
-
+		} catch (SQLException e) {
+			resposta.setStatus(500);
 			saida.println("<erro>");
-			saida.println("  <mensagem>" + e.toString() + "</mensagem>");
+			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
 			saida.println("</erro>");
-
+		} catch (Exception e) {
+			resposta.setStatus(400);
+			saida.println("<erro>");
+			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
+			saida.println("</erro>");
 		}
 
 	}
@@ -185,8 +188,8 @@ public class AtualizarAcervo extends HttpServlet {
 	private void atualizarPeriodico(int idAcervo, HttpServletRequest requisicao, Connection conexao)
 			throws SQLException, NumberFormatException {
 		PreparedStatement ps = conexao.prepareStatement("UPDATE `periodicos` SET "
-				+ "`id-acervo`=?, `periodicidade`=?, `mes`=?, `volume`=?, `subtipo`=?, `issn`=?"
-				+ "WHERE `id-acervo`=?");
+				+ "`id-acervo`=?, `periodicidade`=?, `mes`=?, `volume`=?, `subtipo`=?, `issn`=? "
+				+ "WHERE `id-acervo` = ?");
 		ps.setInt(1, idAcervo);
 		ps.setString(2, requisicao.getParameter("periodicidade"));
 		ps.setString(3, requisicao.getParameter("mes"));

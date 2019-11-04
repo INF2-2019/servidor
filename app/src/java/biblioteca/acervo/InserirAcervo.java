@@ -35,14 +35,13 @@ public class InserirAcervo extends HttpServlet {
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
 		resposta.setContentType("application/xml;charset=UTF-8");
 
-		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
-		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
-			resposta.setStatus(403);
-			return;
-		}
-
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getBiblioteca()) {
+
+			DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
+			if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+				throw new ExcecaoParametrosIncorretos("Você não tem permissão para essa operação");
+			}
 
 			if (conexao == null) {
 				throw new SQLException("Impossível se conectar ao banco de dados");
@@ -91,7 +90,14 @@ public class InserirAcervo extends HttpServlet {
 			saida.println("	 <mensagem>Registro inserido com sucesso</mensagem>");
 			saida.println("</sucesso>");
 
-		} catch (Exception e) {
+		} catch (SQLException e) {
+			resposta.setStatus(500);
+			saida.println("<erro>");
+			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
+			saida.println("</erro>");
+
+		} catch (ExcecaoParametrosIncorretos | NumberFormatException e) {
+			resposta.setStatus(400);
 			saida.println("<erro>");
 			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
 			saida.println("</erro>");
