@@ -97,7 +97,15 @@ public class AtualizarReservas extends HttpServlet {
 		} catch (RenderException e) {
 			throw new ServletException(e);
 		} catch (ParseException ex) {
-			Logger.getLogger(AtualizarReservas.class.getName()).log(Level.SEVERE, null, ex);
+			res.setStatus(400);
+			System.err.println("Algum dado está com seu tipo errado. Erro: " + ex.toString());
+
+			View erroView = new ErroView(ex);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
 		}
 
 	}

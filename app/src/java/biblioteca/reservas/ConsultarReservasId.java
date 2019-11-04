@@ -90,7 +90,15 @@ public class ConsultarReservasId extends HttpServlet {
 		} catch (RenderException ex) {
 			throw new ServletException(ex);
 		} catch (ParseException ex) {
-			Logger.getLogger(ConsultarReservasId.class.getName()).log(Level.SEVERE, null, ex);
+			response.setStatus(400);
+			System.err.println("Algum dado está com seu tipo errado. Erro: " + ex.toString());
+
+			View erroView = new ErroView(ex);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
 		}
 
 	}
