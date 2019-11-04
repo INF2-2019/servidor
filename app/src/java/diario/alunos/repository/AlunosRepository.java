@@ -341,11 +341,11 @@ public class AlunosRepository {
 	}
 
 	public Boolean logarAluno(HttpServletRequest request, HttpServletResponse response, String id, String senha) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
-		int idParsed = Integer.parseUnsignedInt(id);
+		long idParsed = Long.parseLong(id);
 		DiarioAutenticador x = new DiarioAutenticador(request, response);
 		String query = "SELECT * FROM `alunos` WHERE `id` = ?";
 		PreparedStatement ps = con.prepareStatement(query);
-		ps.setInt(1, idParsed);
+		ps.setLong(1, idParsed);
 		ResultSet rs = ps.executeQuery();
 		rs.next();
 		if (Hasher.validar(senha, rs.getString("senha"))) {
