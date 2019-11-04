@@ -45,13 +45,13 @@ public class SignupAdminController extends HttpServlet {
 			senhaParam = request.getParameter("senha");
 
 		try {
-                    /*
+                    
 			if (autenticador.cargoLogado() != BibliotecaCargos.ADMIN) {
 				response.setStatus(403);
 				new ErroView(SOMENTE_ADMIN).render(out);
 				return;
 			}
-                        */
+                        
 			if (nomeParam == null) {
 				response.setStatus(422);
 				new ErroView(SEM_NOME).render(out);
