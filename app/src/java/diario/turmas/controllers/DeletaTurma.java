@@ -25,7 +25,7 @@ public class DeletaTurma extends HttpServlet {
         Headers.XMLHeaders(res);
         res.setContentType("text/xml;charset=UTF-8");
         
-        DiarioAutenticador aut = new DiarioAutenticador(req, res);
+        DiarioAutenticador aut = new DiarioAutenticador(req, res);// Autenticação de usuário
         if(aut.cargoLogado() != ADMIN){
             res.setStatus(403);
             return;
@@ -38,18 +38,21 @@ public class DeletaTurma extends HttpServlet {
         
         PrintWriter out = res.getWriter();
         try{
-			if(id == null){
+			if(id == null){// Erro para algum parâmetro faltando
 				out.println(retornaErro("Parâmetros insufucientes"));
 			}
-			else if(tr.deletaTurma(id)){
+			else if(tr.deletaTurma(id)){// Sucesso
                 out.println(retornaSucesso("Turma "+id+" removida com sucesso."));
             }
-            else{
+            else{// Erro ao deletar
                 out.println(retornaErro("Erro ao tentar remover a turma "+id));
             }
         }
         catch(SQLException e){
             out.println(retornaErro("Erro ao tentar se conectar com o banco de dados. Exceção: "+e));
+        }
+		catch(NumberFormatException e){
+            out.println(retornaErro("Tipo de parâmetro inválido. Exceção: "+e));
         }
     }
 

@@ -24,7 +24,7 @@ public class AlteraTurma extends HttpServlet {
             throws ServletException, IOException {
         Headers.XMLHeaders(res);
         
-        DiarioAutenticador aut = new DiarioAutenticador(req, res);
+        DiarioAutenticador aut = new DiarioAutenticador(req, res);// Autenticação de usuário
         if(aut.cargoLogado() != ADMIN){
             res.setStatus(403);
             return;
@@ -33,22 +33,27 @@ public class AlteraTurma extends HttpServlet {
         Connection c = ConnectionFactory.getDiario();
         TurmasRepository tr = new TurmasRepository(c);
         
-        String id = req.getParameter("id"), idCursos = req.getParameter("idCursos"), nome = req.getParameter("nome");
+        String id = req.getParameter("id"), 
+			idCursos = req.getParameter("idCursos"), 
+			nome = req.getParameter("nome");
         
         PrintWriter out = res.getWriter();
         try{
-			if(id == null || idCursos == null || nome == null){
+			if(id == null || idCursos == null || nome == null){// Erro para algum parâmetro faltando
 				out.println(retornaErro("Parâmetros insufucientes"));
 			}
-			else if(tr.alteraTurma(id, idCursos, nome)){
+			else if(tr.alteraTurma(id, idCursos, nome)){ // Sucesso
                 out.println(retornaSucesso("Turma "+id+" alterada com sucesso."));
             }
-            else{
+            else{ // Erro de alteração de turma
                 out.println(retornaErro("Erro ao tentar alterar a turma "+id));
             }
         }
         catch(SQLException e){
             out.println(retornaErro("Erro ao tentar se conectar com o banco de dados. Exceção: "+e));
+        }
+		catch(NumberFormatException e){
+            out.println(retornaErro("Tipo de parâmetro inválido. Exceção: "+e));
         }
     }
 

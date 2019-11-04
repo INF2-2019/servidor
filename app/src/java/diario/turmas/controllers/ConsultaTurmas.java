@@ -30,16 +30,16 @@ public class ConsultaTurmas extends HttpServlet {
         
         Connection con = ConnectionFactory.getDiario();
         
-        DiarioAutenticador aut = new DiarioAutenticador(req, res);
+        DiarioAutenticador aut = new DiarioAutenticador(req, res);// Autenticação de usuário
         if(aut.cargoLogado() == CONVIDADO){
             res.setStatus(403);
             return;
         }
         
         PrintWriter out = res.getWriter();
-        try{
+        try{ // Consulta turmas no bd
             String sql = "SELECT * FROM turmas";
-			if(req.getParameter("id") != null) sql += " WHERE id="+req.getParameter("id")+",";
+			if(req.getParameter("id") != null) sql += " WHERE id="+req.getParameter("id")+","; // Se o parâmetro id for inserido, será considerado para a consulta
             PreparedStatement prepared = con.prepareStatement(sql);
             ResultSet rs = prepared.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -54,6 +54,9 @@ public class ConsultaTurmas extends HttpServlet {
         }
         catch(SQLException e){
             out.println(retornaErro("Erro ao tentar se conectar com o banco de dados. Exceção: "+e));
+        }
+		catch(NumberFormatException e){
+            out.println(retornaErro("Tipo de parâmetro inválido. Exceção: "+e));
         }
     }
     
