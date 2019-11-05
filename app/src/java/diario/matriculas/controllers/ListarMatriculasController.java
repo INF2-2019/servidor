@@ -6,6 +6,7 @@ import diario.matriculas.models.Matricula;
 import diario.matriculas.repositories.MatriculaRepository;
 import diario.matriculas.views.ListaMatriculasView;
 import utils.ConnectionFactory;
+import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -21,14 +22,17 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "ListarMatriculasController", urlPatterns = "/diario/matriculas/listar")
 public class ListarMatriculasController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
+		Headers.XMLHeaders(response);
 		try {
 			DiarioAutenticador diarioAutenticador = new DiarioAutenticador(request, response);
-			if (diarioAutenticador.cargoLogado() != DiarioCargos.CONVIDADO) {
+			if (diarioAutenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
 				response.setStatus(403);
 				ErroView view = new ErroView("Você não permissão para acessar essa página!");
 				view.render(out);
@@ -47,11 +51,11 @@ public class ListarMatriculasController extends HttpServlet {
 				}
 
 				if (request.getParameter("idAlunos") != null) {
-					filters.put("idAlunos", Long.parseLong(request.getParameter("idAlunos")));
+					filters.put("id-alunos", Long.parseLong(request.getParameter("idAlunos")));
 				}
 
 				if (request.getParameter("idDisciplinas") != null) {
-					filters.put("idDisciplinas", Integer.parseInt(request.getParameter("idDisciplinas")));
+					filters.put("id-disciplinas", Integer.parseInt(request.getParameter("idDisciplinas")));
 				}
 
 				if (request.getParameter("ano") != null) {
@@ -69,6 +73,7 @@ public class ListarMatriculasController extends HttpServlet {
 				view.render(out);
 			} catch (SQLException ex) {
 				response.setStatus(500);
+				Logger.getGlobal().log(Level.SEVERE, ex.toString());
 				ErroView view = new ErroView("Um erro interno aconteceu!", ex.getMessage());
 				view.render(out);
 			} catch (NumberFormatException ex) {

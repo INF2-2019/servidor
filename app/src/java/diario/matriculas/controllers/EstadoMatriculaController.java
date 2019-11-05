@@ -5,6 +5,7 @@ import diario.admin.views.RenderException;
 import diario.admin.views.SucessoView;
 import diario.matriculas.repositories.MatriculaRepository;
 import utils.ConnectionFactory;
+import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -20,6 +21,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "EstadoMatriculaController", urlPatterns = "/diario/matriculas/estado")
 public class EstadoMatriculaController extends HttpServlet {
@@ -27,6 +30,7 @@ public class EstadoMatriculaController extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
+		Headers.XMLHeaders(response);
 		try {
 			DiarioAutenticador diarioAutenticador = new DiarioAutenticador(request, response);
 			if (diarioAutenticador.cargoLogado() != DiarioCargos.ADMIN) {
@@ -59,6 +63,7 @@ public class EstadoMatriculaController extends HttpServlet {
 				view.render(out);
 			} catch (SQLException ex) {
 				response.setStatus(500);
+				Logger.getGlobal().log(Level.SEVERE, ex.toString());
 				ErroView view = new ErroView("Uma falha interna ocorreu!", ex.getMessage());
 				view.render(out);
 			} catch (NumberFormatException ex) {

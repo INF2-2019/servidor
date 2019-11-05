@@ -23,7 +23,7 @@ public class MatriculaView extends View<Matricula> {
 		Matricula m = this.data;
 		try {
 			Document DOM = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-			Element matricula = m.toElement();
+			Element matricula = m.toElement(DOM);
 			DOM.appendChild(matricula);
 			writer.println(Conversores.converterDocumentEmXMLString(DOM));
 		} catch (ParserConfigurationException | TransformerException ex) {

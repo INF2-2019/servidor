@@ -6,6 +6,7 @@ import diario.admin.views.SucessoView;
 import diario.matriculas.models.Matricula;
 import diario.matriculas.repositories.MatriculaRepository;
 import utils.ConnectionFactory;
+import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -18,19 +19,22 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "InsereMatriculaController", urlPatterns = "/diario/matriculas/inserir")
 
 public class InsereMatriculaController extends HttpServlet {
-	public final static Set<String> RQUIRED_PARAMS = new HashSet<>(Arrays.asList("idAlunos", "idDisciplinas", "ano"));
+	public final static Set<String> RQUIRED_PARAMS = new HashSet<>(Arrays.asList("idAlunos", "idDisciplinas"));
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
+		Headers.XMLHeaders(response);
 		try {
-
 			DiarioAutenticador diarioAutenticador = new DiarioAutenticador(request, response);
 			if (diarioAutenticador.cargoLogado() != DiarioCargos.ADMIN) {
 				response.setStatus(403);
@@ -51,10 +55,17 @@ public class InsereMatriculaController extends HttpServlet {
 					throw new SQLException("Falha ao conectar ao banco de dados!");
 				}
 
+				int ano;
+				if (request.getParameter("ano") != null) {
+					ano = Integer.parseInt(request.getParameter("ano"));
+				} else {
+					ano = LocalDate.now().getYear();
+				}
+
 				Matricula matricula = new Matricula(
 					Long.parseLong(request.getParameter("idAlunos")),
 					Integer.parseInt(request.getParameter("idDisciplinas")),
-					Integer.parseInt(request.getParameter("ano"))
+					ano
 				);
 
 				MatriculaRepository repository = new MatriculaRepository(connection);
@@ -65,6 +76,7 @@ public class InsereMatriculaController extends HttpServlet {
 				view.render(out);
 			} catch (SQLException ex) {
 				response.setStatus(500);
+				Logger.getGlobal().log(Level.SEVERE, ex.toString());
 				ErroView view = new ErroView("Um erro interno aconteceu!", ex.getMessage());
 				view.render(out);
 			} catch (NumberFormatException ex) {

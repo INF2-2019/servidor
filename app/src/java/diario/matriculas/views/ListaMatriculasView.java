@@ -26,7 +26,7 @@ public class ListaMatriculasView extends View<List<Matricula>> {
 			Element root = DOM.createElement("matriculas");
 
 			for (Matricula m : data) {
-				root.appendChild(m.toElement());
+				root.appendChild(m.toElement(DOM));
 			}
 
 			DOM.appendChild(root);

@@ -3,9 +3,6 @@ package diario.matriculas.models;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 public class Matricula {
 
 	public final static Integer ID_INDEFINIDO = -1;
@@ -93,10 +90,8 @@ public class Matricula {
 		this.ativo = ativo;
 	}
 
-	public Element toElement() throws ParserConfigurationException {
+	public Element toElement(Document DOM) {
 		Matricula m = this;
-
-		Document DOM = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 
 		Element matricula = DOM.createElement("matricula");
 

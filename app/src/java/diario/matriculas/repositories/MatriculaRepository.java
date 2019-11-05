@@ -7,7 +7,7 @@ import java.util.*;
 
 public class MatriculaRepository {
 
-	public final static Set<String> validFilters = new HashSet<>(Arrays.asList("id", "idAlunos", "idDisciplinas", "ano", "ativo"));
+	public final static Set<String> validFilters = new HashSet<>(Arrays.asList("id", "id-alunos", "id-disciplinas", "ano", "ativo"));
 	private Connection connection;
 
 	public MatriculaRepository(Connection connection) {
@@ -71,7 +71,14 @@ public class MatriculaRepository {
 	public void insertMatricula(Matricula matricula) throws SQLException {
 		// Criar a matrícula
 		String query = "INSERT INTO matriculas (`id-alunos`, `id-disciplinas`, ano, ativo) VALUES (?, ?, ?, ?)";
-		PreparedStatement ps = connection.prepareStatement(query);
+		PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+		ps.setLong(1, matricula.getIdAlunos());
+		ps.setInt(2, matricula.getIdDisciplinas());
+		ps.setInt(3, matricula.getAno());
+		ps.setBoolean(4, matricula.isAtivo());
+
+
 		ps.executeUpdate();
 		ResultSet rs = ps.getGeneratedKeys();
 
@@ -109,11 +116,11 @@ public class MatriculaRepository {
 		pos = 1;
 
 		for (String key : filters.keySet()) {
-			if (key.equals("id") || key.equals("idDisciplinas") || key.equals("ano")) {
+			if (key.equals("id") || key.equals("id-disciplinas") || key.equals("ano")) {
 				ps.setInt(pos, (Integer) filters.get(key));
 			}
 
-			if (key.equals("idAlunos")) {
+			if (key.equals("id-alunos")) {
 				ps.setLong(pos, (Long) filters.get(key));
 			}
 
