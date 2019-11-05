@@ -18,17 +18,17 @@ public class DiarioAutenticador extends Autenticador {
 		logar(identididade, cargo, manter ? KEEP_DURATION : DEFAULT_DURATION);
 	}
 
-	public void encerrar(){
+	public void encerrar() {
 		HttpSession session = this.request.getSession();
 		session.removeAttribute(ID_KEY);
 		session.removeAttribute(ROLE_KEY);
 	}
 
-	public DiarioCargos cargoLogado(){
+	public DiarioCargos cargoLogado() {
 		HttpSession session = this.request.getSession();
 		DiarioCargos cargo = (DiarioCargos) session.getAttribute(ROLE_KEY);
 
-		if(cargo == null){
+		if (cargo == null) {
 			return DiarioCargos.CONVIDADO;
 		}
 
