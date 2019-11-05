@@ -42,10 +42,8 @@ public class LogarAluno extends HttpServlet {
 			conexao.close();
 		} catch (SQLException ex) {
 			out.println("<erro><mensagem>Usuario inexistente</mensagem></erro>");
-		} catch (NoSuchAlgorithmException ex) {
-			Logger.getLogger(LogarAluno.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (InvalidKeySpecException ex) {
-			Logger.getLogger(LogarAluno.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+			out.println("<erro><mensagem>Erro severo</mensagem></erro>");
 		}
 
 	}
