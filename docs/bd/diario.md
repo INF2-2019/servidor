@@ -19,7 +19,7 @@ Traduções:
 | id          | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment |
 | nome        | 2                | `-`            | NO          | varchar(255) | `-`        | `-`            |
 | usuario     | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            |
-| email       | 4                | `-`            | NO          | varchar(255) | UNI        | `-`            |
+| email       | 4                | `-`            | YES         | varchar(255) | `-`        | `-`            |
 | senha       | 5                | `-`            | NO          | varchar(255) | `-`        | `-`            |
 
 ## `alunos`
@@ -39,7 +39,7 @@ Traduções:
 | cidade      | 11               | `-`            | NO          | varchar(255)  | `-`        | `-`   |
 | cep         | 12               | `-`            | NO          | int(11)       | `-`        | `-`   |
 | uf          | 13               | `-`            | NO          | varchar(255)  | `-`        | `-`   |
-| foto        | 14               | `-`            | NO          | text          | `-`        | `-`   |
+| foto        | 14               | `-`            | YES         | text          | `-`        | `-`   |
 
 ## `atividades`
 
@@ -67,9 +67,9 @@ Traduções:
 | id             | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment |
 | id-etapas      | 2                | `-`            | NO          | int(11)      | `-`        | `-`            |
 | id-disciplinas | 3                | `-`            | NO          | int(11)      | `-`        | `-`            |
-| conteudos      | 4                | `-`            | NO          | text         | `-`        | `-`            |
+| conteudos      | 4                | `-`            | YES         | text         | `-`        | `-`            |
 | data           | 5                | `-`            | NO          | date         | `-`        | `-`            |
-| valor          | 6                | `-`            | NO          | decimal(5,2) | `-`        | `-`            |
+| valor          | 6                | 0.00           | NO          | decimal(5,2) | `-`        | `-`            |
 
 ## `cursos`
 
@@ -79,7 +79,7 @@ Traduções:
 | id-depto    | 2                | `-`            | NO          | int(11)      | `-`        | `-`            |
 | nome        | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            |
 | horas-total | 4                | `-`            | NO          | int(11)      | `-`        | `-`            |
-| modalidade  | 5                | `-`            | NO          | varchar(255) | `-`        | `-`            |
+| modalidade  | 5                | `-`            | YES         | varchar(255) | `-`        | `-`            |
 
 ## `departamentos`
 
@@ -95,8 +95,8 @@ Traduções:
 | ------------- | ---------------- | -------------- | ----------- | ------------ | ---------- | ----- |
 | id-conteudos  | 1                | `-`            | NO          | int(11)      | `-`        | `-`   |
 | id-matriculas | 2                | `-`            | NO          | int(11)      | `-`        | `-`   |
-| faltas        | 3                | `-`            | NO          | int(11)      | `-`        | `-`   |
-| nota          | 4                | `-`            | NO          | decimal(5,2) | `-`        | `-`   |
+| faltas        | 3                | 0              | NO          | int(11)      | `-`        | `-`   |
+| nota          | 4                | 0.00           | NO          | decimal(5,2) | `-`        | `-`   |
 
 ## `disciplinas`
 
@@ -123,7 +123,7 @@ Traduções:
 | id-alunos      | 2                | `-`            | NO          | bigint(20)  | `-`        | `-`            |
 | id-disciplinas | 3                | `-`            | NO          | int(11)     | `-`        | `-`            |
 | ano            | 4                | `-`            | NO          | int(11)     | `-`        | `-`            |
-| ativo          | 5                | `-`            | NO          | tinyint(1)  | `-`        | `-`            |
+| ativo          | 5                | 1              | NO          | tinyint(1)  | `-`        | `-`            |
 
 ## `prof_disciplinas`
 
