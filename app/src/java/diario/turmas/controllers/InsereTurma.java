@@ -22,37 +22,35 @@ public class InsereTurma extends HttpServlet {
 
     protected void processRequest(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         Headers.XMLHeaders(res);
-        
+
+        PrintWriter out = res.getWriter();
+
         DiarioAutenticador aut = new DiarioAutenticador(req, res);// Autenticação de usuário
-        if(aut.cargoLogado() != ADMIN){
+        if (aut.cargoLogado() != ADMIN) {
             res.setStatus(403);
+            out.println(retornaErro("Você não tem permissão para realizar essa ação."));
             return;
         }
-        
+
         Connection c = ConnectionFactory.getDiario();
         TurmasRepository tr = new TurmasRepository(c);
-        
+
         String id = req.getParameter("id"),
-		idCursos = req.getParameter("idCursos"), 
-		nome = req.getParameter("nome");
-        
-        PrintWriter out = res.getWriter();
-        try{
-			if(id == null || idCursos == null || nome == null){ // Erro para algum parâmetro faltando
-				out.println(retornaErro("Parâmetros insufucientes"));
-			}
-			else if(tr.insereTurma(id, idCursos, nome)){ // Sucesso
-                out.println(retornaSucesso("Turma "+id+" inserida com sucesso."));
+                idCursos = req.getParameter("idCursos"),
+                nome = req.getParameter("nome");
+
+        try {
+            if (id == null || idCursos == null || nome == null) { // Erro para algum parâmetro faltando
+                out.println(retornaErro("Parâmetros insufucientes"));
+            } else if (tr.insereTurma(id, idCursos, nome)) { // Sucesso
+                out.println(retornaSucesso("Turma " + id + " inserida com sucesso."));
+            } else { // Erro de inserção de turma
+                out.println(retornaErro("Erro ao tentar inserir a turma " + id));
             }
-            else{ // Erro de inserção de turma
-                out.println(retornaErro("Erro ao tentar inserir a turma "+id));
-            }
-        }
-        catch(SQLException e){ 
-            out.println(retornaErro("Erro ao tentar se conectar com o banco de dados. Exceção: "+e));
-        }
-		catch(NumberFormatException e){
-            out.println(retornaErro("Tipo de parâmetro inválido. Exceção: "+e));
+        } catch (SQLException e) {
+            out.println(retornaErro("Erro ao tentar se conectar com o banco de dados. Exceção: " + e));
+        } catch (NumberFormatException e) {
+            out.println(retornaErro("Tipo de parâmetro inválido. Exceção: " + e));
         }
     }
 
@@ -63,7 +61,7 @@ public class InsereTurma extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)	
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }

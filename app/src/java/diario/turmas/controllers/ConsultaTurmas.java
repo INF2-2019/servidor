@@ -26,52 +26,53 @@ public class ConsultaTurmas extends HttpServlet {
 
     protected void processRequest(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         Headers.XMLHeaders(res);
-        res.setContentType("text/xml;charset=UTF-8");
-        
+        res.setContentType("application/xml;charset=UTF-8");
+
+        PrintWriter out = res.getWriter();
         Connection con = ConnectionFactory.getDiario();
-        
+
         DiarioAutenticador aut = new DiarioAutenticador(req, res);// Autenticação de usuário
-        if(aut.cargoLogado() == CONVIDADO){
+        if (aut.cargoLogado() == CONVIDADO) {
             res.setStatus(403);
+            out.println(retornaErro("Você não tem permissão para realizar essa ação."));
             return;
         }
-        
-        PrintWriter out = res.getWriter();
-        try{ // Consulta turmas no bd
+
+        try { // Consulta turmas no bd
             String sql = "SELECT * FROM turmas";
-			if(req.getParameter("id") != null) sql += " WHERE id="+req.getParameter("id")+","; // Se o parâmetro id for inserido, será considerado para a consulta
+            if (req.getParameter("id") != null) {
+                sql += " WHERE id=" + req.getParameter("id") + ","; // Se o parâmetro id for inserido, será considerado para a consulta
+            }
             PreparedStatement prepared = con.prepareStatement(sql);
             ResultSet rs = prepared.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
-            
+
             ArrayList<TurmaModel> arr = new ArrayList<>();
             while (rs.next()) {
-                for (int i = 1; i <= rsmd.getColumnCount(); i+=3) {
+                for (int i = 1; i <= rsmd.getColumnCount(); i += 3) {
                     arr.add(new TurmaModel(rs.getInt(i), rs.getInt(i + 1), rs.getString(i + 2)));
                 }
             }
             out.printf(retornaConsulta(arr));
-        }
-        catch(SQLException e){
-            out.println(retornaErro("Erro ao tentar se conectar com o banco de dados. Exceção: "+e));
-        }
-		catch(NumberFormatException e){
-            out.println(retornaErro("Tipo de parâmetro inválido. Exceção: "+e));
+        } catch (SQLException e) {
+            out.println(retornaErro("Erro ao tentar se conectar com o banco de dados. Exceção: " + e));
+        } catch (NumberFormatException e) {
+            out.println(retornaErro("Tipo de parâmetro inválido. Exceção: " + e));
         }
     }
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
-    
+
     @Override
     public String getServletInfo() {
         return "Mostra todas as turmas em XML";

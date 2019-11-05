@@ -23,36 +23,34 @@ public class DeletaTurma extends HttpServlet {
     protected void processRequest(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
         Headers.XMLHeaders(res);
-        res.setContentType("text/xml;charset=UTF-8");
-        
+        res.setContentType("application/xml;charset=UTF-8");
+
+        PrintWriter out = res.getWriter();
+
         DiarioAutenticador aut = new DiarioAutenticador(req, res);// Autenticação de usuário
-        if(aut.cargoLogado() != ADMIN){
+        if (aut.cargoLogado() != ADMIN) {
             res.setStatus(403);
+            out.println(retornaErro("Você não tem permissão para realizar essa ação."));
             return;
         }
-        
+
         Connection c = ConnectionFactory.getDiario();
         TurmasRepository tr = new TurmasRepository(c);
-        
+
         String id = req.getParameter("id");
-        
-        PrintWriter out = res.getWriter();
-        try{
-			if(id == null){// Erro para algum parâmetro faltando
-				out.println(retornaErro("Parâmetros insufucientes"));
-			}
-			else if(tr.deletaTurma(id)){// Sucesso
-                out.println(retornaSucesso("Turma "+id+" removida com sucesso."));
+
+        try {
+            if (id == null) {// Erro para algum parâmetro faltando
+                out.println(retornaErro("Parâmetros insufucientes"));
+            } else if (tr.deletaTurma(id)) {// Sucesso
+                out.println(retornaSucesso("Turma " + id + " removida com sucesso."));
+            } else {// Erro ao deletar
+                out.println(retornaErro("Erro ao tentar remover a turma " + id));
             }
-            else{// Erro ao deletar
-                out.println(retornaErro("Erro ao tentar remover a turma "+id));
-            }
-        }
-        catch(SQLException e){
-            out.println(retornaErro("Erro ao tentar se conectar com o banco de dados. Exceção: "+e));
-        }
-		catch(NumberFormatException e){
-            out.println(retornaErro("Tipo de parâmetro inválido. Exceção: "+e));
+        } catch (SQLException e) {
+            out.println(retornaErro("Erro ao tentar se conectar com o banco de dados. Exceção: " + e));
+        } catch (NumberFormatException e) {
+            out.println(retornaErro("Tipo de parâmetro inválido. Exceção: " + e));
         }
     }
 
