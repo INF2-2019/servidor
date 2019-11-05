@@ -1,7 +1,6 @@
 package diario.alunos.servlets;
 
 import diario.alunos.repository.AlunosRepository;
-import diario.campi.view.*;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -13,13 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import utils.ConnectionFactory;
 import utils.Headers;
-import utils.autenticador.DiarioAutenticador;
 
 
 @WebServlet(name = "LogarAluno", urlPatterns = {"/diario/alunos/logar"})

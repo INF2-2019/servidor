@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,8 +14,6 @@ import diario.cursos.view.ErroView;
 import diario.cursos.view.RenderException;
 import diario.cursos.view.SucessoView;
 import diario.cursos.view.View;
-import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
 import utils.ConnectionFactory;
 import utils.Headers;
 

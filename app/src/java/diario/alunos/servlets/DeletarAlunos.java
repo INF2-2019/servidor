@@ -14,8 +14,6 @@ import diario.cursos.view.ErroView;
 import diario.cursos.view.RenderException;
 import diario.cursos.view.SucessoView;
 import diario.cursos.view.View;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import utils.ConnectionFactory;
 import utils.Headers;
 
