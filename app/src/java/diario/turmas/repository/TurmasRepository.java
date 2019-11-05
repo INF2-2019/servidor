@@ -7,48 +7,48 @@ import utils.ConnectionFactory;
 
 public class TurmasRepository {
 
-    private Connection con;
+	private Connection con;
 
-    public TurmasRepository() {
-        this(ConnectionFactory.getDiario());
-    }
+	public TurmasRepository() {
+		this(ConnectionFactory.getDiario());
+	}
 
-    public TurmasRepository(Connection c) {
-        con = c;
-    }
+	public TurmasRepository(Connection c) {
+		con = c;
+	}
 
-    public boolean deletaTurma(String idStr) throws SQLException, NumberFormatException, NullPointerException {
-        int idInt = Integer.parseInt(idStr);
+	public boolean deletaTurma(String idStr) throws SQLException, NumberFormatException, NullPointerException {
+		int idInt = Integer.parseInt(idStr);
 
-        String sql = "DELETE FROM turmas WHERE id = " + idInt;
-        PreparedStatement prepared = con.prepareStatement(sql);
+		String sql = "DELETE FROM turmas WHERE id = " + idInt;
+		PreparedStatement prepared = con.prepareStatement(sql);
 
-        int deu = prepared.executeUpdate();
+		int deu = prepared.executeUpdate();
 
-        return deu != 0;
-    }
+		return deu != 0;
+	}
 
-    public boolean insereTurma(String idStr, String idCursosStr, String nome) throws SQLException, NumberFormatException, NullPointerException {
-        int idInt = Integer.parseInt(idStr);
-        int idCursosInt = Integer.parseInt(idCursosStr);
+	public boolean insereTurma(String idStr, String idCursosStr, String nome) throws SQLException, NumberFormatException, NullPointerException {
+		int idInt = Integer.parseInt(idStr);
+		int idCursosInt = Integer.parseInt(idCursosStr);
 
-        String sql = "INSERT INTO turmas (`id`, `id-cursos`, `nome`) VALUES (" + idInt + "," + idCursosInt + ",'" + nome + "')";
-        PreparedStatement prepared = con.prepareStatement(sql);
+		String sql = "INSERT INTO turmas (`id`, `id-cursos`, `nome`) VALUES (" + idInt + "," + idCursosInt + ",'" + nome + "')";
+		PreparedStatement prepared = con.prepareStatement(sql);
 
-        int deu = prepared.executeUpdate();
+		int deu = prepared.executeUpdate();
 
-        return deu != 0;
-    }
+		return deu != 0;
+	}
 
-    public boolean alteraTurma(String idStr, String idCursosStr, String nome) throws SQLException, NumberFormatException, NullPointerException {
-        int idInt = Integer.parseInt(idStr);
-        int idCursosInt = Integer.parseInt(idCursosStr);
+	public boolean alteraTurma(String idStr, String idCursosStr, String nome) throws SQLException, NumberFormatException, NullPointerException {
+		int idInt = Integer.parseInt(idStr);
+		int idCursosInt = Integer.parseInt(idCursosStr);
 
-        String sql = "UPDATE turmas SET `id-cursos` = " + idCursosInt + ", `nome` = '" + nome + "' WHERE id = " + idInt;
-        PreparedStatement prepared = con.prepareStatement(sql);
+		String sql = "UPDATE turmas SET `id-cursos` = " + idCursosInt + ", `nome` = '" + nome + "' WHERE id = " + idInt;
+		PreparedStatement prepared = con.prepareStatement(sql);
 
-        int deu = prepared.executeUpdate();
+		int deu = prepared.executeUpdate();
 
-        return deu != 0;
-    }
+		return deu != 0;
+	}
 }
