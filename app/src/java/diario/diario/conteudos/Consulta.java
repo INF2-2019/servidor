@@ -16,55 +16,54 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import utils.ConnectionFactory;
+import utils.Headers;
 
 /**
  *
- * @author Marcus
+ * @author Juan
  */
 @WebServlet(urlPatterns = {"/diario/diario/conteudo/consulta"})
 public class Consulta extends HttpServlet {
     
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, SQLException {
-            
-        try (PrintWriter out = response.getWriter()) {
-            try{
-                
-                String query;
-                query = "SELECT * FROM conteudos";
-                
-                boolean mostra_valor = true;
-                
-                if(ChecaParametro.parametroExiste(request, "especifico")){
-                    String oq = request.getParameter("especifico");
-                    if("conteudo".equals(oq)){
-                        query += " WHERE valor=0";
-                        mostra_valor = false;
-                    } else if("atividade".equals(oq)){
-                        query += " WHERE valor>0";
-                    } else {
-                        out.print(RespostaXML.erro("'especifico' não esta formatado corretamente", "O 'especifico' pode ser ou 'conteudo' ou 'atividade'"));
-                        return;
-                    }
-                } 
-                
-                Connection conexao = ConnectionFactory.getDiario();
-		PreparedStatement st = conexao.prepareStatement(query);
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+        
+        PrintWriter out = response.getWriter();
+        Headers.XMLHeaders(response);
+        
+        String query;
+        query = "SELECT * FROM conteudos";
 
-		ResultSet resultado = st.executeQuery();
-                if(mostra_valor)
-                    out.print(RespostaXML.retornaSet(resultado,"id-etapas","id-disciplinas","conteudos","data","valor"));
-                else
-                    out.print(RespostaXML.retornaSet(resultado,"id-etapas","id-disciplinas","conteudos","data"));
+        boolean mostra_valor = true;
 
-		st.close();
-		conexao.close();
+        if (ChecaParametro.parametroExiste(request, "especifico")) {
+            String oq = request.getParameter("especifico");
+            if ("conteudo".equals(oq)) {
+                query += " WHERE valor=0";
+                mostra_valor = false;
+            } else if ("atividade".equals(oq)) {
+                query += " WHERE valor>0";
+            } else {
+                out.print(RespostaXML.erro("'especifico' não esta formatado corretamente", "O 'especifico' pode ser ou 'conteudo' ou 'atividade'"));
+                return;
+            }
+        }
+                  
+        try {
+            Connection conexao = ConnectionFactory.getDiario();
+            PreparedStatement st = conexao.prepareStatement(query);
 
-            }catch (SQLException e) {
-		out.print(RespostaXML.erro("Erro no banco de dados!", e.getMessage()));
-                e.printStackTrace();
-	    }
-           
+            ResultSet resultado = st.executeQuery();
+            if (mostra_valor) {
+                out.print(RespostaXML.retornaSet(resultado, "id-etapas", "id-disciplinas", "conteudos", "data", "valor"));
+            } else {
+                out.print(RespostaXML.retornaSet(resultado, "id-etapas", "id-disciplinas", "conteudos", "data"));
+            }
+
+            st.close();
+            conexao.close();
+        } catch (SQLException e) {
+            out.print(RespostaXML.erro("Erro no banco de dados!", e.getMessage()));
+            e.printStackTrace();
         }
     }
 

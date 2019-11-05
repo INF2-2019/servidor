@@ -25,8 +25,8 @@ import utils.Headers;
  *
  * @author Juan
  */
-@WebServlet(urlPatterns = {"/diario/diario/conteudo/atualizar"})
-public class Atualizar extends HttpServlet {
+@WebServlet(urlPatterns = {"/diario/diario/conteudo/deletar"})
+public class Deletar extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         
@@ -43,62 +43,9 @@ public class Atualizar extends HttpServlet {
             return;
         }
 
-        String query = "UPDATE conteudos SET ";
-        List<String> modificacoes = new ArrayList<String>();
-
-        if (ChecaParametro.parametroExiste(request, "etapa")) {
-            if (!ChecaParametro.parametroEInteiro(request, "etapa")) {
-                out.print(RespostaXML.erro("'etapa' deve ser inteiro!", "Falha no formato do parametro 'etapa'"));
-                return;
-            } else {
-                modificacoes.add("`id-etapas`="+request.getParameter("etapa"));
-            }
-        }
+        String query = "DELETE FROM conteudos WHERE id="+request.getParameter("id");
         
-        if (ChecaParametro.parametroExiste(request, "disciplina")) {
-            if (!ChecaParametro.parametroEInteiro(request, "disciplina")) {
-                out.print(RespostaXML.erro("'disciplina' deve ser inteiro!", "Falha no formato do parametro 'disciplina'"));
-                return;
-            } else {
-                modificacoes.add("`id-disciplinas`="+request.getParameter("disciplina"));
-            }
-        }
-        
-        if (ChecaParametro.parametroExiste(request, "conteudo")) {
-            if (!ChecaParametro.parametroNaoVazio(request, "conteudo")) {
-                out.print(RespostaXML.erro("'conteudo' não pode estar vazio!", "O parametro 'conteudo' não pode ser vazio"));
-                return;
-            } else {
-                modificacoes.add("conteudos=\""+request.getParameter("conteudo")+"\"");
-            }
-        }
-        
-        if (ChecaParametro.parametroExiste(request, "data")) {
-            if (!ChecaParametro.parametroEData(request, "data")) {
-                out.print(RespostaXML.erro("'data' não esta formatada corretamente", "Falha no formato do parametro 'data'"));
-                return;
-            } else {
-                modificacoes.add("data=\""+request.getParameter("data")+"\"");
-            }
-        }
-        
-        if (ChecaParametro.parametroExiste(request, "valor")) {
-            if (!ChecaParametro.parametroEInteiro(request, "valor")) {
-                out.print(RespostaXML.erro("'valor' deve ser decimal!", "Falha no formato do parametro 'valor'"));
-                return;
-            } else {
-                modificacoes.add("valor="+request.getParameter("valor"));
-            }
-        }
-
         try {
-                
-            if(modificacoes.size()==0){
-                out.print(RespostaXML.erro("Nenhuma alteração detectada!","Nenhum parametro de modificação recebido"));
-                return;
-            }
-            query += String.join(",", modificacoes) + " WHERE id="+request.getParameter("id");
-            
             // Conecta e executa Query SQL
             Connection conexao = ConnectionFactory.getDiario();
             PreparedStatement st = conexao.prepareStatement(query);
@@ -106,7 +53,7 @@ public class Atualizar extends HttpServlet {
             st.close();
             conexao.close();
 
-            String xml = RespostaXML.sucesso("Atualizado com sucesso!");
+            String xml = RespostaXML.sucesso("Deletado com sucesso!");
             out.print(xml);
         } catch (SQLException e) {
             out.print(RespostaXML.erro("Erro no banco de dados!", e.getMessage()));
@@ -129,7 +76,7 @@ public class Atualizar extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(Atualizar.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Deletar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -147,7 +94,7 @@ public class Atualizar extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(Atualizar.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Deletar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

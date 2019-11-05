@@ -17,88 +17,92 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import utils.ConnectionFactory;
+import utils.Headers;
 
 /**
  *
- * @author Marcus
+ * @author Juan
  */
 @WebServlet(urlPatterns = {"/diario/diario/conteudo/inserir"})
 public class Inserir extends HttpServlet {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, SQLException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+        
+        PrintWriter out = response.getWriter();
+        Headers.XMLHeaders(response);
+        
+        String parametro_falta = ChecaParametro.parametroFaltante(request, "etapa", "disciplina", "conteudo", "data");
+        if (parametro_falta != null) {
+            out.print(RespostaXML.erro("Erro com '" + parametro_falta + "'", "O parametro '" + parametro_falta + "' é obrigatório!"));
+            return;
+        }
 
-        try (PrintWriter out = response.getWriter()) {
+        if (!ChecaParametro.parametroEInteiro(request, "etapa")) {
+            out.print(RespostaXML.erro("'etapa' não é inteiro", "Falha no formato do parametro 'etapa'"));
+            return;
+        }
+
+        if (!ChecaParametro.parametroEInteiro(request, "disciplina")) {
+            out.print(RespostaXML.erro("'disciplina' não é inteiro", "Falha no formato do parametro 'disciplina'"));
+            return;
+        }
+
+        if (!ChecaParametro.parametroEData(request, "data")) {
+            out.print(RespostaXML.erro("'data' não esta formatada corretamente", "Falha no formato do parametro 'data'"));
+            return;
+        }
+
+        String id_etapas_string = request.getParameter("etapa"),
+                id_disciplinas_string = request.getParameter("disciplina"),
+                conteudos = request.getParameter("conteudo"),
+                datas = request.getParameter("data"),
+                valor_string = request.getParameter("valor");
+
+        int id_etapas = Integer.parseInt(id_etapas_string),
+                id_disciplinas = Integer.parseInt(id_disciplinas_string);
+
+        Date date = Date.valueOf(datas);
+
+        Double valor = 0.0;
+        if (ChecaParametro.parametroExiste(request, "valor")) {
+            if (!ChecaParametro.parametroEDecimal(request, "valor")) {
+                out.print(RespostaXML.erro("'valor' não esta formatado corretamente", "Falha no formato do parametro 'valor'"));
+                return;
+            } else {
+                valor = Double.valueOf(valor_string);
+            }
+        }
+
+        // Query SQL de inserção na tabela DESCARTES
+        String query = "INSERT INTO conteudos(`id-etapas`,`id-disciplinas`, conteudos , data, valor) VALUES (?,?,?,?,?)";
+        
+        try {
+            // Conecta e executa Query SQL
+            Connection conexao = ConnectionFactory.getDiario();
+            PreparedStatement st = conexao.prepareStatement(query);
+
+            st.setInt(1, id_etapas); //id-etapas
+            st.setInt(2, id_disciplinas); //id-disciplinas
+            st.setString(3, conteudos); // conteudos
+            st.setDate(4, date); //data
+            st.setDouble(5, valor); // valor
+
+            int r = st.executeUpdate();
+
+            st.close();
+            conexao.close();
             
-                String parametro_falta = ChecaParametro.parametroFaltante(request, "etapa","disciplina","conteudo","data");
-                if(parametro_falta!=null){
-                    out.print(RespostaXML.erro("Erro com '"+parametro_falta+"'", "O parametro '"+parametro_falta+"' é obrigatório!"));
-                    return;
-                }
-                
-                if(!ChecaParametro.parametroEInteiro(request, "etapa")){
-                    out.print(RespostaXML.erro("'etapa' não é inteiro", "Falha no formato do parametro 'etapa'"));
-                    return;
-                }
-                
-                if(!ChecaParametro.parametroEInteiro(request, "disciplina")){
-                    out.print(RespostaXML.erro("'disciplina' não é inteiro", "Falha no formato do parametro 'disciplina'"));
-                    return;
-                }
-                
-                if(!ChecaParametro.parametroEData(request, "data")){
-                    out.print(RespostaXML.erro("'data' não esta formatada corretamente", "Falha no formato do parametro 'data'"));
-                    return;
-                }
-                
-                String id_etapas_string = request.getParameter("etapa"),
-                       id_disciplinas_string = request.getParameter("disciplina"),
-                       conteudos = request.getParameter("conteudo"),
-                       datas = request.getParameter("data"),
-                       valor_string = request.getParameter("valor");
+            String mensagem = "";
+            if(valor>0.0) mensagem =  "Atividade adicionada com sucesso!";
+            else mensagem =  "Conteudo adicionado com sucesso!";
             
-                int id_etapas = Integer.parseInt(id_etapas_string),
-                    id_disciplinas = Integer.parseInt(id_disciplinas_string);
-                
-                Date date = Date.valueOf(datas);
-                
-                
-                Double valor = 0.0;
-                if(ChecaParametro.parametroExiste(request, "valor")){
-                    if(!ChecaParametro.parametroEDecimal(request, "valor")){
-                        out.print(RespostaXML.erro("'valor' não esta formatado corretamente", "Falha no formato do parametro 'valor'"));
-                        return;
-                    } else {
-                        valor = Double.valueOf(valor_string);
-                    }
-                } 
-                
-                // Query SQL de inserção na tabela DESCARTES
-		String query = "INSERT INTO conteudos(`id-etapas`,`id-disciplinas`, conteudos , data, valor) VALUES (?,?,?,?,?)";
+            String xml = RespostaXML.sucesso(mensagem);
+            out.print(xml);
 
-		// Conecta e executa Query SQL
-		Connection conexao = ConnectionFactory.getDiario();
-		PreparedStatement st = conexao.prepareStatement(query);
-
-		st.setInt(1, id_etapas); //id-etapas
-		st.setInt(2, id_disciplinas); //id-disciplinas
-		st.setString(3, conteudos); // conteudos
-		st.setDate(4, date); //data
-                st.setDouble(5, valor); // valor
-                
-                int r = st.executeUpdate();
-                
-		st.close();
-		conexao.close();
-
-
-                String xml = RespostaXML.sucesso("Conteudo adicionado com sucesso!");
-		out.print(xml);
-           
         } catch (SQLException e) {
-		out.print(RespostaXML.erro("Erro no banco de dados!", e.getMessage()));
-                e.printStackTrace();
-	}
+            out.print(RespostaXML.erro("Erro no banco de dados!", e.getMessage()));
+            e.printStackTrace();
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

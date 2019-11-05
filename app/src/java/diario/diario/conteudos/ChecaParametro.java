@@ -36,6 +36,10 @@ public class ChecaParametro {
         return false;
     }
     
+    public static boolean parametroNaoVazio(HttpServletRequest req, String parametro){
+        return true;
+    }
+    
     public static String parametroFaltante(HttpServletRequest req, String ...parametros){
         for(String parametro:parametros){
             if(!parametroExiste(req,parametro)) 
