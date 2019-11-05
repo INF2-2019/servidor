@@ -68,7 +68,7 @@ public class EmprestimoRepository {
 
 		return multa;
 	}
-	// TODO: Adequar ao sistema de datas
+
 
 	public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException, ParseException, InacessivelException, AlunoException {
 
@@ -84,7 +84,6 @@ public class EmprestimoRepository {
 		}
                 else throw new AlunoException("O id(CPF) do aluno é obrigatório");
                Connection conDiario = utils.ConnectionFactory.getDiario();
-				System.out.println(idAlunos);
                 ps = conDiario.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ?");
                 ps.setLong(1, idAlunos);
                 resultadoBusca = ps.executeQuery();
