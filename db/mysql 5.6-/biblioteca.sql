@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS `alunos`;
 CREATE TABLE IF NOT EXISTS `alunos` (
   `id` INT NOT NULL,
   `nome` VARCHAR(127) NOT NULL,
-  `senha` VARCHAR(170) NOT NULL,
+  `senha` varchar(170) NOT NULL,
   `email` VARCHAR(127) NOT NULL UNIQUE,
   `sexo` ENUM('M', 'F') NOT NULL,
   `nascimento` DATE NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `alunos` (
   `cidade` VARCHAR(127) NOT NULL,
   `cep` INT NOT NULL,
   `uf` VARCHAR(127) NOT NULL,
-  `foto` text NOT NULL,
+  `foto` text,
   PRIMARY KEY(id)
 );
 
@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS `operador`;
 CREATE TABLE IF NOT EXISTS `operador` (
   `id` INT NOT NULL,
   `nome` VARCHAR(127) NOT NULL,
-  `senha` VARCHAR(170) NOT NULL,
+  `senha` varchar(170) NOT NULL,
   `email` VARCHAR(127) NOT NULL UNIQUE,
   PRIMARY KEY(id)
 );
@@ -36,9 +36,9 @@ DROP TABLE IF EXISTS `admin`;
 CREATE TABLE IF NOT EXISTS `admin` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(127) NOT NULL,
-  `usuario` VARCHAR(127) NOT NULL UNIQUE, 
+  `usuario` VARCHAR(127) NOT NULL, 
   `email` VARCHAR(127) NOT NULL UNIQUE,
-  `senha` VARCHAR(170) NOT NULL,
+  `senha` varchar(170) NOT NULL,
   PRIMARY KEY(id)
 );
 
@@ -132,8 +132,8 @@ CREATE TABLE IF NOT EXISTS `emprestimos` (
   `id-acervo` INT NOT NULL,
   `data-emprestimo` DATE NOT NULL,
   `data-prev-devol` DATE NOT NULL,
-  `data-devolucao` DATE NOT NULL,
-  `multa` DECIMAL(5,2) NOT NULL,
+  `data-devolucao` DATE,
+  `multa` DECIMAL(7,2) NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -144,6 +144,6 @@ CREATE TABLE IF NOT EXISTS `reservas` (
   `id-acervo` INT NOT NULL,
   `data-reserva` DATE NOT NULL,
   `tempo-espera` INT NOT NULL,
-  `emprestou` BOOLEAN NOT NULL,
+  `emprestou` BOOLEAN NOT NULL DEFAULT False,
   PRIMARY KEY (id)
 );

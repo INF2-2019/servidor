@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `alunos` (
   `cidade` VARCHAR(255) NOT NULL,
   `cep` INT NOT NULL,
   `uf` VARCHAR(255) NOT NULL,
-  `foto` text NOT NULL,
+  `foto` text,
   PRIMARY KEY(id)
 );
 
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `emprestimos` (
   `id-acervo` INT NOT NULL,
   `data-emprestimo` DATE NOT NULL,
   `data-prev-devol` DATE NOT NULL,
-  `data-devolucao` DATE NOT NULL,
+  `data-devolucao` DATE,
   `multa` DECIMAL(7,2) NOT NULL,
   PRIMARY KEY (id)
 );
@@ -144,6 +144,6 @@ CREATE TABLE IF NOT EXISTS `reservas` (
   `id-acervo` INT NOT NULL,
   `data-reserva` DATE NOT NULL,
   `tempo-espera` INT NOT NULL,
-  `emprestou` BOOLEAN NOT NULL,
+  `emprestou` BOOLEAN NOT NULL DEFAULT False,
   PRIMARY KEY (id)
 );
