@@ -19,6 +19,8 @@ import biblioteca.emprestimos.views.ErroView;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import utils.autenticador.BibliotecaAutenticador;
+import utils.autenticador.BibliotecaCargos;
 
 @WebServlet(name = "DeletarEmprestimos", urlPatterns = {"/biblioteca/emprestimos/deletar"})
 public class DeletarEmprestimos extends HttpServlet {
@@ -26,9 +28,19 @@ public class DeletarEmprestimos extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Headers.XMLHeaders(response);
 		Connection conexao = ConnectionFactory.getBiblioteca();
-
+		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
 		PrintWriter out = response.getWriter();
-
+		if ((autenticador.cargoLogado() != BibliotecaCargos.ADMIN) || (autenticador.cargoLogado() != BibliotecaCargos.OPERADOR)) {
+			response.setStatus(403);
+			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+			return;
+		}
+		
 		if (conexao == null) {
 			System.err.println("Falha ao conectar ao bd");
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
