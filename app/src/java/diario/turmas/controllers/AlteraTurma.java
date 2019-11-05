@@ -69,6 +69,6 @@ public class AlteraTurma extends HttpServlet {
 
     @Override
     public String getServletInfo() {
-        return "Servlet para deletar uma turma";
+        return "Servlet para alterar uma turma";
     }
 }
