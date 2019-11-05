@@ -29,11 +29,10 @@ public class DisciplinaModel extends Model {
 		} else {
 			retorno[2] = parametros.get("nome");
 		}
-
 		if (!parametros.containsKey("carga-horaria-min")) {
 			retorno[3] = cargaHorariaMin;
 		} else {
-			retorno[3] = parametros.get("horas");
+			retorno[3] = parametros.get("carga-horaria-min");
 		}
 
 		return retorno;

@@ -16,6 +16,11 @@ import diario.disciplinas.views.RenderException;
 import diario.disciplinas.views.View;
 import diario.disciplinas.views.SucessoView;
 import diario.disciplinas.views.ErroView;
+import diario.disciplinas.views.ExcecaoConteudoVinculado;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
 
 @WebServlet(name = "DeletarDisciplinas", urlPatterns = {"/diario/disciplinas/deletar"})
 public class DeletarDisciplinas extends HttpServlet {
@@ -25,9 +30,26 @@ public class DeletarDisciplinas extends HttpServlet {
 		Connection conexao = ConnectionFactory.getDiario();
 
 		PrintWriter out = response.getWriter();
+		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+
+		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			response.setStatus(403);
+			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+			return;
+		}
 
 		if (conexao == null) {
-			System.err.println("Falha ao conectar ao bd"); // Adicionar XML de erro
+			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
 			return;
 		}
 
@@ -60,7 +82,14 @@ public class DeletarDisciplinas extends HttpServlet {
 			}
 		} catch (RenderException e) {
 			throw new ServletException(e);
+		} catch (ExcecaoConteudoVinculado ex) {
+			response.setStatus(400);
+			View erroView = new ErroView(ex);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
 		}
 	}
-
 }

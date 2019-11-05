@@ -24,6 +24,9 @@ import diario.etapas.view.EtapasConsultaView;
 import diario.etapas.view.ErroFormatView;
 import diario.etapas.view.ErroSqlView;
 
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 @WebServlet(name = "ConsultarEtapas", urlPatterns = "/diario/etapas/consultar")
 public class ConsultarEtapas extends HttpServlet {
 
@@ -31,6 +34,13 @@ public class ConsultarEtapas extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Headers.XMLHeaders(response);
+
+		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+		if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
+			response.setStatus(403);
+			return;
+		}
+
 		Connection conexao = ConnectionFactory.getDiario();
 
 		PrintWriter out = response.getWriter();

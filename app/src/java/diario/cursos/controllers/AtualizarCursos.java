@@ -7,6 +7,8 @@ import diario.cursos.view.SucessoView;
 import diario.cursos.view.View;
 import utils.ConnectionFactory;
 import utils.Headers;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,6 +27,13 @@ public class AtualizarCursos extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Headers.XMLHeaders(response);
+
+		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			response.setStatus(403);
+			return;
+		}
+
 		Connection conexao = ConnectionFactory.getDiario();
 
 		PrintWriter out = response.getWriter();
@@ -45,14 +54,15 @@ public class AtualizarCursos extends HttpServlet {
 
 		Map<String, String> parametros = definirParametros(request);
 		// Testa se todos parâmetros necessários foram inseridos
-		if (parametros == null) {
+		if (! request.getParameterMap().containsKey("id")) {
 			response.setStatus(400);
-			View erroView = new ErroView(new Exception("Parâmetros incorretos para a operação de atualização."));
+			View erroView = new ErroView(new Exception("Um ID deve ser passado para a operação de atualização."));
 			try {
 				erroView.render(out);
 			} catch (RenderException e) {
 				throw new ServletException(e);
 			}
+			return;
 		}
 
 		try {
@@ -79,6 +89,16 @@ public class AtualizarCursos extends HttpServlet {
 			} catch (RenderException e) {
 				throw new ServletException(e);
 			}
+		} catch (NullPointerException e) {
+			response.setStatus(400);
+			System.err.println("Id inválido. Erro: "+e.toString());
+
+			View erroView = new ErroView(e);
+			try {
+				erroView.render(out);
+			} catch (RenderException ex) {
+				throw new ServletException(ex);
+			}
 		} catch (RenderException e) {
 			throw new ServletException(e);
 		}
@@ -86,40 +106,23 @@ public class AtualizarCursos extends HttpServlet {
 
 	public Map<String, String> definirParametros(HttpServletRequest req) {
 		Map<String, String> dados = new LinkedHashMap<>();
-		boolean temPeloMenosUm = false;
 
-		if (req.getParameterMap().containsKey("id")) {
-			dados.put("id", req.getParameter("id"));
-		} else {
-			return null;
-		}
+		dados.put("id", req.getParameter("id"));
 
 		if (req.getParameterMap().containsKey("departamento")) {
 			dados.put("id-depto", req.getParameter("departamento"));
-		} else {
-			temPeloMenosUm = true;
 		}
 
 		if (req.getParameterMap().containsKey("nome")) {
 			dados.put("nome", req.getParameter("nome"));
-		} else {
-			temPeloMenosUm = true;
 		}
 
 		if (req.getParameterMap().containsKey("horas")) {
 			dados.put("horas-total", req.getParameter("horas"));
-		} else {
-			temPeloMenosUm = true;
 		}
 
 		if (req.getParameterMap().containsKey("modalidade")) {
 			dados.put("modalidade", req.getParameter("modalidade"));
-		} else {
-			temPeloMenosUm = true;
-		}
-
-		if (!temPeloMenosUm) {
-			return null;
 		}
 
 		return dados;

@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 public class ErroView extends View {
 
@@ -33,7 +34,11 @@ public class ErroView extends View {
 		Element erro = documento.createElement("erro");
 		Element msg = documento.createElement("mensagem");
 
-		msg.appendChild(documento.createTextNode("Os parâmetros inseridos são inválidos."));
+		if(excecao instanceof NumberFormatException || excecao instanceof SQLException){
+			msg.appendChild(documento.createTextNode("Os parâmetros inseridos são inválidos."));
+		} else {
+			msg.appendChild(documento.createTextNode(excecao.getMessage()));
+		}
 		erro.appendChild(msg);
 
 		documento.appendChild(erro);

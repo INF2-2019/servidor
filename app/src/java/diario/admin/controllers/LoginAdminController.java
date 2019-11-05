@@ -33,31 +33,30 @@ public class LoginAdminController extends HttpServlet {
 	private final static String INTERNO = "Um erro interno ocorreu!";
 	private final static String LOGADO = "Logado com sucesso!";
 
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Headers.XMLHeaders(response);
 		PrintWriter out = response.getWriter();
 
-  	String login, senha;
-  	boolean manter;
+		String login, senha;
+		boolean manter;
 		login = request.getParameter("login");
 		senha = request.getParameter("senha");
 		manter = request.getParameter("manter") != null;
 
-
 		try {
-			if(login == null){
+			if (login == null) {
 				new ErroView(SEM_LOGIN).render(out);
 				return;
 			}
 
-			if(senha == null){
+			if (senha == null) {
 				new ErroView(SEM_SENHA).render(out);
 				return;
 			}
 
 			try {
 				Connection connection = ConnectionFactory.getDiario();
-				if(connection == null){
+				if (connection == null) {
 					throw new SQLException();
 				}
 
@@ -65,7 +64,7 @@ public class LoginAdminController extends HttpServlet {
 				Admin original = rep.getAdminFromUsuario(login);
 
 				// Login inválido
-				if(!Hasher.validar(senha, original.getHashSenha())){
+				if (!Hasher.validar(senha, original.getHashSenha())) {
 					throw new AdminNotFoundException();
 				}
 
@@ -77,18 +76,18 @@ public class LoginAdminController extends HttpServlet {
 				response.setStatus(200);
 				new SucessoView(LOGADO).render(out);
 				return;
-			}catch (SQLException | InvalidKeySpecException | NoSuchAlgorithmException ex){
+			} catch (SQLException | InvalidKeySpecException | NoSuchAlgorithmException ex) {
 				response.setStatus(500);
 				new ErroView(INTERNO).render(out);
 				return;
-			}catch (AdminNotFoundException ex){
+			} catch (AdminNotFoundException ex) {
 				response.setStatus(401);
 				new ErroView(CREDENCIAIS).render(out);
 				return;
 			}
-		}catch (RenderException ex){
+		} catch (RenderException ex) {
 			response.setStatus(500);
 			throw new ServletException(ex);
 		}
-  }
+	}
 }

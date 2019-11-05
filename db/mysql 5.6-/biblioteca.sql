@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `operador` (
 
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE IF NOT EXISTS `admin` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(127) NOT NULL,
   `usuario` VARCHAR(127) NOT NULL UNIQUE, 
   `email` VARCHAR(127) NOT NULL UNIQUE,
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `livros` (
   `id-obra` INT NOT NULL,
   `id-acervo` INT NOT NULL,
   `edicao` INT NOT NULL,
-  `isbn` INT NOT NULL
+  `isbn` BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS `midias`;
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `partes` (
 
 DROP TABLE IF EXISTS `periodicos`;
 CREATE TABLE IF NOT EXISTS `periodicos` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL,
   `id-acervo` INT NOT NULL,
   `periodicidade` VARCHAR(127) NOT NULL,
   `mes` VARCHAR(127) NOT NULL,

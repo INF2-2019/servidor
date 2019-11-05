@@ -19,5 +19,4 @@ public abstract class View<D> {
 		render(printWriter);
 		return data.toString();
 	}
-	;
 }

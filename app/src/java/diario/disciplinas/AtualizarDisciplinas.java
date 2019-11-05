@@ -18,6 +18,8 @@ import java.util.TreeMap;
 import diario.disciplinas.views.RenderException;
 import diario.disciplinas.views.View;
 import diario.disciplinas.views.ErroView;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
 
 @WebServlet(name = "AtualizarDisciplinas", urlPatterns = {"/diario/disciplinas/atualizar"})
 public class AtualizarDisciplinas extends HttpServlet {
@@ -26,6 +28,20 @@ public class AtualizarDisciplinas extends HttpServlet {
 		Headers.XMLHeaders(res);
 		Connection con = ConnectionFactory.getDiario();
 		PrintWriter out = res.getWriter();
+		DiarioAutenticador autenticador = new DiarioAutenticador(req, res);
+
+		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			res.setStatus(403);
+			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+			return;
+		}
+
+		 
 		if (con == null) {
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {
@@ -37,6 +53,16 @@ public class AtualizarDisciplinas extends HttpServlet {
 		}
 
 		DisciplinaRepository disciplinaRep = new DisciplinaRepository(con);
+		if (!req.getParameterMap().containsKey("id")) {
+			res.setStatus(400);
+			View erroView = new ErroView(new Exception("Um ID deve ser passado para a operação de atualização."));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+			return;
+		}
 		String id = req.getParameter("id");
 		SortedMap<String, String> filtros = definirMap(req);
 		try {
@@ -84,7 +110,6 @@ public class AtualizarDisciplinas extends HttpServlet {
 		if (req.getParameter("horas") != null) {
 			dados.put("carga-horaria-min", req.getParameter("horas"));
 		}
-
 		return dados;
 	}
 }
