@@ -40,7 +40,7 @@ public class DiarioAutenticador extends Autenticador {
 		return session.getAttribute(ID_KEY);
 	}
 
-	private void logar(Integer identidade, DiarioCargos cargo, int duration) {
+	private void logar(Object identidade, DiarioCargos cargo, int duration) {
 		HttpSession session = this.request.getSession();
 		session.setAttribute(ID_KEY, identidade);
 		session.setAttribute(ROLE_KEY, cargo);
