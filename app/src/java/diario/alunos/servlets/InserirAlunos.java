@@ -35,7 +35,7 @@ public class InserirAlunos extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		Headers.XMLHeaders(response);
 
-		if (!rep.checarAutorizacaoADM(request, response)) {
+		if (rep.checarAutorizacaoADM(request, response)) {
 
 			String id = request.getParameter("id");
 			String nome = request.getParameter("nome");
