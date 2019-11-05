@@ -83,7 +83,9 @@ public class EmprestimoRepository {
                         idAlunos = Long.parseLong(SidAlunos);
 		}
                 else throw new AlunoException("O id(CPF) do aluno é obrigatório");
-                ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
+               Connection conDiario = utils.ConnectionFactory.getDiario();
+				System.out.println(idAlunos);
+                ps = conDiario.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ?");
                 ps.setLong(1, idAlunos);
                 resultadoBusca = ps.executeQuery();
 
@@ -149,7 +151,7 @@ public class EmprestimoRepository {
 	public boolean atualizar(SortedMap<String, String> filtros, String id) throws SQLException, NumberFormatException, ParseException, AlunoException {
 		int idParsed = Integer.parseUnsignedInt(id);
 		if (filtros.containsKey("id-alunos")) {
-			Integer.parseUnsignedInt(filtros.get("id-alunos"));
+			 Long.parseLong(filtros.get("id-alunos"));
 		}
 
 		if (filtros.containsKey("id-acervo")) {
@@ -195,8 +197,8 @@ public class EmprestimoRepository {
 		Date dataDevolucao = (Date) (parametros.get("data-devolucao"));
 		double multa = Double.parseDouble(parametros.get("multa").toString());
 
-
-		PreparedStatement ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
+		Connection conDiario = utils.ConnectionFactory.getDiario();
+		PreparedStatement ps = conDiario.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
                 ps.setLong(1, idAlunos);
                 ResultSet resultadoBusca = ps.executeQuery();
                 if(!resultadoBusca.next()) throw new AlunoException("Não existe esse aluno.");
