@@ -22,7 +22,7 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@WebServlet(name = "Inserir", urlPatterns = "/diario/cursos/inserir")
+@WebServlet(name = "InserirCursos", urlPatterns = "/diario/cursos/inserir")
 public class InserirCursos extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
