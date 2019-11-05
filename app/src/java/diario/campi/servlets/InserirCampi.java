@@ -28,7 +28,7 @@ public class InserirCampi extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		Headers.XMLHeaders(response);
 
-		if (rep.checarAutorizacaoADM(request, response)) {
+		if (!rep.checarAutorizacaoADM(request, response)) {
 			
 			String nome = request.getParameter("nome");
 			String cidade = request.getParameter("cidade");
