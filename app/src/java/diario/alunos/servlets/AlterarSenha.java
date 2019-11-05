@@ -42,7 +42,7 @@ public class AlterarSenha extends HttpServlet {
 					out.println("<erro><mensagem>Não foi possível alterar a senha</mensagem></erro>");
 				}
 			} catch (SQLException excecaoSQL) {
-				response.setStatus(400);
+				response.setStatus(500);
 				System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
 				View erroView = new ErroView(excecaoSQL);
@@ -54,6 +54,7 @@ public class AlterarSenha extends HttpServlet {
 			} catch (RenderException e) {
 				throw new ServletException(e);
 			} catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+				response.setStatus(500);
 				out.println("<erro><mensagem>Erro severo</mensagem></erro>");
 			}
 

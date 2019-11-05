@@ -52,7 +52,7 @@ public class InserirAlunos extends HttpServlet {
 				View sucessoView = new SucessoView("Inserido com sucesso.");
 				sucessoView.render(out);
 			} catch (NumberFormatException excecaoFormatoErrado) {
-				response.setStatus(400);
+				response.setStatus(422);
 				System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
 
 				View erroView = new ErroView(excecaoFormatoErrado);
@@ -62,7 +62,7 @@ public class InserirAlunos extends HttpServlet {
 					throw new ServletException(e);
 				}
 			} catch (SQLException excecaoSQL) {
-				response.setStatus(400);
+				response.setStatus(500);
 				System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
 				View erroView = new ErroView(excecaoSQL);
@@ -74,6 +74,7 @@ public class InserirAlunos extends HttpServlet {
 			} catch (RenderException e) {
 				throw new ServletException(e);
 			} catch (NoSuchAlgorithmException | ParseException | InvalidKeySpecException ex) {
+				response.setStatus(500);
 				out.println("<erro><mensagem>Erro severo</mensagem></erro>");
 			}
 		} else {

@@ -40,7 +40,7 @@ public class AlterarFoto extends HttpServlet {
 					out.println("<erro><mensagem>Não foi possível alterar a foto</mensagem></erro>");
 				}
 			} catch (SQLException excecaoSQL) {
-				response.setStatus(400);
+				response.setStatus(500);
 				System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
 				View erroView = new ErroView(excecaoSQL);

@@ -31,12 +31,15 @@ public class LogarAluno extends HttpServlet {
 			if (rep.logarAluno(request, response, id, senha)) {
 
 			} else {
+				response.setStatus(400);
 				out.println("<erro><mensagem>Senha incorreta</mensagem></erro>");
 			}
 			conexao.close();
 		} catch (SQLException ex) {
+			response.setStatus(500);
 			out.println("<erro><mensagem>Usuario inexistente</mensagem></erro>");
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+			response.setStatus(500);
 			out.println("<erro><mensagem>Erro severo</mensagem></erro>");
 		}
 

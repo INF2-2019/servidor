@@ -29,6 +29,7 @@ public class ListarAlunos extends HttpServlet {
 			out.println(xml);
 			conexao.close();
 		} catch (SQLException ex) {
+			response.setStatus(500);
 			out.println("<erro><mensagem>Falha ao listar alunos do banco de dados</mensagem></erro>");
 		}
 

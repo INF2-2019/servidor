@@ -53,7 +53,7 @@ public class AlterarAlunos extends HttpServlet {
 				View sucessoView = new SucessoView("Atualizado com sucesso.");
 				sucessoView.render(out);
 			} catch (NumberFormatException excecaoFormatoErrado) {
-				response.setStatus(400);
+				response.setStatus(422);
 				System.err.println("Numero inteiro invalido para o parametro. Erro: " + excecaoFormatoErrado.toString());
 
 				View erroView = new ErroView(excecaoFormatoErrado);
@@ -63,7 +63,7 @@ public class AlterarAlunos extends HttpServlet {
 					throw new ServletException(e);
 				}
 			} catch (SQLException excecaoSQL) {
-				response.setStatus(400);
+				response.setStatus(500);
 				System.err.println("Busca SQL invalida. Erro: " + excecaoSQL.toString());
 
 				View erroView = new ErroView(excecaoSQL);
