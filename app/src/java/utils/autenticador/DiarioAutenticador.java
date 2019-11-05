@@ -14,8 +14,8 @@ public class DiarioAutenticador extends Autenticador {
 		super(request, response);
 	}
 
-	public void logar(Integer identididade, DiarioCargos cargo, boolean manter) {
-		logar(identididade, cargo, manter ? KEEP_DURATION : DEFAULT_DURATION);
+	public void logar(Object identidade, DiarioCargos cargo, boolean manter) {
+		logar(identidade, cargo, manter ? KEEP_DURATION : DEFAULT_DURATION);
 	}
 
 	public void encerrar() {

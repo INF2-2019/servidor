@@ -14,8 +14,8 @@ public class BibliotecaAutenticador extends Autenticador {
 		super(request, response);
 	}
 
-	public void logar(Integer identididade, BibliotecaCargos cargo, boolean manter) {
-		logar(identididade, cargo, manter ? KEEP_DURATION : DEFAULT_DURATION);
+	public void logar(Object identidade, BibliotecaCargos cargo, boolean manter) {
+		logar(identidade, cargo, manter ? KEEP_DURATION : DEFAULT_DURATION);
 	}
 
 	public void encerrar() {
