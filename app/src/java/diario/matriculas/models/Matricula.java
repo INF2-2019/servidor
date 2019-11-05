@@ -1,4 +1,4 @@
-package diario.matriculas.model;
+package diario.matriculas.models;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -8,17 +8,36 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class Matricula {
 
-	public final static int ID_INDEFINIDO = -1;
-	private int id, idDisciplinas, ano;
-	private long idAlunos;
-	private boolean ativo;
+	public final static Integer ID_INDEFINIDO = -1;
+	private Integer id;
+	private Integer idDisciplinas;
+	private Integer ano;
+	private Long idAlunos;
+	private Boolean ativo;
 
-	public Matricula(int id, long idAlunos, int idDisciplinas, int ano, boolean ativo) {
+	public Matricula(Integer id, Long idAlunos, Integer idDisciplinas, Integer ano, Boolean ativo) {
 		this.setId(id);
 		this.setIdAlunos(idAlunos);
 		this.setIdDisciplinas(idDisciplinas);
 		this.setAno(ano);
 		this.setAtivo(ativo);
+	}
+
+	public Matricula(Integer id, Long idAlunos, Integer idDisciplinas, Integer ano) {
+		this(id, idAlunos, idDisciplinas, ano, true);
+	}
+
+	public Matricula(Long idAlunos, Integer idDisciplinas, Integer ano, Boolean ativo) {
+		this(ID_INDEFINIDO, idAlunos, idDisciplinas, ano, ativo);
+
+	}
+
+	public Matricula(Long idAlunos, Integer idDisciplinas, Integer ano) {
+		this(ID_INDEFINIDO, idAlunos, idDisciplinas, ano, true);
+	}
+
+	public Matricula() {
+		this(null, null, null, null, null);
 	}
 
 	@Override
@@ -34,56 +53,43 @@ public class Matricula {
 		return false;
 	}
 
-	public Matricula(int id, long idAlunos, int idDisciplinas, int ano) {
-		this(id, idAlunos, idDisciplinas, ano, true);
-	}
-
-	public Matricula(long idAlunos, int idDisciplinas, int ano, boolean ativo) {
-		this(ID_INDEFINIDO, idAlunos, idDisciplinas, ano, ativo);
-
-	}
-
-	public Matricula(long idAlunos, int idDisciplinas, int ano) {
-		this(ID_INDEFINIDO, idAlunos, idDisciplinas, ano, true);
-	}
-
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public long getIdAlunos() {
+	public Long getIdAlunos() {
 		return idAlunos;
 	}
 
-	public void setIdAlunos(long idAlunos) {
+	public void setIdAlunos(Long idAlunos) {
 		this.idAlunos = idAlunos;
 	}
 
-	public int getIdDisciplinas() {
+	public Integer getIdDisciplinas() {
 		return idDisciplinas;
 	}
 
-	public void setIdDisciplinas(int idDisciplinas) {
+	public void setIdDisciplinas(Integer idDisciplinas) {
 		this.idDisciplinas = idDisciplinas;
 	}
 
-	public int getAno() {
+	public Integer getAno() {
 		return ano;
 	}
 
-	public void setAno(int ano) {
+	public void setAno(Integer ano) {
 		this.ano = ano;
 	}
 
-	public boolean isAtivo() {
+	public Boolean isAtivo() {
 		return ativo;
 	}
 
-	public void setAtivo(boolean ativo) {
+	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
 

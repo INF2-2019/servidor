@@ -1,8 +1,8 @@
-package diario.matriculas.view;
+package diario.matriculas.views;
 
 import diario.admin.views.RenderException;
 import diario.admin.views.View;
-import diario.matriculas.model.Matricula;
+import diario.matriculas.models.Matricula;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Conversores;
