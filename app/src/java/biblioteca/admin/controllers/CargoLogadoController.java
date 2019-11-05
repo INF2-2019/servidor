@@ -11,11 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import utils.Headers;
 
 @WebServlet(name = "CargoLogadoControllerBiblioteca", urlPatterns = "/biblioteca/cargo")
 public class CargoLogadoController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Headers.XMLHeaders(response);
 		PrintWriter out = response.getWriter();
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
 		try {

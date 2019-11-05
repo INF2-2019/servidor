@@ -30,7 +30,7 @@ public class DeletarEmprestimos extends HttpServlet {
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
 		PrintWriter out = response.getWriter();
-		if ((autenticador.cargoLogado() != BibliotecaCargos.ADMIN) || (autenticador.cargoLogado() != BibliotecaCargos.OPERADOR)) {
+		if ((autenticador.cargoLogado() != BibliotecaCargos.ADMIN) && (autenticador.cargoLogado() != BibliotecaCargos.OPERADOR)) {
 			response.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
 			try {

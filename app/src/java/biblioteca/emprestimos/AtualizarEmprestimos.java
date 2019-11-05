@@ -33,7 +33,7 @@ public class AtualizarEmprestimos extends HttpServlet {
 
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(req, res);
 
-		if ((autenticador.cargoLogado() != BibliotecaCargos.ADMIN) || (autenticador.cargoLogado() != BibliotecaCargos.OPERADOR)) {
+		if ((autenticador.cargoLogado() != BibliotecaCargos.ADMIN) && (autenticador.cargoLogado() != BibliotecaCargos.OPERADOR)) {
 			res.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
 			try {
@@ -43,7 +43,6 @@ public class AtualizarEmprestimos extends HttpServlet {
 			}
 			return;
 		}
-
 		if (con == null) {
 			res.setStatus(500);
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));

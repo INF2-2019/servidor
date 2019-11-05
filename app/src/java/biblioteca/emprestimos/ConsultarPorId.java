@@ -32,7 +32,16 @@ public class ConsultarPorId extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
-
+		if ((autenticador.cargoLogado() != BibliotecaCargos.ADMIN) && (autenticador.cargoLogado() != BibliotecaCargos.OPERADOR)) {
+			response.setStatus(403);
+			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+			return;
+		}
 		if (conexao == null) {
 			response.setStatus(500);
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
