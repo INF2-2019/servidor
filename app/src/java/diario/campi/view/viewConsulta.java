@@ -38,7 +38,7 @@ public class viewConsulta {
 		return xml;
 	}
 	
-	public static String XMLAluno(int id, String nome, String email) {
+	public static String XMLAluno(String id, String nome, String email) {
 		String xml =
 				"<aluno>"
 					+ "<id>" + id + "</id>"
@@ -48,7 +48,7 @@ public class viewConsulta {
 		return xml;
 	}
 	
-	public static String XMLAlunoCompleto(int id, String nome, String email, String sexo, Date nascimento, String logradouro, int numero, String complemento, String bairro, String cidade, int cep, String uf, String foto) {
+	public static String XMLAlunoCompleto(String id, String nome, String email, String sexo, Date nascimento, String logradouro, int numero, String complemento, String bairro, String cidade, int cep, String uf, String foto) {
 		String data = new SimpleDateFormat("dd/MM/yyyy").format(nascimento);
 		String xml =
 				"<aluno>"

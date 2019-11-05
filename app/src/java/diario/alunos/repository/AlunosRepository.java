@@ -278,9 +278,14 @@ public class AlunosRepository {
 		String xml = "";
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT * FROM `alunos`");
-
 		while (rs.next()) {
-			xml += viewConsulta.XMLAluno(rs.getInt("id"), rs.getString("nome"), rs.getString("email"));
+			int id = rs.getInt("id");
+			String idStr = Integer.toString(id);
+			String zeros = "";
+			for (int i = idStr.length(); i < 11; i++)
+				zeros+="0";
+			zeros+=idStr;
+				xml += viewConsulta.XMLAluno(zeros, rs.getString("nome"), rs.getString("email"));
 		}
 		xml = viewConsulta.XMLConsultaAlunos(xml);
 		return xml;
@@ -293,7 +298,13 @@ public class AlunosRepository {
 		ps.setLong(1, idParsed);
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
-			xml += viewConsulta.XMLAlunoCompleto(rs.getInt("id"),
+			int id2 = rs.getInt("id");
+			String idStr = Integer.toString(id2);
+			String zeros = "";
+			for (int i = idStr.length(); i < 11; i++)
+				zeros+="0";
+			zeros+=idStr;
+			xml += viewConsulta.XMLAlunoCompleto(zeros,
 					rs.getString("nome"),
 					rs.getString("email"),
 					rs.getString("sexo"),
