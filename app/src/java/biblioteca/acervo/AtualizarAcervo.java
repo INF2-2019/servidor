@@ -64,25 +64,46 @@ public class AtualizarAcervo extends HttpServlet {
 				String query = "";
 				switch (requisicao.getParameter("tipo").toLowerCase()) {
 					case "academicos":
-						query = "INSERT INTO `academicos` VALUES (" + requisicao.getParameter("id-obra")
-								+ ", " + idAcervo + ", '" + requisicao.getParameter("programa") + "')";
+						query = "INSERT INTO `academicos` VALUES (?, ?, ?)";
+						PreparedStatement acad = conexao.prepareStatement(query);
+						acad.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
+						acad.setInt(2, idAcervo);
+						acad.setString(3, requisicao.getParameter("programa"));
+						acad.execute();
+						acad.close();
 						break;
 					case "livros":
-						query = "INSERT INTO `livros` VALUES (" + requisicao.getParameter("id-obra")
-								+ ", " + idAcervo + ", " + requisicao.getParameter("edicao") + ", "
-								+ requisicao.getParameter("isbn") + ")";
+						query = "INSERT INTO `livros` VALUES (?, ?, ?, ?)";
+						PreparedStatement liv = conexao.prepareStatement(query);
+						liv.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
+						liv.setInt(2, idAcervo);
+						liv.setInt(3, Integer.parseInt(requisicao.getParameter("edicao")));
+						liv.setLong(4, Long.parseLong(requisicao.getParameter("isbn")));
+						liv.execute();
+						liv.close();
 						break;
 					case "midias":
-						query = "INSERT INTO `midias` VALUES (" + requisicao.getParameter("id-obra")
-								+ ", " + idAcervo + ", '" + requisicao.getParameter("tempo")
-								+ "', '" + requisicao.getParameter("subtipo") + "')";
+						query = "INSERT INTO `midias` VALUES (?, ?, ?, ?)";
+						PreparedStatement mid = conexao.prepareStatement(query);
+						mid.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
+						mid.setInt(2, idAcervo);
+						mid.setString(3, requisicao.getParameter("tempo"));
+						mid.setString(4, requisicao.getParameter("subtipo"));
+						mid.execute();
+						mid.close();
 						break;
 					case "periodicos":
-						query = "INSERT INTO `periodicos` VALUES (" + requisicao.getParameter("id-obra")
-								+ ", " + idAcervo + ", '" + requisicao.getParameter("periodicidade")
-								+ "', '" + requisicao.getParameter("mes") + "', " + requisicao.getParameter("volume")
-								+ ", '" + requisicao.getParameter("subtipo") + "', " + requisicao.getParameter("issn")
-								+ ")";
+						query = "INSERT INTO `periodicos` VALUES (?, ?, ?, ?, ?, ?, ?)";
+						PreparedStatement per = conexao.prepareStatement(query);
+						per.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
+						per.setInt(2, idAcervo);
+						per.setString(3, requisicao.getParameter("periodicidade"));
+						per.setString(4, requisicao.getParameter("mes"));
+						per.setInt(5, Integer.parseInt(requisicao.getParameter("volume")));
+						per.setString(6, requisicao.getParameter("subtipo"));
+						per.setInt(7, Integer.parseInt(requisicao.getParameter("issn")));
+						per.execute();
+						per.close();
 				}
 				conexao.createStatement().executeUpdate(query);
 			}
@@ -178,7 +199,7 @@ public class AtualizarAcervo extends HttpServlet {
 		PreparedStatement ps = conexao.prepareStatement("UPDATE `midias` SET `id-obra` = ? , `id-acervo` = ? ,`tempo` = ? ,`subtipo` = ?  WHERE `id-acervo` = ?");
 		ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
 		ps.setInt(2, idAcervo);
-		ps.setString(3, requisicao.getParameter("tempo"));
+		ps.setString(3, requisicao.getParameter("tempo")); // o formato deverá ser adaptado no front-end
 		ps.setString(4, requisicao.getParameter("subtipo").toUpperCase());
 		ps.setInt(5, idAcervo);
 		ps.execute();
