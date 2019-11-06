@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Time;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -54,7 +55,7 @@ public class InserirAcervo extends HttpServlet {
 			String clausulaSql = "INSERT INTO `acervo` "
 					+ "(`id-campi`, `nome`, `tipo`, `local`, `ano`, `editora`, `paginas`)"
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
-			PreparedStatement ps = conexao.prepareStatement(clausulaSql);
+			PreparedStatement ps = conexao.prepareStatement(clausulaSql, Statement.RETURN_GENERATED_KEYS);
 			ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-campi")));
 			ps.setString(2, requisicao.getParameter("nome"));
 			ps.setString(3, requisicao.getParameter("tipo").toUpperCase());
@@ -63,12 +64,12 @@ public class InserirAcervo extends HttpServlet {
 			ps.setString(6, requisicao.getParameter("editora"));
 			ps.setInt(7, Integer.parseInt(requisicao.getParameter("paginas")));
 			ps.executeUpdate();
-			ps.close();
 
 			// Obtendo o `id` com característica auto-incremento
-			ResultSet resultado = conexao.createStatement().executeQuery("SELECT LAST_INSERT_ID() AS last_id FROM `acervo`");
+			ResultSet resultado = ps.getGeneratedKeys();
 			resultado.first();
-			int id = Integer.parseInt(resultado.getString("last_id"));
+			int id = resultado.getInt(1);
+			ps.close();
 
 			switch (requisicao.getParameter("tipo").toLowerCase()) {
 				case "academicos":
