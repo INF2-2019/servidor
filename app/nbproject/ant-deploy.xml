@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project default="-deploy-ant" basedir=".">
     <target name="-init-cl-deployment-env" if="deploy.ant.enabled">
         <property file="${deploy.ant.properties.file}" />
