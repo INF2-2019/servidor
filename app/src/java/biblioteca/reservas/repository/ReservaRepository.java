@@ -226,7 +226,7 @@ public class ReservaRepository {
 		Set<ReservaModel> disciplinaResultado = new LinkedHashSet<>();
 		sql = "SELECT * FROM `reservas` ORDER BY `id`";
 		long idAluno = -1L;
-                int idAcervo = -1, tempoEspera = -1;
+		int idAcervo = -1, tempoEspera = -1;
 		boolean emprestou = false;
 		java.sql.Date dataReserva = new java.sql.Date(0);
 		if (filtros.containsKey("id-alunos")) {
