@@ -178,7 +178,7 @@ public class AtualizarAcervo extends HttpServlet {
 		PreparedStatement ps = conexao.prepareStatement("UPDATE `midias` SET `id-obra` = ? , `id-acervo` = ? ,`tempo` = ? ,`subtipo` = ?  WHERE `id-acervo` = ?");
 		ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
 		ps.setInt(2, idAcervo);
-		ps.setString(3, requisicao.getParameter("tempo")); // o formato deverá ser adaptado no front-end
+		ps.setString(3, requisicao.getParameter("tempo"));
 		ps.setString(4, requisicao.getParameter("subtipo").toUpperCase());
 		ps.setInt(5, idAcervo);
 		ps.execute();
