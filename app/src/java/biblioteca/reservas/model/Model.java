@@ -1,4 +1,3 @@
-
 package biblioteca.reservas.model;
 
 public abstract class Model {

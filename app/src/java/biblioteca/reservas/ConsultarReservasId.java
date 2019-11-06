@@ -25,81 +25,80 @@ import utils.Headers;
 import utils.autenticador.BibliotecaAutenticador;
 import utils.autenticador.BibliotecaCargos;
 
-
 @WebServlet(name = "ConsultarReservasId", urlPatterns = {"/biblioteca/reservas/consultarporid"})
 public class ConsultarReservasId extends HttpServlet {
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
-		Connection conexao = ConnectionFactory.getBiblioteca();
-		PrintWriter out = response.getWriter();
-		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
-  
-		if (autenticador.cargoLogado() == BibliotecaCargos.CONVIDADO) {
-			response.setStatus(403);
-			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
-			try {
-				erroView.render(out);
-			} catch (RenderException e) {
-				throw new ServletException(e);
-			}
-			return;
-		}
-		if (conexao == null) {
-			System.err.println("Falha ao conectar ao bd");
-			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
-			try {
-				erroView.render(out);
-			} catch (RenderException e) {
-				throw new ServletException(e);
-			}
-			return;
-		}
-		ReservaRepository reservarep = new ReservaRepository(conexao);
-		Set<ReservaModel> resultado;
-		try {
-			resultado = new HashSet<>();
-			resultado.add(reservarep.consultarId(request.getParameter("id")));
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	Headers.XMLHeaders(response);
+	Connection conexao = ConnectionFactory.getBiblioteca();
+	PrintWriter out = response.getWriter();
+	BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
 
-			View DisciplinaConsultaView = new ReservaConsultaView(resultado);
-			DisciplinaConsultaView.render(out);
-
-		} catch (NumberFormatException excecaoFormatoErrado) {
-			response.setStatus(400);
-			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
-			View erroView = new ErroView(excecaoFormatoErrado);
-			try {
-				erroView.render(out);
-			} catch (RenderException e) {
-				throw new ServletException(e);
-			}
-		} catch (SQLException excecaoSQL) {
-			response.setStatus(400);
-			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
-			View erroView = new ErroView(excecaoSQL);
-			try {
-				erroView.render(out);
-			} catch (RenderException e) {
-				throw new ServletException(e);
-			}
-			try {
-				conexao.close();
-			} catch (SQLException erro) {
-				System.err.println("Erro ao fechar banco de dados. Erro: " + erro.toString());
-			}
-		} catch (RenderException ex) {
-			throw new ServletException(ex);
-		} catch (ParseException ex) {
-			response.setStatus(400);
-			System.err.println("Algum dado está com seu tipo errado. Erro: " + ex.toString());
-
-			View erroView = new ErroView(ex);
-			try {
-				erroView.render(out);
-			} catch (RenderException e) {
-				throw new ServletException(e);
-			}
-		}
-
+	if (autenticador.cargoLogado() == BibliotecaCargos.CONVIDADO) {
+	    response.setStatus(403);
+	    View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
+	    try {
+		erroView.render(out);
+	    } catch (RenderException e) {
+		throw new ServletException(e);
+	    }
+	    return;
 	}
+	if (conexao == null) {
+	    System.err.println("Falha ao conectar ao bd");
+	    View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
+	    try {
+		erroView.render(out);
+	    } catch (RenderException e) {
+		throw new ServletException(e);
+	    }
+	    return;
+	}
+	ReservaRepository reservarep = new ReservaRepository(conexao);
+	Set<ReservaModel> resultado;
+	try {
+	    resultado = new HashSet<>();
+	    resultado.add(reservarep.consultarId(request.getParameter("id")));
+
+	    View DisciplinaConsultaView = new ReservaConsultaView(resultado);
+	    DisciplinaConsultaView.render(out);
+
+	} catch (NumberFormatException excecaoFormatoErrado) {
+	    response.setStatus(400);
+	    System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
+	    View erroView = new ErroView(excecaoFormatoErrado);
+	    try {
+		erroView.render(out);
+	    } catch (RenderException e) {
+		throw new ServletException(e);
+	    }
+	} catch (SQLException excecaoSQL) {
+	    response.setStatus(400);
+	    System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
+	    View erroView = new ErroView(excecaoSQL);
+	    try {
+		erroView.render(out);
+	    } catch (RenderException e) {
+		throw new ServletException(e);
+	    }
+	    try {
+		conexao.close();
+	    } catch (SQLException erro) {
+		System.err.println("Erro ao fechar banco de dados. Erro: " + erro.toString());
+	    }
+	} catch (RenderException ex) {
+	    throw new ServletException(ex);
+	} catch (ParseException ex) {
+	    response.setStatus(400);
+	    System.err.println("Algum dado está com seu tipo errado. Erro: " + ex.toString());
+
+	    View erroView = new ErroView(ex);
+	    try {
+		erroView.render(out);
+	    } catch (RenderException e) {
+		throw new ServletException(e);
+	    }
+	}
+
+    }
 }
