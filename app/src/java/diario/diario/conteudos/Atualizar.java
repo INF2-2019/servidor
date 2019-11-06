@@ -101,6 +101,12 @@ public class Atualizar extends HttpServlet {
             
             // Conecta e executa Query SQL
             Connection conexao = ConnectionFactory.getDiario();
+            
+            if(conexao==null){
+                out.print(RespostaXML.erro("Falha na conexão!","Falha em tentar conectar com o banco de dados"));
+                return;
+            }
+            
             PreparedStatement st = conexao.prepareStatement(query);
             st.executeUpdate();
             st.close();
@@ -109,7 +115,7 @@ public class Atualizar extends HttpServlet {
             String xml = RespostaXML.sucesso("Atualizado com sucesso!");
             out.print(xml);
         } catch (SQLException e) {
-            out.print(RespostaXML.erro("Erro no banco de dados!", e.getMessage()));
+            out.print(RespostaXML.erro("Erro na conexão!", e.getMessage()));
             e.printStackTrace();
         }
     }

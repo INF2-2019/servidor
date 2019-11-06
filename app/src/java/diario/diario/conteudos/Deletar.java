@@ -48,6 +48,12 @@ public class Deletar extends HttpServlet {
         try {
             // Conecta e executa Query SQL
             Connection conexao = ConnectionFactory.getDiario();
+            
+            if(conexao==null){
+                out.print(RespostaXML.erro("Falha na conexão!","Falha em tentar conectar com o banco de dados"));
+                return;
+            }
+            
             PreparedStatement st = conexao.prepareStatement(query);
             st.executeUpdate();
             st.close();
@@ -56,7 +62,7 @@ public class Deletar extends HttpServlet {
             String xml = RespostaXML.sucesso("Deletado com sucesso!");
             out.print(xml);
         } catch (SQLException e) {
-            out.print(RespostaXML.erro("Erro no banco de dados!", e.getMessage()));
+            out.print(RespostaXML.erro("Erro na operação!", e.getMessage()));
             e.printStackTrace();
         }
     }

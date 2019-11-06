@@ -3,11 +3,11 @@ package diario.diario.conteudos;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -32,24 +32,57 @@ public class Consulta extends HttpServlet {
         
         String query;
         query = "SELECT * FROM conteudos";
+        List<String> filtro = new ArrayList<String>();
 
         boolean mostra_valor = true;
-
+        
+        /* Parametro opcional */
         if (ChecaParametro.parametroExiste(request, "especifico")) {
             String oq = request.getParameter("especifico");
             if ("conteudo".equals(oq)) {
-                query += " WHERE valor=0";
+                filtro.add("valor=0");
                 mostra_valor = false;
             } else if ("atividade".equals(oq)) {
-                query += " WHERE valor>0";
+                filtro.add("valor>0");
             } else {
                 out.print(RespostaXML.erro("'especifico' não esta formatado corretamente", "O 'especifico' pode ser ou 'conteudo' ou 'atividade'"));
                 return;
             }
         }
+        
+        /* Parametro obrigatório a todos menos o ADMIN */
+        if (ChecaParametro.parametroExiste(request, "disciplina")) {
+            if (!ChecaParametro.parametroEInteiro(request, "disciplina")) {
+                out.print(RespostaXML.erro("'disciplina' deve ser inteiro!", "Falha no formato do parametro 'disciplina'"));
+                return;
+            } else {
+                filtro.add("`id-disciplinas`="+request.getParameter("disciplina"));
+            }
+        } else {
+            out.print(RespostaXML.erro("Acesso negado!","O acesso a toda tabela é um recurso exclusivo do Administrador"));
+            return;
+        }
+        
+        /* Parametro opcional */
+        if (ChecaParametro.parametroExiste(request, "etapa")) {
+            if (!ChecaParametro.parametroEInteiro(request, "etapa")) {
+                out.print(RespostaXML.erro("'etapa' deve ser inteiro!", "Falha no formato do parametro 'etapa'"));
+                return;
+            } else {
+                filtro.add("`id-etapas`="+request.getParameter("etapa"));
+            }
+        }
+        
+        query+= " WHERE "+String.join(" AND ", filtro);
                   
         try {
             Connection conexao = ConnectionFactory.getDiario();
+            
+            if(conexao==null){
+                out.print(RespostaXML.erro("Falha na conexão!","Falha em tentar conectar com o banco de dados"));
+                return;
+            }
+            
             PreparedStatement st = conexao.prepareStatement(query);
 
             ResultSet resultado = st.executeQuery();
@@ -62,7 +95,7 @@ public class Consulta extends HttpServlet {
             st.close();
             conexao.close();
         } catch (SQLException e) {
-            out.print(RespostaXML.erro("Erro no banco de dados!", e.getMessage()));
+            out.print(RespostaXML.erro("Erro na operação!", e.getMessage()));
             e.printStackTrace();
         }
     }

@@ -69,8 +69,17 @@ public class Inserir extends HttpServlet {
                 out.print(RespostaXML.erro("'valor' não esta formatado corretamente", "Falha no formato do parametro 'valor'"));
                 return;
             } else {
+                if(valor<0.0){
+                    out.print(RespostaXML.erro("O valor não pode ser negativo!", "O campo valor aceita apenas numeros positivos"));
+                    return;
+                }
                 valor = Double.valueOf(valor_string);
             }
+        }
+        
+        if (!ChecaParametro.parametroNaoVazio(request, "conteudo")) {
+            out.print(RespostaXML.erro((valor>0.0? "Atividade":"Conteudo")+" não pode estar vazio!", "O parametro 'conteudo' não pode ser vazio"));
+            return;
         }
 
         // Query SQL de inserção na tabela DESCARTES
@@ -79,6 +88,12 @@ public class Inserir extends HttpServlet {
         try {
             // Conecta e executa Query SQL
             Connection conexao = ConnectionFactory.getDiario();
+            
+            if(conexao==null){
+                out.print(RespostaXML.erro("Falha na conexão!","Falha em tentar conectar com o banco de dados"));
+                return;
+            }
+            
             PreparedStatement st = conexao.prepareStatement(query);
 
             st.setInt(1, id_etapas); //id-etapas
@@ -100,7 +115,7 @@ public class Inserir extends HttpServlet {
             out.print(xml);
 
         } catch (SQLException e) {
-            out.print(RespostaXML.erro("Erro no banco de dados!", e.getMessage()));
+            out.print(RespostaXML.erro("Erro na operação!", e.getMessage()));
             e.printStackTrace();
         }
     }
