@@ -6,7 +6,7 @@ import java.util.Map;
 public class ReservaModel extends Model {
 
 	int id, idAcervo, TempoEspera; 
-        long idAlunos;
+	long idAlunos;
 	Date dataReserva;
 	boolean emprestou;
 
