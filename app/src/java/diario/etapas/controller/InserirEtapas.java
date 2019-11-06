@@ -1,13 +1,15 @@
 package diario.etapas.controller;
 
-import diario.etapas.repository.EtapasRepository;
-import utils.ConnectionFactory;
-import utils.Headers;
 import diario.etapas.RenderException;
-import diario.etapas.view.View;
+import diario.etapas.repository.EtapasRepository;
 import diario.etapas.view.ErroFormatView;
 import diario.etapas.view.ErroSqlView;
 import diario.etapas.view.SucessoView;
+import diario.etapas.view.View;
+import utils.ConnectionFactory;
+import utils.Headers;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,11 +20,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
 
 @WebServlet(name = "InserirEtapas", urlPatterns = "/diario/etapas/inserir")
 public class InserirEtapas extends HttpServlet {
@@ -91,6 +91,8 @@ public class InserirEtapas extends HttpServlet {
 		// definir os valores do map condicionalmente, conforme a requisição
 		if (req.getParameter("ano") != null) {
 			dados.put("ano", req.getParameter("ano"));
+		} else {
+			dados.put("ano", Integer.toString(LocalDate.now().getYear()));
 		}
 
 		if (req.getParameter("valor") != null) {
