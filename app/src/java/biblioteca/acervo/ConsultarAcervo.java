@@ -30,7 +30,6 @@ public class ConsultarAcervo extends HttpServlet {
 		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
 
 		PrintWriter saida = resposta.getWriter();
-		saida.println("<acervo>");
 		try (Connection conexao = ConnectionFactory.getBiblioteca()) {
 
 			DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
@@ -51,13 +50,17 @@ public class ConsultarAcervo extends HttpServlet {
 				acervo = conexao.createStatement().executeQuery("SELECT * FROM `acervo`");
 			}
 
+			saida.println("<acervo>");
 			while (acervo.next()) {
 				saida.println("<item>");
 				escreverItemDados(acervo, saida);
 
 				String tipo = acervo.getString("tipo").toLowerCase();
-				ResultSet item = conexao.createStatement().executeQuery(
-						String.format("SELECT * FROM `%s` WHERE `id-acervo` = %d", tipo, acervo.getInt("id")));
+				PreparedStatement stmt = conexao.prepareStatement(
+						String.format("SELECT * FROM `%s` WHERE `id-acervo` = ?", tipo));
+				stmt.setInt(1, acervo.getInt("id"));
+				ResultSet item = stmt.executeQuery();
+
 				item.first();
 				switch (tipo) {
 					case "livros":
@@ -75,6 +78,7 @@ public class ConsultarAcervo extends HttpServlet {
 				}
 				saida.println("</item>");
 			}
+			saida.println("</acervo>");
 
 		} catch (SQLException e) {
 			resposta.setStatus(500);
@@ -86,8 +90,6 @@ public class ConsultarAcervo extends HttpServlet {
 			saida.println("<erro>");
 			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
 			saida.println("</erro>");
-		} finally {
-			saida.println("</acervo>");
 		}
 
 	}
