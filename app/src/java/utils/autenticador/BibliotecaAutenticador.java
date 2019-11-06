@@ -14,39 +14,33 @@ public class BibliotecaAutenticador extends Autenticador {
 		super(request, response);
 	}
 
-	public void logar(Integer identididade, BibliotecaCargos cargo, boolean manter){
-		logar(identididade, cargo, manter ? KEEP_DURATION : DEFAULT_DURATION);
+	public void logar(Object identidade, BibliotecaCargos cargo, boolean manter) {
+		logar(identidade, cargo, manter ? KEEP_DURATION : DEFAULT_DURATION);
 	}
 
-	public void encerrar(){
+	public void encerrar() {
 		HttpSession session = this.request.getSession();
 		session.removeAttribute(ID_KEY);
 		session.removeAttribute(ROLE_KEY);
 	}
 
-	public BibliotecaCargos cargoLogado(){
+	public BibliotecaCargos cargoLogado() {
 		HttpSession session = this.request.getSession();
 		BibliotecaCargos cargo = (BibliotecaCargos) session.getAttribute(ROLE_KEY);
 
-		if(cargo == null){
+		if (cargo == null) {
 			return BibliotecaCargos.CONVIDADO;
 		}
 
 		return cargo;
 	}
 
-	public Integer idLogado(){
+	public Object idLogado() {
 		HttpSession session = this.request.getSession();
-		Integer identificador = (Integer) session.getAttribute(ID_KEY);
-
-		if(identificador == null){
-			return null;
-		}
-
-		return identificador;
+		return session.getAttribute(ID_KEY);
 	}
 
-	private void logar(Integer identidade, BibliotecaCargos cargo, int duration){
+	private void logar(Object identidade, BibliotecaCargos cargo, int duration) {
 		HttpSession session = this.request.getSession();
 		session.setAttribute(ID_KEY, identidade);
 		session.setAttribute(ROLE_KEY, cargo);
