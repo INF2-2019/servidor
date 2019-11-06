@@ -89,13 +89,13 @@ public class InserirEtapas extends HttpServlet {
 		Map<String, String> dados = new LinkedHashMap<>();
 
 		// definir os valores do map condicionalmente, conforme a requisição
-		if (req.getParameter("ano") != null) {
+		if (req.getParameter("ano") != null  && !req.getParameter("ano").equals("")) {
 			dados.put("ano", req.getParameter("ano"));
 		} else {
 			dados.put("ano", Integer.toString(LocalDate.now().getYear()));
 		}
 
-		if (req.getParameter("valor") != null) {
+		if (req.getParameter("valor") != null  && !req.getParameter("valor").equals("")) {
 			dados.put("valor", req.getParameter("valor"));
 		}
 

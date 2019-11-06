@@ -98,15 +98,15 @@ public class ConsultarEtapas extends HttpServlet {
 		Map<String, String> dados = new LinkedHashMap<>();
 
 		// definir os valores do map condicionalmente, conforme a requisição
-		if (req.getParameter("id") != null) {
+		if (req.getParameter("id") != null  && !req.getParameter("id").equals("")) {
 			dados.put("id", req.getParameter("id"));
 		}
 
-		if (req.getParameter("ano") != null) {
+		if (req.getParameter("ano") != null  && !req.getParameter("ano").equals("")) {
 			dados.put("ano", req.getParameter("ano"));
 		}
 
-		if (req.getParameter("valor") != null) {
+		if (req.getParameter("valor") != null && !req.getParameter("valor").equals("")) {
 			dados.put("valor", req.getParameter("valor"));
 		}
 
