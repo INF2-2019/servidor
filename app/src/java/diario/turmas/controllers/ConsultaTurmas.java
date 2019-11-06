@@ -41,7 +41,7 @@ public class ConsultaTurmas extends HttpServlet {
 		try { // Consulta turmas no bd
 			String sql = "SELECT * FROM turmas";
 			if (req.getParameter("id") != null) {
-				sql += " WHERE id=" + req.getParameter("id") + ","; // Se o parâmetro id for inserido, será considerado para a consulta
+				sql += " WHERE id=" + req.getParameter("id"); // Se o parâmetro id for inserido, será considerado para a consulta
 			}
 			PreparedStatement prepared = con.prepareStatement(sql);
 			ResultSet rs = prepared.executeQuery();
