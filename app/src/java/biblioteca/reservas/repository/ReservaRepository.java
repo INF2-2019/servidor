@@ -70,7 +70,6 @@ public class ReservaRepository {
 			tempoEspera = days;
 		}
 		sql = "UPDATE `reservas` SET `tempo-espera` = ?, `emprestou` = ? WHERE `id` = ?";
-		System.out.println("AAAA chjegou");
 		stat = con.prepareStatement(sql);
 		stat.setInt(1, tempoEspera);
 		stat.setBoolean(2, true);
