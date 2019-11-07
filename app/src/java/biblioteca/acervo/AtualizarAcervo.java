@@ -172,9 +172,7 @@ public class AtualizarAcervo extends HttpServlet {
 		ps.setInt(2, idAcervo);
 		ps.setString(3, requisicao.getParameter("programa"));
 		ps.setInt(4, idAcervo);
-		System.out.println(ps.toString());
 		ps.execute();
-		System.out.println("blz");
 		ps.close();
 	}
 
