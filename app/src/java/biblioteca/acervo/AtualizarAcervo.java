@@ -50,7 +50,6 @@ public class AtualizarAcervo extends HttpServlet {
 			Validacao.validarParametros(requisicao);
 			Validacao.validarIdCampi(Integer.parseInt(requisicao.getParameter("id-campi")), conexao);
 			int idAcervo = Integer.parseInt(requisicao.getParameter("id"));
-			Validacao.validarIdObra(idAcervo, conexao);
 
 			/*TROCA UM REGISTRO ANTIGO DE TABELA CASO NECESSÁRIO*/
 			String tipoAntigo = obterTipo(idAcervo, conexao);
@@ -62,50 +61,62 @@ public class AtualizarAcervo extends HttpServlet {
 				delete.close();
 				// Inserção do novo registro
 				String query = "";
+				PreparedStatement stmt = null;
 				switch (requisicao.getParameter("tipo").toLowerCase()) {
 					case "academicos":
 						query = "INSERT INTO `academicos` VALUES (?, ?, ?)";
-						PreparedStatement acad = conexao.prepareStatement(query);
-						acad.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
-						acad.setInt(2, idAcervo);
-						acad.setString(3, requisicao.getParameter("programa"));
-						acad.execute();
-						acad.close();
+						stmt = conexao.prepareStatement(query);
+						stmt.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
+						stmt.setInt(2, idAcervo);
+						stmt.setString(3, requisicao.getParameter("programa"));
 						break;
 					case "livros":
 						query = "INSERT INTO `livros` VALUES (?, ?, ?, ?)";
-						PreparedStatement liv = conexao.prepareStatement(query);
-						liv.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
-						liv.setInt(2, idAcervo);
-						liv.setInt(3, Integer.parseInt(requisicao.getParameter("edicao")));
-						liv.setLong(4, Long.parseLong(requisicao.getParameter("isbn")));
-						liv.execute();
-						liv.close();
+						stmt = conexao.prepareStatement(query);
+						stmt.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
+						stmt.setInt(2, idAcervo);
+						stmt.setInt(3, Integer.parseInt(requisicao.getParameter("edicao")));
+						stmt.setLong(4, Long.parseLong(requisicao.getParameter("isbn")));
 						break;
 					case "midias":
 						query = "INSERT INTO `midias` VALUES (?, ?, ?, ?)";
-						PreparedStatement mid = conexao.prepareStatement(query);
-						mid.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
-						mid.setInt(2, idAcervo);
-						mid.setString(3, requisicao.getParameter("tempo"));
-						mid.setString(4, requisicao.getParameter("subtipo"));
-						mid.execute();
-						mid.close();
+						stmt = conexao.prepareStatement(query);
+						stmt.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
+						stmt.setInt(2, idAcervo);
+						stmt.setString(3, requisicao.getParameter("tempo"));
+						stmt.setString(4, requisicao.getParameter("subtipo"));
 						break;
 					case "periodicos":
 						query = "INSERT INTO `periodicos` VALUES (?, ?, ?, ?, ?, ?, ?)";
-						PreparedStatement per = conexao.prepareStatement(query);
-						per.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
-						per.setInt(2, idAcervo);
-						per.setString(3, requisicao.getParameter("periodicidade"));
-						per.setString(4, requisicao.getParameter("mes"));
-						per.setInt(5, Integer.parseInt(requisicao.getParameter("volume")));
-						per.setString(6, requisicao.getParameter("subtipo"));
-						per.setInt(7, Integer.parseInt(requisicao.getParameter("issn")));
-						per.execute();
-						per.close();
+						stmt = conexao.prepareStatement(query);
+						stmt.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
+						stmt.setInt(2, idAcervo);
+						stmt.setString(3, requisicao.getParameter("periodicidade"));
+						stmt.setString(4, requisicao.getParameter("mes"));
+						stmt.setInt(5, Integer.parseInt(requisicao.getParameter("volume")));
+						stmt.setString(6, requisicao.getParameter("subtipo"));
+						stmt.setInt(7, Integer.parseInt(requisicao.getParameter("issn")));
 				}
-				conexao.createStatement().executeUpdate(query);
+				stmt.executeUpdate();
+				stmt.close();
+			} else {
+				/*MODIFICAÇÃO DA TABELA DA OBRA:*/
+				switch (requisicao.getParameter("tipo")) {
+
+					case "academicos":
+						atualizarAcademico(idAcervo, requisicao, conexao);
+						break;
+					case "livros":
+						atualizarLivro(idAcervo, requisicao, conexao);
+						break;
+					case "midias":
+						atualizarMidia(idAcervo, requisicao, conexao);
+						break;
+					case "periodicos":
+						atualizarPeriodico(idAcervo, requisicao, conexao);
+						break;
+
+				}
 			}
 
 			/*MODIFICAÇÃO DO ACERVO:*/
@@ -125,23 +136,6 @@ public class AtualizarAcervo extends HttpServlet {
 			ps.execute();
 			ps.close();
 
-			/*MODIFICAÇÃO DA TABELA DA OBRA:*/
-			switch (requisicao.getParameter("tipo")) {
-
-				case "academicos":
-					atualizarAcademico(idAcervo, requisicao, conexao);
-					break;
-				case "livros":
-					atualizarLivro(idAcervo, requisicao, conexao);
-					break;
-				case "midias":
-					atualizarMidia(idAcervo, requisicao, conexao);
-					break;
-				case "periodicos":
-					atualizarPeriodico(idAcervo, requisicao, conexao);
-					break;
-
-			}
 			conexao.close();
 
 			saida.println("<sucesso>");
@@ -178,7 +172,9 @@ public class AtualizarAcervo extends HttpServlet {
 		ps.setInt(2, idAcervo);
 		ps.setString(3, requisicao.getParameter("programa"));
 		ps.setInt(4, idAcervo);
+		System.out.println(ps.toString());
 		ps.execute();
+		System.out.println("blz");
 		ps.close();
 	}
 
