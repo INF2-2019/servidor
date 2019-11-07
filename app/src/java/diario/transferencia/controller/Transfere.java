@@ -27,17 +27,17 @@ public class Transfere extends HttpServlet {
 
 		Headers.XMLHeaders(response);
 
-		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
-		if(autenticador.cargoLogado() != DiarioCargos.ADMIN) {
-			response.setStatus(403);
-			return;
-		}
-
 		try(PrintWriter out = response.getWriter()) {
+			
 			Exception excecao = null;
 			
 			try {
 
+				DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+				if(autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+					throw new AutenticacaoException();
+				}
+				
 				if(request.getParameter("cpf") == null) {
 					throw new ParametrosIncorretosException("Falha ao receber CPF");
 				}
@@ -64,6 +64,9 @@ public class Transfere extends HttpServlet {
 					throw new ServletException(e);
 				}
 
+			} catch(AutenticacaoException ex) {
+				response.setStatus(403);
+				excecao = ex;
 			} catch(ParametrosIncorretosException ex) {
 				response.setStatus(422);
 				excecao = ex;
