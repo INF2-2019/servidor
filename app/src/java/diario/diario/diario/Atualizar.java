@@ -1,4 +1,4 @@
-package diario.diario.conteudos;
+package diario.diario.diario;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,69 +25,45 @@ import utils.Headers;
  *
  * @author Juan
  */
-@WebServlet(urlPatterns = {"/diario/diario/conteudo/atualizar"})
+@WebServlet(urlPatterns = {"/diario/diario/diario/atualizar"})
 public class Atualizar extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+        /*
+            conteudo:int - id do conteudo a ser alterado
+            matricula:int - id da matricula a ser alterado
+            ? falta:int - quantidade de faltas do aluno
+            ? nota:Double - nota do aluno
+        */
         
         PrintWriter out = response.getWriter();
         Headers.XMLHeaders(response);
         
-        if (ChecaParametro.parametroExiste(request, "id")) {
-            if (!ChecaParametro.parametroEInteiro(request, "id")) {
-                out.print(RespostaXML.erro("'id' deve ser inteiro!", "Falha no formato do parametro 'id'"));
-                return;
-            }
-        } else {
-            out.print(RespostaXML.erro("ID é obrigatório!", "O parametro 'id' é obrigatório!"));
+        String parametro_falta = ChecaParametro.parametroFaltante(request, "conteudo", "matricula");
+        if (parametro_falta != null) {
+            out.print(RespostaXML.erro("Erro com '" + parametro_falta + "'", "O parametro '" + parametro_falta + "' é obrigatório!"));
             return;
         }
 
-        String query = "UPDATE conteudos SET ";
+        String query = "UPDATE diario SET ";
         List<String> modificacoes = new ArrayList<String>();
 
-        if (ChecaParametro.parametroExiste(request, "etapa")) {
-            if (!ChecaParametro.parametroEInteiro(request, "etapa")) {
-                out.print(RespostaXML.erro("'etapa' deve ser inteiro!", "Falha no formato do parametro 'etapa'"));
+        if (ChecaParametro.parametroExiste(request, "falta")) {
+            if (!ChecaParametro.parametroEInteiro(request, "falta")) {
+                out.print(RespostaXML.erro("'falta' deve ser inteiro!", "Falha no formato do parametro 'falta'"));
                 return;
             } else {
-                modificacoes.add("`id-etapas`="+request.getParameter("etapa"));
+                modificacoes.add("faltas="+request.getParameter("falta"));
             }
         }
         
-        if (ChecaParametro.parametroExiste(request, "disciplina")) {
-            if (!ChecaParametro.parametroEInteiro(request, "disciplina")) {
-                out.print(RespostaXML.erro("'disciplina' deve ser inteiro!", "Falha no formato do parametro 'disciplina'"));
-                return;
-            } else {
-                modificacoes.add("`id-disciplinas`="+request.getParameter("disciplina"));
-            }
-        }
         
-        if (ChecaParametro.parametroExiste(request, "conteudo")) {
-            if (!ChecaParametro.parametroNaoVazio(request, "conteudo")) {
-                out.print(RespostaXML.erro("'conteudo' não pode estar vazio!", "O parametro 'conteudo' não pode ser vazio"));
+        if (ChecaParametro.parametroExiste(request, "nota")) {
+            if (!ChecaParametro.parametroEDecimal(request, "nota")) {
+                out.print(RespostaXML.erro("'nota' deve ser decimal!", "Falha no formato do parametro 'nota'"));
                 return;
             } else {
-                modificacoes.add("conteudos=\""+request.getParameter("conteudo")+"\"");
-            }
-        }
-        
-        if (ChecaParametro.parametroExiste(request, "data")) {
-            if (!ChecaParametro.parametroEData(request, "data")) {
-                out.print(RespostaXML.erro("'data' não esta formatada corretamente", "Falha no formato do parametro 'data'"));
-                return;
-            } else {
-                modificacoes.add("data=\""+request.getParameter("data")+"\"");
-            }
-        }
-        
-        if (ChecaParametro.parametroExiste(request, "valor")) {
-            if (!ChecaParametro.parametroEDecimal(request, "valor")) {
-                out.print(RespostaXML.erro("'valor' deve ser decimal!", "Falha no formato do parametro 'valor'"));
-                return;
-            } else {
-                modificacoes.add("valor="+request.getParameter("valor"));
+                modificacoes.add("nota="+request.getParameter("nota"));
             }
         }
 
@@ -97,7 +73,7 @@ public class Atualizar extends HttpServlet {
                 out.print(RespostaXML.erro("Nenhuma alteração detectada!","Nenhum parametro de modificação recebido"));
                 return;
             }
-            query += String.join(",", modificacoes) + " WHERE id="+request.getParameter("id");
+            query += String.join(",", modificacoes) + " WHERE `id-conteudos`="+request.getParameter("conteudo")+" AND `id-matriculas`="+request.getParameter("matricula");
             
             // Conecta e executa Query SQL
             Connection conexao = ConnectionFactory.getDiario();
@@ -106,7 +82,6 @@ public class Atualizar extends HttpServlet {
                 out.print(RespostaXML.erro("Falha na conexão!","Falha em tentar conectar com o banco de dados"));
                 return;
             }
-            
             PreparedStatement st = conexao.prepareStatement(query);
             st.executeUpdate();
             st.close();

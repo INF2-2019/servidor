@@ -69,11 +69,11 @@ public class Inserir extends HttpServlet {
                 out.print(RespostaXML.erro("'valor' não esta formatado corretamente", "Falha no formato do parametro 'valor'"));
                 return;
             } else {
+                valor = Double.valueOf(valor_string);
                 if(valor<0.0){
                     out.print(RespostaXML.erro("O valor não pode ser negativo!", "O campo valor aceita apenas numeros positivos"));
                     return;
                 }
-                valor = Double.valueOf(valor_string);
             }
         }
         

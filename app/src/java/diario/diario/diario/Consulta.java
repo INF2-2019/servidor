@@ -1,4 +1,4 @@
-package diario.diario.conteudos;
+package diario.diario.diario;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,16 +22,23 @@ import utils.Headers;
  *
  * @author Juan
  */
-@WebServlet(urlPatterns = {"/diario/diario/conteudo/consulta"})
+@WebServlet(urlPatterns = {"/diario/diario/diario/consulta"})
 public class Consulta extends HttpServlet {
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+        /*
+            [especifico:String[conteudo,atividade]] - String que filtra consulta entre conteudo e atividade 
+                especifico = "conteudo" - mostra apenas conteudo
+                especifico = "atividade" - mostra apenas atividade
+            conteudo:int - id do conteudo a ser consultado
+            [matricula:int] - id da matricula a ser consultado 
+        */
         
         PrintWriter out = response.getWriter();
         Headers.XMLHeaders(response);
         
         String query;
-        query = "SELECT * FROM conteudos";
+        query = "SELECT * FROM diario";
         List<String> filtro = new ArrayList<String>();
 
         boolean mostra_valor = true;
@@ -45,18 +52,18 @@ public class Consulta extends HttpServlet {
             } else if ("atividade".equals(oq)) {
                 filtro.add("valor>0");
             } else {
-                out.print(RespostaXML.erro("'especifico' não esta formatado corretamente", "O 'especifico' pode ser ou 'conteudo' ou 'atividade'"));
+                out.print(RespostaXML.erro("'especifico' não esta formatado corretamente", "O 'especifico' pode ser 'conteudo' ou 'atividade'"));
                 return;
             }
         }
         
         /* Parametro obrigatório a todos menos o ADMIN */
-        if (ChecaParametro.parametroExiste(request, "disciplina")) {
-            if (!ChecaParametro.parametroEInteiro(request, "disciplina")) {
-                out.print(RespostaXML.erro("'disciplina' deve ser inteiro!", "Falha no formato do parametro 'disciplina'"));
+        if (ChecaParametro.parametroExiste(request, "conteudo")) {
+            if (!ChecaParametro.parametroEInteiro(request, "conteudo")) {
+                out.print(RespostaXML.erro("O ID do conteudo deve ser inteiro!", "Falha no formato do parametro 'conteudo'"));
                 return;
             } else {
-                filtro.add("`id-disciplinas`="+request.getParameter("disciplina"));
+                filtro.add("`id-conteudos`="+request.getParameter("conteudo"));
             }
         } else {
             out.print(RespostaXML.erro("Acesso negado!","O acesso a toda tabela é um recurso exclusivo do Administrador"));
@@ -64,12 +71,12 @@ public class Consulta extends HttpServlet {
         }
         
         /* Parametro opcional */
-        if (ChecaParametro.parametroExiste(request, "etapa")) {
-            if (!ChecaParametro.parametroEInteiro(request, "etapa")) {
-                out.print(RespostaXML.erro("'etapa' deve ser inteiro!", "Falha no formato do parametro 'etapa'"));
+        if (ChecaParametro.parametroExiste(request, "matricula")) {
+            if (!ChecaParametro.parametroEInteiro(request, "matricula")) {
+                out.print(RespostaXML.erro("'matricula' deve ser inteiro!", "Falha no formato do parametro 'matricula'"));
                 return;
             } else {
-                filtro.add("`id-etapas`="+request.getParameter("etapa"));
+                filtro.add("`id-matriculas`="+request.getParameter("matricula"));
             }
         }
         
@@ -87,9 +94,9 @@ public class Consulta extends HttpServlet {
 
             ResultSet resultado = st.executeQuery();
             if (mostra_valor) {
-                out.print(RespostaXML.retornaSet(resultado, "id" ,"id-etapas", "id-disciplinas", "conteudos", "data", "valor"));
+                out.print(RespostaXML.retornaSet(resultado, "id-conteudos", "id-matriculas", "faltas", "nota"));
             } else {
-                out.print(RespostaXML.retornaSet(resultado, "id" ,"id-etapas", "id-disciplinas", "conteudos", "data"));
+                out.print(RespostaXML.retornaSet(resultado, "id-conteudos", "id-matriculas", "faltas"));
             }
 
             st.close();
