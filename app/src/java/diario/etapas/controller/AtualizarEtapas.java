@@ -108,18 +108,18 @@ public class AtualizarEtapas extends HttpServlet {
 		Map<String, String> dados = new LinkedHashMap<>();
 		boolean temPeloMenosUm = false; // variável que verifica se há um parâmetro além do ID
 
-		if (req.getParameterMap().containsKey("id")) {
+		if (req.getParameterMap().containsKey("id") && !req.getParameter("id").equals("")) {
 			dados.put("id", req.getParameter("id"));
 		} else {
 			return null;
 		}
 
-		if (req.getParameterMap().containsKey("ano")) {
+		if (req.getParameterMap().containsKey("ano") && !req.getParameter("ano").equals("")) {
 			dados.put("ano", req.getParameter("ano"));
 			temPeloMenosUm = true;
 		}
 
-		if (req.getParameterMap().containsKey("valor")) {
+		if (req.getParameterMap().containsKey("valor") && !req.getParameter("valor").equals("")) {
 			dados.put("valor", req.getParameter("valor"));
 			temPeloMenosUm = true;
 		}

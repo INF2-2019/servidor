@@ -33,7 +33,7 @@ public class DeletarCampi extends HttpServlet {
 
 		Headers.XMLHeaders(response);
 		String id = request.getParameter("id");
-		if (rep.checarAutorizacaoADM(request, response)) {
+		if (!rep.checarAutorizacaoADM(request, response)) {
 			try{			
 				String sucesso = rep.deletarCampi(id, request, response);
 				if("sucesso".equals(sucesso)) {
