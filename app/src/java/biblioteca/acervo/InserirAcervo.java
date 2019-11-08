@@ -41,7 +41,7 @@ public class InserirAcervo extends HttpServlet {
 
 			DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
 			if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
-				throw new ExcecaoParametrosIncorretos("Você não tem permissão para essa operação");
+				throw new ExcecaoNaoAutorizado("Você não tem permissão para essa operação");
 			}
 
 			if (conexao == null) {
@@ -93,15 +93,17 @@ public class InserirAcervo extends HttpServlet {
 
 		} catch (SQLException e) {
 			resposta.setStatus(500);
-			saida.println("<erro>");
-			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
-			saida.println("</erro>");
-
-		} catch (ExcecaoParametrosIncorretos | NumberFormatException e) {
+			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
+		} catch (ExcecaoNaoAutorizado e) {
+			resposta.setStatus(403);
+			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
+		} catch (ExcecaoParametrosIncorretos e) {
 			resposta.setStatus(400);
-			saida.println("<erro>");
-			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
-			saida.println("</erro>");
+			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
+		} catch (NumberFormatException e) {
+			resposta.setStatus(400);
+			saida.println("<erro><mensagem>" + e.toString() + "</mensagem></erro>");
+			// Ja que as mensagens do NumberFormat não são muito descritivas
 		}
 	}
 
