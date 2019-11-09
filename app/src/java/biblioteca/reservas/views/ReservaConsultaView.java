@@ -14,65 +14,65 @@ import utils.Conversores;
 
 public class ReservaConsultaView extends View<Set<ReservaModel>> {
 
-    public ReservaConsultaView(Set<ReservaModel> ReservaModel) {
-	super(ReservaModel);
-    }
-
-    @Override
-    public void render(PrintWriter writer) throws RenderException {
-	try {
-	    Document cursosEmDocument = disciplinaParaDocument(data);
-	    writer.write(Conversores.converterDocumentEmXMLString(cursosEmDocument));
-	} catch (Exception ex) {
-	    throw new RenderException(ex);
-	}
-    }
-
-    private Document disciplinaParaDocument(Set<ReservaModel> reservas) throws ParserConfigurationException {
-
-	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-	DocumentBuilder construtor = dbf.newDocumentBuilder();
-	Document documento = construtor.newDocument();
-
-	Element root = documento.createElement("reservas");
-
-	for (ReservaModel reserva : reservas) {
-	    if (reserva != null) {
-		root.appendChild(criarElementoDocument(documento, reserva));
-	    }
+	public ReservaConsultaView(Set<ReservaModel> ReservaModel) {
+		super(ReservaModel);
 	}
 
-	documento.appendChild(root);
+	@Override
+	public void render(PrintWriter writer) throws RenderException {
+		try {
+			Document cursosEmDocument = disciplinaParaDocument(data);
+			writer.write(Conversores.converterDocumentEmXMLString(cursosEmDocument));
+		} catch (Exception ex) {
+			throw new RenderException(ex);
+		}
+	}
 
-	return documento;
-    }
+	private Document disciplinaParaDocument(Set<ReservaModel> reservas) throws ParserConfigurationException {
 
-    private static Element criarElementoDocument(Document documento, ReservaModel c) {
-	SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd");
-	Element elemento = documento.createElement("reserva");
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder construtor = dbf.newDocumentBuilder();
+		Document documento = construtor.newDocument();
 
-	Element id = documento.createElement("id");
-	Element idAluno = documento.createElement("id-aluno");
-	Element idAcervo = documento.createElement("id-acervo");
-	Element dataReserva = documento.createElement("data-reserva");
-	Element tempoEspera = documento.createElement("tempo-espera");
-	Element emprestou = documento.createElement("emprestou");
+		Element root = documento.createElement("reservas");
 
-	id.appendChild(documento.createTextNode("" + c.getId()));
-	idAluno.appendChild(documento.createTextNode("" + c.getIdAlunos()));
-	idAcervo.appendChild(documento.createTextNode("" + c.getIdAcervo()));
-	dataReserva.appendChild(documento.createTextNode("" + simpleFormat.format(c.getDataReserva())));
-	tempoEspera.appendChild(documento.createTextNode("" + c.getTempoEspera()));
-	emprestou.appendChild(documento.createTextNode("" + c.isEmprestou()));
+		for (ReservaModel reserva : reservas) {
+			if (reserva != null) {
+				root.appendChild(criarElementoDocument(documento, reserva));
+			}
+		}
 
-	elemento.appendChild(id);
-	elemento.appendChild(idAluno);
-	elemento.appendChild(idAcervo);
-	elemento.appendChild(dataReserva);
-	elemento.appendChild(tempoEspera);
-	elemento.appendChild(emprestou);
+		documento.appendChild(root);
 
-	return elemento;
-    }
+		return documento;
+	}
+
+	private static Element criarElementoDocument(Document documento, ReservaModel c) {
+		SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Element elemento = documento.createElement("reserva");
+
+		Element id = documento.createElement("id");
+		Element idAluno = documento.createElement("id-aluno");
+		Element idAcervo = documento.createElement("id-acervo");
+		Element dataReserva = documento.createElement("data-reserva");
+		Element tempoEspera = documento.createElement("tempo-espera");
+		Element emprestou = documento.createElement("emprestou");
+
+		id.appendChild(documento.createTextNode("" + c.getId()));
+		idAluno.appendChild(documento.createTextNode("" + c.getIdAlunos()));
+		idAcervo.appendChild(documento.createTextNode("" + c.getIdAcervo()));
+		dataReserva.appendChild(documento.createTextNode("" + simpleFormat.format(c.getDataReserva())));
+		tempoEspera.appendChild(documento.createTextNode("" + c.getTempoEspera()));
+		emprestou.appendChild(documento.createTextNode("" + c.isEmprestou()));
+
+		elemento.appendChild(id);
+		elemento.appendChild(idAluno);
+		elemento.appendChild(idAcervo);
+		elemento.appendChild(dataReserva);
+		elemento.appendChild(tempoEspera);
+		elemento.appendChild(emprestou);
+
+		return elemento;
+	}
 
 }

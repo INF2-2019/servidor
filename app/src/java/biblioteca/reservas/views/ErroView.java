@@ -13,36 +13,36 @@ import java.sql.SQLException;
 
 public class ErroView extends View {
 
-    public ErroView(Exception excecao) {
-	super(excecao);
-    }
-
-    @Override
-    public void render(PrintWriter writer) throws RenderException {
-	try {
-	    writer.write(Conversores.converterDocumentEmXMLString(criarErroXML((Exception) data)));
-	} catch (ParserConfigurationException | TransformerException ex) {
-	    throw new RenderException(ex);
+	public ErroView(Exception excecao) {
+		super(excecao);
 	}
-    }
 
-    private static Document criarErroXML(Exception excecao) throws ParserConfigurationException {
-	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-	DocumentBuilder construtor = dbf.newDocumentBuilder();
-	Document documento = construtor.newDocument();
-
-	Element erro = documento.createElement("erro");
-	Element msg = documento.createElement("informacao");
-	if (excecao instanceof NumberFormatException || excecao instanceof SQLException) {
-	    msg.appendChild(documento.createTextNode("Os parâmetros inseridos são inválidos."));
-	} else {
-	    msg.appendChild(documento.createTextNode(excecao.getMessage()));
+	@Override
+	public void render(PrintWriter writer) throws RenderException {
+		try {
+			writer.write(Conversores.converterDocumentEmXMLString(criarErroXML((Exception) data)));
+		} catch (ParserConfigurationException | TransformerException ex) {
+			throw new RenderException(ex);
+		}
 	}
-	erro.appendChild(msg);
 
-	documento.appendChild(erro);
+	private static Document criarErroXML(Exception excecao) throws ParserConfigurationException {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder construtor = dbf.newDocumentBuilder();
+		Document documento = construtor.newDocument();
 
-	return documento;
-    }
+		Element erro = documento.createElement("erro");
+		Element msg = documento.createElement("informacao");
+		if (excecao instanceof NumberFormatException || excecao instanceof SQLException) {
+			msg.appendChild(documento.createTextNode("Os parâmetros inseridos são inválidos."));
+		} else {
+			msg.appendChild(documento.createTextNode(excecao.getMessage()));
+		}
+		erro.appendChild(msg);
+
+		documento.appendChild(erro);
+
+		return documento;
+	}
 
 }
