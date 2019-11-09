@@ -56,7 +56,7 @@ public class DeletarReservas extends HttpServlet {
 			View sucessoView = new SucessoView("Deletado com sucesso.");
 			sucessoView.render(out);
 		} catch (NumberFormatException excecaoFormatoErrado) {
-			response.setStatus(400);
+			response.setStatus(422);
 			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
 
 			View erroView = new ErroView(excecaoFormatoErrado);
@@ -66,7 +66,7 @@ public class DeletarReservas extends HttpServlet {
 				throw new ServletException(e);
 			}
 		} catch (SQLException excecaoSQL) {
-			response.setStatus(400);
+			response.setStatus(500);
 			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
 			View erroView = new ErroView(excecaoSQL);

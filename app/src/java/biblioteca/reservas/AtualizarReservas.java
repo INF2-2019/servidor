@@ -58,7 +58,7 @@ public class AtualizarReservas extends HttpServlet {
 
 		ReservaRepository reservaaRep = new ReservaRepository(con);
 		if (!req.getParameterMap().containsKey("id")) {
-			res.setStatus(400);
+			res.setStatus(422);
 			View erroView = new ErroView(new Exception("Um ID deve ser passado para a operação de atualização."));
 			try {
 				erroView.render(out);
@@ -84,7 +84,7 @@ public class AtualizarReservas extends HttpServlet {
 				throw new ServletException(e);
 			}
 		} catch (SQLException excecaoSQL) {
-			res.setStatus(400);
+			res.setStatus(500);
 			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
 			View erroView = new ErroView(excecaoSQL);

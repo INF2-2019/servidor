@@ -77,7 +77,7 @@ public class ConsultarReservas extends HttpServlet {
 				throw new ServletException(e);
 			}
 		} catch (SQLException excecaoSQL) {
-			response.setStatus(400);
+			response.setStatus(500);
 			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 			View erroView = new ErroView(excecaoSQL);
 			try {

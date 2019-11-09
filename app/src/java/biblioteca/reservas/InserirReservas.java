@@ -62,7 +62,7 @@ public class InserirReservas extends HttpServlet {
 			View sucessoView = new SucessoView("Inserido com sucesso.");
 			sucessoView.render(out);
 		} catch (NumberFormatException excecaoFormatoErrado) {
-			response.setStatus(400);
+			response.setStatus(422);
 			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
 
 			View erroView = new ErroView(excecaoFormatoErrado);
@@ -72,7 +72,7 @@ public class InserirReservas extends HttpServlet {
 				throw new ServletException(e);
 			}
 		} catch (SQLException excecaoSQL) {
-			response.setStatus(400);
+			response.setStatus(500);
 			System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
 			View erroView = new ErroView(excecaoSQL);
@@ -92,7 +92,7 @@ public class InserirReservas extends HttpServlet {
 				throw new ServletException(e);
 			}
 		} catch (ExcecaoreservaExistente ex) {
-			response.setStatus(400);
+			response.setStatus(403);
 			View erroView = new ErroView(ex);
 			try {
 				erroView.render(out);
@@ -100,7 +100,7 @@ public class InserirReservas extends HttpServlet {
 				throw new ServletException(e);
 			}
 		} catch (AlunoException ex) {
-			response.setStatus(400);
+			response.setStatus(403);
 			System.err.println("Erro ao inserir aluno. Erro: " + ex.toString());
 
 			View erroView = new ErroView(ex);
