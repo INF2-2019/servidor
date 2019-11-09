@@ -277,8 +277,8 @@ public class AlunosRepository {
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT * FROM `alunos`");
 		while (rs.next()) {
-			int id = rs.getInt("id");
-			String idStr = Integer.toString(id);
+			Long id = rs.getLong("id");
+			String idStr = Long.toString(id);
 			String zeros = "";
 			for (int i = idStr.length(); i < 11; i++)
 				zeros+="0";
@@ -296,8 +296,8 @@ public class AlunosRepository {
 		ps.setLong(1, idParsed);
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
-			int id2 = rs.getInt("id");
-			String idStr = Integer.toString(id2);
+			Long id2 = rs.getLong("id");
+			String idStr = Long.toString(id2);
 			String zeros = "";
 			for (int i = idStr.length(); i < 11; i++)
 				zeros+="0";
