@@ -1,4 +1,4 @@
-package diario.professores;
+package diario.professores.services;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

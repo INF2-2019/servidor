@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import utils.ConnectionFactory;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
+import diario.professores.services.ExcecaoNaoAutorizado;
 
 @WebServlet(name = "ConsultarProfessores", urlPatterns = "/diario/professores/consultar")
 /**
@@ -34,14 +35,13 @@ public class ConsultarProfessor extends HttpServlet {
 		resposta.addHeader("Access-Control-Allow-Origin", "*");
 		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
 
-		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
-		if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
-			resposta.setStatus(403);
-			return;
-		}
-
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
+
+			DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
+			if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
+				throw new ExcecaoNaoAutorizado("Você não tem permissão para realiazr esta operação");
+			}
 
 			if (conexao == null) {
 				throw new SQLException("Impossível se conectar ao banco de dados");
@@ -70,13 +70,12 @@ public class ConsultarProfessor extends HttpServlet {
 			}
 			saida.println("</professores>");
 
+		} catch (ExcecaoNaoAutorizado e) {
+			resposta.setStatus(403);
+			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
 		} catch (SQLException e) {
-
 			resposta.setStatus(500);
-			saida.println("<erro>");
-			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
-			saida.println("</erro>");
-
+			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
 		}
 	}
 

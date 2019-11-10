@@ -1,4 +1,4 @@
-package diario.professores;
+package diario.professores.services;
 
 /**
  * <h1> Exceção de Parâmetros Incorretos</h1>
