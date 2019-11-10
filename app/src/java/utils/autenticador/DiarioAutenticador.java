@@ -14,7 +14,7 @@ public class DiarioAutenticador extends Autenticador {
 		super(request, response);
 	}
 
-	public void logar(Object identididade, DiarioCargos cargo, boolean manter){
+	public void logar(Object identididade, DiarioCargos cargo, boolean manter) {
 		logar(identididade, cargo, manter ? KEEP_DURATION : DEFAULT_DURATION);
 	}
 
@@ -35,18 +35,12 @@ public class DiarioAutenticador extends Autenticador {
 		return cargo;
 	}
 
-	public Long idLogado(){
+	public Object idLogado() {
 		HttpSession session = this.request.getSession();
-		Long identificador = (Long) session.getAttribute(ID_KEY);
-
-		if(identificador == null){
-			return null;
-		}
-
-		return identificador;
+		return session.getAttribute(ID_KEY);
 	}
 
-	private void logar(Object identidade, DiarioCargos cargo, int duration){
+	private void logar(Object identidade, DiarioCargos cargo, int duration) {
 		HttpSession session = this.request.getSession();
 		session.setAttribute(ID_KEY, identidade);
 		session.setAttribute(ROLE_KEY, cargo);

@@ -21,7 +21,11 @@ public class CargoLogadoController extends HttpServlet {
 		try {
 			SucessoView sucessoView = new SucessoView("Cargo consultado com sucesso!");
 			sucessoView.addParameter("cargo", autenticador.cargoLogado().toString());
-			sucessoView.addParameter("id", autenticador.idLogado().toString());
+			Object id = autenticador.idLogado();
+			if (id == null) {
+				id = "";
+			}
+			sucessoView.addParameter("id", id.toString());
 			sucessoView.render(out);
 		} catch (RenderException ex) {
 			throw new ServletException(ex);
