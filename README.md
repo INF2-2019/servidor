@@ -70,7 +70,7 @@ As bibliotecas usadas atualmente são:
 - `Commons Email`
 - `Activation`
 
-As três últimas bibliotecas precisam ser incluídas no projeto, para isso siga os passos:
+As três últimas bibliotecas precisam ser incluídas no projeto (caso já não estejam automaticamente), para isso siga os passos:
 
 1. Clique com o botão direito em "Bibliotecas" e selecione "Adicionar JAR/Pasta..." conforme [a imagem](http://prntscr.com/puoihq)
 2. Localize a pasta `app/web/WEB-INF/lib`
