@@ -1,16 +1,9 @@
 package diario.diario.conteudos;
 
+import diario.diario.utils.ErroException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -29,40 +22,43 @@ import utils.Headers;
 public class Deletar extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+        /*
+            ? id:int - id do conteudo/atividade
+            ? etapa:int - id da etapa
+            ? disciplina:int - id da disciplina
+        
+        */
+        
         
         PrintWriter out = response.getWriter();
         Headers.XMLHeaders(response);
         
-        if (ChecaParametro.parametroExiste(request, "id")) {
-            if (!ChecaParametro.parametroEInteiro(request, "id")) {
-                out.print(RespostaXML.erro("'id' deve ser inteiro!", "Falha no formato do parametro 'id'"));
-                return;
-            }
-        } else {
-            out.print(RespostaXML.erro("ID é obrigatório!", "O parametro 'id' é obrigatório!"));
-            return;
-        }
-
-        String query = "DELETE FROM conteudos WHERE id="+request.getParameter("id");
-        
-        try {
-            // Conecta e executa Query SQL
-            Connection conexao = ConnectionFactory.getDiario();
+        try{
+            ConteudosParametros p = new ConteudosParametros();
+            p.setParametros(request);
             
-            if(conexao==null){
-                out.print(RespostaXML.erro("Falha na conexão!","Falha em tentar conectar com o banco de dados"));
-                return;
+            if(p.existe("id")){
+                ConteudosRepository.remover(p.getId());
+            } else {
+                boolean tem_etapa = p.existe("etapa"),
+                        tem_disciplina = p.existe("disciplina");
+                
+                if(tem_etapa&&tem_disciplina)
+                    ConteudosRepository.removerPorEtapaEDisciplina(p.getIdEtapa(), p.getIdDisciplina());
+                else if(tem_etapa)
+                    ConteudosRepository.removerPorEtapa(p.getIdEtapa());
+                else if(tem_disciplina)
+                    ConteudosRepository.removerPorDisciplina(p.getIdDisciplina());
+                else
+                    throw new ErroException("Nenhum parametro selecionado!","Ao menos um dos parametros deve estar presente: 'id', 'disciplina' ou 'etapa'");
             }
             
-            PreparedStatement st = conexao.prepareStatement(query);
-            st.executeUpdate();
-            st.close();
-            conexao.close();
-
-            String xml = RespostaXML.sucesso("Deletado com sucesso!");
-            out.print(xml);
-        } catch (SQLException e) {
-            out.print(RespostaXML.erro("Erro na operação!", e.getMessage()));
+            out.print(ConteudosView.sucesso("Deletado com sucesso!"));
+        }catch(Exception e){
+            if(e instanceof ErroException && ((ErroException)e).causa!=null)
+                out.print(ConteudosView.erro(e.getMessage(),((ErroException)e).causa));
+            else
+                out.print(ConteudosView.erro("Erro inesperado!",e.getMessage()));
             e.printStackTrace();
         }
     }

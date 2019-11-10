@@ -1,5 +1,6 @@
 package diario.diario.diario;
 
+import diario.diario.utils.ErroException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -27,80 +28,43 @@ public class Deletar extends HttpServlet {
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         /*
-            [especifico:String[conteudo,atividade]] - String que filtra deletar entre conteudo e atividade 
+            ? especifico:String[conteudo,atividade] - String que filtra deletar entre conteudo e atividade 
                 especifico = "conteudo" - deleta apenas conteudo
                 especifico = "atividade" - deleta apenas atividade
-            conteudo:int - id do conteudo a ser deletado
-            [matricula:int] - id da matricula a ser deletado
+            ? conteudo:int - id do conteudo a ser deletado
+            ? matricula:int - id da matricula a ser deletado
         */
         
         PrintWriter out = response.getWriter();
         Headers.XMLHeaders(response);
         
-        String query;
-        query = "DELETE FROM diario";
-        List<String> filtro = new ArrayList<String>();
-
-        boolean mostra_valor = true;
-        
-        /* Parametro opcional */
-        if (ChecaParametro.parametroExiste(request, "especifico")) {
-            String oq = request.getParameter("especifico");
-            if ("conteudo".equals(oq)) {
-                filtro.add("valor=0");
-                mostra_valor = false;
-            } else if ("atividade".equals(oq)) {
-                filtro.add("valor>0");
-            } else {
-                out.print(RespostaXML.erro("'especifico' não esta formatado corretamente", "O 'especifico' pode ser 'conteudo' ou 'atividade'"));
-                return;
-            }
-        }
-        
-        /* Parametro obrigatório a todos menos o ADMIN */
-        if (ChecaParametro.parametroExiste(request, "conteudo")) {
-            if (!ChecaParametro.parametroEInteiro(request, "conteudo")) {
-                out.print(RespostaXML.erro("O ID do conteudo deve ser inteiro!", "Falha no formato do parametro 'conteudo'"));
-                return;
-            } else {
-                filtro.add("`id-conteudos`="+request.getParameter("conteudo"));
-            }
-        } else {
-            out.print(RespostaXML.erro("Especifique o conteudo!","Para deletar deve se especificar ao menos um id-conteudo"));
-            return;
-        }
-        
-        /* Parametro opcional */
-        if (ChecaParametro.parametroExiste(request, "matricula")) {
-            if (!ChecaParametro.parametroEInteiro(request, "matricula")) {
-                out.print(RespostaXML.erro("'matricula' deve ser inteiro!", "Falha no formato do parametro 'matricula'"));
-                return;
-            } else {
-                filtro.add("`id-matriculas`="+request.getParameter("matricula"));
-            }
-        }
-        
-        query+= " WHERE "+String.join(" AND ", filtro);
-                  
-        try {
-            Connection conexao = ConnectionFactory.getDiario();
+        try{
+            DiarioParametros p = new DiarioParametros();
+            p.setParametros(request);
             
-            if(conexao==null){
-                out.print(RespostaXML.erro("Falha na conexão!","Falha em tentar conectar com o banco de dados"));
-                return;
-            }
+            boolean tem_matricula = p.existe("matricula"),
+                    tem_conteudo = p.existe("conteudo");
+                    
             
-            PreparedStatement st = conexao.prepareStatement(query);
-            st.executeUpdate();
-            st.close();
-            conexao.close();
-
-            String xml = RespostaXML.sucesso("Deletado com sucesso!");
+            if(tem_matricula&&tem_conteudo){
+                DiarioRepository.remover(p.getIdConteudo(),p.getIdMatricula());
+            } else if(tem_matricula){
+                DiarioRepository.removerPorMatricula(p.getIdMatricula());
+            } else if(tem_conteudo){
+                DiarioRepository.removerPorConteudo(p.getIdConteudo());
+            } else
+                throw new ErroException("Nenhum parametro selecionado!","Ao menos um dos parametros deve estar presente: 'matricula' ou 'conteudo'");
+            
+            String xml = DiarioView.sucesso("Deletado com sucesso!");
             out.print(xml);
-        } catch (SQLException e) {
-            out.print(RespostaXML.erro("Erro na operação!", e.getMessage()));
+        }catch(Exception e){
+            if(e instanceof ErroException && ((ErroException)e).causa!=null)
+                out.print(DiarioView.erro(e.getMessage(),((ErroException)e).causa));
+            else
+                out.print(DiarioView.erro("Erro inesperado!",e.getMessage()));
             e.printStackTrace();
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

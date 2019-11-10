@@ -1,5 +1,6 @@
 package diario.diario.diario;
 
+import diario.diario.utils.ErroException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -27,9 +28,9 @@ public class Consulta extends HttpServlet {
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         /*
-            [especifico:String[conteudo,atividade]] - String que filtra consulta entre conteudo e atividade 
-                especifico = "conteudo" - mostra apenas conteudo
-                especifico = "atividade" - mostra apenas atividade
+            [tipo:String[conteudo,atividade]] - String que filtra consulta entre conteudo e atividade 
+                tipo = "conteudo" - mostra apenas conteudo
+                tipo = "atividade" - mostra apenas atividade
             conteudo:int - id do conteudo a ser consultado
             [matricula:int] - id da matricula a ser consultado 
         */
@@ -37,72 +38,37 @@ public class Consulta extends HttpServlet {
         PrintWriter out = response.getWriter();
         Headers.XMLHeaders(response);
         
-        String query;
-        query = "SELECT * FROM diario";
-        List<String> filtro = new ArrayList<String>();
-
-        boolean mostra_valor = true;
-        
-        /* Parametro opcional */
-        if (ChecaParametro.parametroExiste(request, "especifico")) {
-            String oq = request.getParameter("especifico");
-            if ("conteudo".equals(oq)) {
-                filtro.add("valor=0");
-                mostra_valor = false;
-            } else if ("atividade".equals(oq)) {
-                filtro.add("valor>0");
-            } else {
-                out.print(RespostaXML.erro("'especifico' não esta formatado corretamente", "O 'especifico' pode ser 'conteudo' ou 'atividade'"));
-                return;
-            }
-        }
-        
-        /* Parametro obrigatório a todos menos o ADMIN */
-        if (ChecaParametro.parametroExiste(request, "conteudo")) {
-            if (!ChecaParametro.parametroEInteiro(request, "conteudo")) {
-                out.print(RespostaXML.erro("O ID do conteudo deve ser inteiro!", "Falha no formato do parametro 'conteudo'"));
-                return;
-            } else {
-                filtro.add("`id-conteudos`="+request.getParameter("conteudo"));
-            }
-        } else {
-            out.print(RespostaXML.erro("Acesso negado!","O acesso a toda tabela é um recurso exclusivo do Administrador"));
-            return;
-        }
-        
-        /* Parametro opcional */
-        if (ChecaParametro.parametroExiste(request, "matricula")) {
-            if (!ChecaParametro.parametroEInteiro(request, "matricula")) {
-                out.print(RespostaXML.erro("'matricula' deve ser inteiro!", "Falha no formato do parametro 'matricula'"));
-                return;
-            } else {
-                filtro.add("`id-matriculas`="+request.getParameter("matricula"));
-            }
-        }
-        
-        query+= " WHERE "+String.join(" AND ", filtro);
-                  
-        try {
-            Connection conexao = ConnectionFactory.getDiario();
+        try{
+            DiarioParametros p = new DiarioParametros();
+            p.setParametros(request);
+            p.obrigatorios("tipo");
             
-            if(conexao==null){
-                out.print(RespostaXML.erro("Falha na conexão!","Falha em tentar conectar com o banco de dados"));
-                return;
-            }
+            boolean tem_conteudo = p.existe("conteudo"),
+                    tem_matricula = p.existe("matricula"),
+                    e_atividade = p.getTipo().equals("atividade");
             
-            PreparedStatement st = conexao.prepareStatement(query);
-
-            ResultSet resultado = st.executeQuery();
-            if (mostra_valor) {
-                out.print(RespostaXML.retornaSet(resultado, "id-conteudos", "id-matriculas", "faltas", "nota"));
-            } else {
-                out.print(RespostaXML.retornaSet(resultado, "id-conteudos", "id-matriculas", "faltas"));
-            }
-
-            st.close();
-            conexao.close();
-        } catch (SQLException e) {
-            out.print(RespostaXML.erro("Erro na operação!", e.getMessage()));
+            ArrayList<DiarioModel> resultado;
+            if(tem_conteudo && tem_matricula){
+                resultado = DiarioRepository.consulta(p.getIdConteudo(), p.getIdMatricula());
+                out.print(DiarioView.consulta(resultado));
+                
+            } else if(tem_conteudo){
+                resultado = DiarioRepository.consultaPorConteudo(p.getIdConteudo());
+                out.print(DiarioView.consultaSemNota(resultado));
+                
+            } else if(tem_matricula){
+                resultado = DiarioRepository.consultaPorMatricula(p.getIdMatricula(),e_atividade);
+                out.print(DiarioView.consultaSemFalta(resultado));
+                
+            } else
+                throw new ErroException("Acesso negado!","O acesso a toda tabela é um recurso exclusivo do Administrador");
+            
+            
+        }catch(Exception e){
+            if(e instanceof ErroException && ((ErroException)e).causa!=null)
+                out.print(DiarioView.erro(e.getMessage(),((ErroException)e).causa));
+            else
+                out.print(DiarioView.erro("Erro inesperado!",e.getMessage()));
             e.printStackTrace();
         }
     }

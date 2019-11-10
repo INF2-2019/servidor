@@ -1,5 +1,6 @@
 package diario.diario.diario;
 
+import diario.diario.utils.ErroException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import static java.lang.System.out;
@@ -39,58 +40,31 @@ public class Atualizar extends HttpServlet {
         PrintWriter out = response.getWriter();
         Headers.XMLHeaders(response);
         
-        String parametro_falta = ChecaParametro.parametroFaltante(request, "conteudo", "matricula");
-        if (parametro_falta != null) {
-            out.print(RespostaXML.erro("Erro com '" + parametro_falta + "'", "O parametro '" + parametro_falta + "' é obrigatório!"));
-            return;
-        }
-
-        String query = "UPDATE diario SET ";
-        List<String> modificacoes = new ArrayList<String>();
-
-        if (ChecaParametro.parametroExiste(request, "falta")) {
-            if (!ChecaParametro.parametroEInteiro(request, "falta")) {
-                out.print(RespostaXML.erro("'falta' deve ser inteiro!", "Falha no formato do parametro 'falta'"));
-                return;
-            } else {
-                modificacoes.add("faltas="+request.getParameter("falta"));
-            }
-        }
-        
-        
-        if (ChecaParametro.parametroExiste(request, "nota")) {
-            if (!ChecaParametro.parametroEDecimal(request, "nota")) {
-                out.print(RespostaXML.erro("'nota' deve ser decimal!", "Falha no formato do parametro 'nota'"));
-                return;
-            } else {
-                modificacoes.add("nota="+request.getParameter("nota"));
-            }
-        }
-
-        try {
-                
-            if(modificacoes.size()==0){
-                out.print(RespostaXML.erro("Nenhuma alteração detectada!","Nenhum parametro de modificação recebido"));
-                return;
-            }
-            query += String.join(",", modificacoes) + " WHERE `id-conteudos`="+request.getParameter("conteudo")+" AND `id-matriculas`="+request.getParameter("matricula");
+        try{
+            DiarioParametros p = new DiarioParametros();
+            p.setParametros(request);
+            p.obrigatorios("conteudo", "matricula");
             
-            // Conecta e executa Query SQL
-            Connection conexao = ConnectionFactory.getDiario();
+            boolean tem_falta  = p.existe("falta"),
+                    tem_nota = p.existe("nota");
             
-            if(conexao==null){
-                out.print(RespostaXML.erro("Falha na conexão!","Falha em tentar conectar com o banco de dados"));
-                return;
-            }
-            PreparedStatement st = conexao.prepareStatement(query);
-            st.executeUpdate();
-            st.close();
-            conexao.close();
-
-            String xml = RespostaXML.sucesso("Atualizado com sucesso!");
+            if(tem_falta && tem_nota){
+                DiarioRepository.atualizar(p.getIdConteudo(), p.getIdMatricula(), p.getFalta(), p.getNota());
+            } else if(tem_nota){
+                DiarioRepository.atualizar(p.getIdConteudo(), p.getIdMatricula(), p.getNota());
+            } else if(tem_falta){
+                DiarioRepository.atualizar(p.getIdConteudo(), p.getIdMatricula(), p.getFalta());
+            } else
+                throw new ErroException("Nenhuma alteração detectada!","Nenhum parametro de modificação recebido");
+            
+            String xml = DiarioView.sucesso("Atualizado com sucesso!");
             out.print(xml);
-        } catch (SQLException e) {
-            out.print(RespostaXML.erro("Erro na operação!", e.getMessage()));
+            
+        }catch(Exception e){
+            if(e instanceof ErroException && ((ErroException)e).causa!=null)
+                out.print(DiarioView.erro(e.getMessage(),((ErroException)e).causa));
+            else
+                out.print(DiarioView.erro("Erro inesperado!",e.getMessage()));
             e.printStackTrace();
         }
     }

@@ -1,13 +1,8 @@
 package diario.diario.conteudos;
 
+import diario.diario.utils.ErroException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,93 +26,30 @@ public class Inserir extends HttpServlet {
         PrintWriter out = response.getWriter();
         Headers.XMLHeaders(response);
         
-        String parametro_falta = ChecaParametro.parametroFaltante(request, "etapa", "disciplina", "conteudo", "data");
-        if (parametro_falta != null) {
-            out.print(RespostaXML.erro("Erro com '" + parametro_falta + "'", "O parametro '" + parametro_falta + "' é obrigatório!"));
-            return;
-        }
-
-        if (!ChecaParametro.parametroEInteiro(request, "etapa")) {
-            out.print(RespostaXML.erro("'etapa' não é inteiro", "Falha no formato do parametro 'etapa'"));
-            return;
-        }
-
-        if (!ChecaParametro.parametroEInteiro(request, "disciplina")) {
-            out.print(RespostaXML.erro("'disciplina' não é inteiro", "Falha no formato do parametro 'disciplina'"));
-            return;
-        }
-
-        if (!ChecaParametro.parametroEData(request, "data")) {
-            out.print(RespostaXML.erro("'data' não esta formatada corretamente", "Falha no formato do parametro 'data'"));
-            return;
-        }
-
-        String id_etapas_string = request.getParameter("etapa"),
-                id_disciplinas_string = request.getParameter("disciplina"),
-                conteudos = request.getParameter("conteudo"),
-                datas = request.getParameter("data"),
-                valor_string = request.getParameter("valor");
-
-        int id_etapas = Integer.parseInt(id_etapas_string),
-                id_disciplinas = Integer.parseInt(id_disciplinas_string);
-
-        Date date = Date.valueOf(datas);
-
-        Double valor = 0.0;
-        if (ChecaParametro.parametroExiste(request, "valor")) {
-            if (!ChecaParametro.parametroEDecimal(request, "valor")) {
-                out.print(RespostaXML.erro("'valor' não esta formatado corretamente", "Falha no formato do parametro 'valor'"));
-                return;
+        try{
+            ConteudosParametros p = new ConteudosParametros();
+            p.setParametros(request);
+            p.obrigatorios("etapa", "disciplina", "conteudo", "data");
+            
+            boolean tem_etapa = p.existe("etapa"),
+                    tem_tipo = p.existe("tipo");
+            
+            if(p.existe("valor") && p.getValor()>0.0){
+                ConteudosRepository.insere(p.getIdEtapa(), p.getIdDisciplina(), p.getConteudo(), p.getData(), p.getValor());
+                out.print(ConteudosView.sucesso("Atividade adicionada com sucesso!"));
             } else {
-                valor = Double.valueOf(valor_string);
-                if(valor<0.0){
-                    out.print(RespostaXML.erro("O valor não pode ser negativo!", "O campo valor aceita apenas numeros positivos"));
-                    return;
-                }
+                ConteudosRepository.insere(p.getIdEtapa(), p.getIdDisciplina(), p.getConteudo(), p.getData());
+                out.print(ConteudosView.sucesso("Conteudo adicionado com sucesso!"));
             }
-        }
-        
-        if (!ChecaParametro.parametroNaoVazio(request, "conteudo")) {
-            out.print(RespostaXML.erro((valor>0.0? "Atividade":"Conteudo")+" não pode estar vazio!", "O parametro 'conteudo' não pode ser vazio"));
-            return;
-        }
 
-        // Query SQL de inserção na tabela DESCARTES
-        String query = "INSERT INTO conteudos(`id-etapas`,`id-disciplinas`, conteudos , data, valor) VALUES (?,?,?,?,?)";
-        
-        try {
-            // Conecta e executa Query SQL
-            Connection conexao = ConnectionFactory.getDiario();
-            
-            if(conexao==null){
-                out.print(RespostaXML.erro("Falha na conexão!","Falha em tentar conectar com o banco de dados"));
-                return;
-            }
-            
-            PreparedStatement st = conexao.prepareStatement(query);
-
-            st.setInt(1, id_etapas); //id-etapas
-            st.setInt(2, id_disciplinas); //id-disciplinas
-            st.setString(3, conteudos); // conteudos
-            st.setDate(4, date); //data
-            st.setDouble(5, valor); // valor
-
-            int r = st.executeUpdate();
-
-            st.close();
-            conexao.close();
-            
-            String mensagem = "";
-            if(valor>0.0) mensagem =  "Atividade adicionada com sucesso!";
-            else mensagem =  "Conteudo adicionado com sucesso!";
-            
-            String xml = RespostaXML.sucesso(mensagem);
-            out.print(xml);
-
-        } catch (SQLException e) {
-            out.print(RespostaXML.erro("Erro na operação!", e.getMessage()));
+        }catch(Exception e){
+            if(e instanceof ErroException && ((ErroException)e).causa!=null)
+                out.print(ConteudosView.erro(e.getMessage(),((ErroException)e).causa));
+            else
+                out.print(ConteudosView.erro("Erro inesperado!",e.getMessage()));
             e.printStackTrace();
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
