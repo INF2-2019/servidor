@@ -2,6 +2,7 @@ package diario.admin.controllers;
 
 import diario.admin.views.RenderException;
 import diario.admin.views.SucessoView;
+import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 
 import javax.servlet.ServletException;
@@ -17,6 +18,7 @@ public class CargoLogadoController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
+		Headers.XMLHeaders(response);
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 		try {
 			SucessoView sucessoView = new SucessoView("Cargo consultado com sucesso!");
