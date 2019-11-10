@@ -1,10 +1,13 @@
 package diario.departamentos.controller;
 
 import diario.departamentos.repository.DepartamentoRepository;
+import diario.departamentos.service.DepartamentoValidation;
 import diario.departamentos.view.ErroView;
+import diario.departamentos.view.RenderException;
 import diario.departamentos.view.SucessoView;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,25 +24,59 @@ public class Insere extends HttpServlet {
 			throws ServletException, IOException {
 
 		Headers.XMLHeaders(response);
+		PrintWriter out = response.getWriter();
 
-		try(PrintWriter out = response.getWriter()) {
+		Exception excecao = null;
+
+		try {
+
+			DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+			if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+				throw new AutenticacaoException();
+			}
+
+			String idCampiStr = request.getParameter("id-campi");
+			String nome = request.getParameter("nome");
+
+			if (nome == null && idCampiStr == null) {
+				throw new ParametrosIncorretosException("Informe o nome e o campus do departamento");
+			} else if (idCampiStr == null) {
+				throw new ParametrosIncorretosException("Informe o campus do departamento");
+			}
+			DepartamentoValidation.validaNome(nome);
+
+			int idCampi;
 			try {
-				if(request.getParameter("id-campi") == null || request.getParameter("nome") == null)
-					throw new Exception("Informe o id-campi e o nome do departamento");
-				int idCampi = Integer.parseInt(request.getParameter("id-campi"));
-				String nome = request.getParameter("nome");
-				DepartamentoRepository.insere(idCampi, nome);
-				out.println(SucessoView.sucesso("Departamento inserido com sucesso"));
-			} catch(Exception ex) {
-				out.println(ErroView.erro("Falha ao inserir departamento", ex));
+				idCampi = Integer.parseInt(idCampiStr);
+			} catch (NumberFormatException ex) {
+				throw new ParametrosIncorretosException("Id do campus deve ser inteiro");
+			}
+
+			DepartamentoRepository.insere(idCampi, nome);
+
+			SucessoView sucessoView = new SucessoView("Departamento inserido com sucesso");
+			sucessoView.render(out);
+		} catch (AutenticacaoException ex) {
+			response.setStatus(403);
+			excecao = ex;
+		} catch (ParametrosIncorretosException ex) {
+			response.setStatus(422);
+			excecao = ex;
+		} catch (SQLException ex) {
+			response.setStatus(500);
+			excecao = ex;
+		} catch (RenderException ex) {
+			throw new ServletException();
+		} finally {
+			if (excecao != null) {
+				ErroView erroView = new ErroView(excecao);
+				try {
+					erroView.render(out);
+				} catch (RenderException ex) {
+					throw new ServletException();
+				}
 			}
 		}
-	}
-
-	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		processRequest(request, response);
 	}
 
 	@Override
