@@ -30,7 +30,7 @@ public class AlterarCampi extends HttpServlet {
 		CampiRepository rep = new CampiRepository(conexao);
 		PrintWriter out = response.getWriter();
 		Headers.XMLHeaders(response);
-		
+
 		if (rep.checarAutorizacaoADM(request, response)) {
 
 			String id = request.getParameter("id");
@@ -38,7 +38,7 @@ public class AlterarCampi extends HttpServlet {
 			String cidade = request.getParameter("cidade");
 			String uf = request.getParameter("uf");
 			try {
-				rep.alterarCampi(id,nome,cidade,uf);
+				rep.alterarCampi(id, nome, cidade, uf);
 				View sucessoView = new SucessoView("Atualizado com sucesso.");
 				sucessoView.render(out);
 			} catch (NumberFormatException excecaoFormatoErrado) {
@@ -67,11 +67,11 @@ public class AlterarCampi extends HttpServlet {
 				response.setStatus(500);
 				out.println("<erro><mensagem>Erro severo</mensagem></erro>");
 			}
-		
+
 		} else {
 			response.setStatus(403);
 			out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
-		} 
+		}
 
 	}
 

@@ -14,7 +14,6 @@ import java.io.PrintWriter;
 import utils.ConnectionFactory;
 import utils.Headers;
 
-
 /**
  *
  * @author User
@@ -22,14 +21,14 @@ import utils.Headers;
 @WebServlet(name = "InserirCampi", urlPatterns = {"/diario/campi/inserir"})
 public class InserirCampi extends HttpServlet {
 
-     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Connection conexao = ConnectionFactory.getDiario();
 		CampiRepository rep = new CampiRepository(conexao);
 		PrintWriter out = response.getWriter();
 		Headers.XMLHeaders(response);
 
 		if (rep.checarAutorizacaoADM(request, response)) {
-			
+
 			String nome = request.getParameter("nome");
 			String cidade = request.getParameter("cidade");
 			String uf = request.getParameter("uf");
