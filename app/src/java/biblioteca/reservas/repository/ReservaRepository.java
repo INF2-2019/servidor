@@ -107,7 +107,6 @@ public class ReservaRepository {
 
 		if (valores.containsKey("id-alunos")) {
 			SidAlunos = valores.get("id-alunos");
-			System.out.println(SidAlunos);
 			if (SidAlunos.length() != 11) {
 				throw new AlunoException("Número inválido para um CPF.");
 			}
@@ -147,7 +146,6 @@ public class ReservaRepository {
 		}
 
 		int tempoEspera = 0 ;
-			System.out.println(valores.get("tempo-espera"));
 		if (valores.containsKey("tempo-espera")) {
 			tempoEspera = Integer.parseUnsignedInt(valores.get("tempo-espera"));
 		}
@@ -193,7 +191,6 @@ public class ReservaRepository {
 		if (filtros.containsKey("data-reserva")) {
 			simpleFormat.parse(filtros.get("data-reserva"));
 		}
-		System.out.println(filtros.get("emprestou"));
 		if (filtros.containsKey("emprestou")) {
 			Boolean.parseBoolean(filtros.get("emprestou"));
 		}
