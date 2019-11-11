@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `descartes` (
 DROP TABLE IF EXISTS `emprestimos`;
 CREATE TABLE IF NOT EXISTS `emprestimos` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `id-alunos` INT NOT NULL,
+  `id-alunos` BIGINT NOT NULL,
   `id-acervo` INT NOT NULL,
   `data-emprestimo` DATE NOT NULL,
   `data-prev-devol` DATE NOT NULL,
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `emprestimos` (
 DROP TABLE IF EXISTS `reservas`;
 CREATE TABLE IF NOT EXISTS `reservas` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `id-aluno` INT NOT NULL,
+  `id-alunos` BIGINT NOT NULL,
   `id-acervo` INT NOT NULL,
   `data-reserva` DATE NOT NULL,
   `tempo-espera` INT NOT NULL,
