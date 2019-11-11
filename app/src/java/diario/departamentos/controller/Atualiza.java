@@ -80,7 +80,7 @@ public class Atualiza extends HttpServlet {
 			response.setStatus(422);
 			excecao = ex;
 		} catch (DepartamentoInexistenteException ex) {
-			response.setStatus(400);
+			response.setStatus(404);
 			excecao = ex;
 		} catch (SQLException ex) {
 			response.setStatus(500);
