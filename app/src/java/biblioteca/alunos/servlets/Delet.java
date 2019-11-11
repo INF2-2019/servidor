@@ -18,7 +18,7 @@ import utils.ConnectionFactory;
 import utils.Headers;
 
 
-@WebServlet(name = "Delet", urlPatterns = {"/biblioteca/alunos/deletar"})
+@WebServlet(name = "DeletarAluno", urlPatterns = {"/biblioteca/alunos/deletar"})
 public class Delet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)

@@ -21,7 +21,7 @@ import utils.ConnectionFactory;
 import utils.Headers;
 
 
-@WebServlet(name = "Alterar", urlPatterns = {"/biblioteca/alunos/alterar"})
+@WebServlet(name = "AlterarAluno", urlPatterns = {"/biblioteca/alunos/alterar"})
 public class Alterar extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)

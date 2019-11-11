@@ -14,7 +14,7 @@ import utils.ConnectionFactory;
 import utils.Headers;
 
 
-@WebServlet(name = "Listar", urlPatterns = {"/biblioteca/alunos/listar"})
+@WebServlet(name = "ListarAluno", urlPatterns = {"/biblioteca/alunos/listar"})
 public class Listar extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
