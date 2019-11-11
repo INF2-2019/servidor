@@ -34,7 +34,7 @@ public class LoginAdminController extends HttpServlet {
 	private final static String LOGADO = "Logado com sucesso!";
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		PrintWriter out = response.getWriter();
 
 		String login, senha;

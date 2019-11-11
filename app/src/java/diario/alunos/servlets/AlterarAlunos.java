@@ -29,7 +29,7 @@ public class AlterarAlunos extends HttpServlet {
 		Connection conexao = ConnectionFactory.getDiario();
 		AlunosRepository rep = new AlunosRepository(conexao);
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 
 		if (rep.checarAutorizacaoADM(request, response)) {
 

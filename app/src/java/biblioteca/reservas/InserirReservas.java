@@ -1,31 +1,24 @@
 package biblioteca.reservas;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import biblioteca.reservas.repository.ReservaRepository;
+import biblioteca.reservas.views.*;
+import utils.ConnectionFactory;
+import utils.Headers;
+import utils.autenticador.BibliotecaAutenticador;
+import utils.autenticador.BibliotecaCargos;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import biblioteca.reservas.repository.ReservaRepository;
-import biblioteca.reservas.views.AlunoException;
-import utils.ConnectionFactory;
-import utils.Headers;
-
-import biblioteca.reservas.views.View;
-import biblioteca.reservas.views.SucessoView;
-import biblioteca.reservas.views.ErroView;
-import biblioteca.reservas.views.ExcecaoreservaExistente;
-import biblioteca.reservas.views.RenderException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import utils.autenticador.BibliotecaAutenticador;
-import utils.autenticador.BibliotecaCargos;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @WebServlet(name = "InserirReservas", urlPatterns = {"/biblioteca/reservas/inserir"})
 public class InserirReservas extends HttpServlet {
@@ -34,7 +27,7 @@ public class InserirReservas extends HttpServlet {
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		ReservaRepository ReservaRep = new ReservaRepository(conexao);
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
 		if (autenticador.cargoLogado() == BibliotecaCargos.CONVIDADO) {
 			response.setStatus(403);

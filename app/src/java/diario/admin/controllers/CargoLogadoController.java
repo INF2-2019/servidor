@@ -18,7 +18,7 @@ public class CargoLogadoController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 		try {
 			SucessoView sucessoView = new SucessoView("Cargo consultado com sucesso!");

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import utils.ConnectionFactory;
 import utils.Hasher;
+import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -29,8 +30,7 @@ public class InsercaoProfessor extends HttpServlet {
 	protected void doPost(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws IOException {
 
-		resposta.addHeader("Access-Control-Allow-Origin", "*");
-		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
+		Headers.XMLHeaders(requisicao, resposta);
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
 		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {

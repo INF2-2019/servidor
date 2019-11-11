@@ -1,17 +1,18 @@
 package biblioteca.alunos.servlets;
 
 import biblioteca.alunos.repository.AlunosRepository;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
+import utils.ConnectionFactory;
+import utils.Headers;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
-import utils.ConnectionFactory;
-import utils.Headers;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 
 @WebServlet(name = "ConsultarAluno", urlPatterns = {"/biblioteca/alunos/consultar"})
@@ -21,7 +22,7 @@ public class Consultar extends HttpServlet {
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		PrintWriter out = response.getWriter();
 		String xml = "";
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		String id = request.getParameter("id");
 		AlunosRepository rep = new AlunosRepository(conexao);
 		try {

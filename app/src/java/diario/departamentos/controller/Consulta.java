@@ -21,7 +21,7 @@ public class Consulta extends HttpServlet {
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 
 		try(PrintWriter out = response.getWriter()) {
 

@@ -1,6 +1,5 @@
 package diario.campi.servlets;
 
-import diario.campi.view.*;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,8 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import diario.campi.repository.*;
 import java.io.PrintWriter;
-import java.sql.ResultSet;
-import java.sql.Statement;
+
 import utils.ConnectionFactory;
 import utils.Headers;
 
@@ -28,7 +26,7 @@ public class ListarCampi extends HttpServlet {
 		CampiRepository rep = new CampiRepository(conexao);
 		PrintWriter out = response.getWriter();
 		String xml;
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 
 		try {
 			xml = rep.listarCampi();

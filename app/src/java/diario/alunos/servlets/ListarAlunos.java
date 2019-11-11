@@ -22,7 +22,7 @@ public class ListarAlunos extends HttpServlet {
 		AlunosRepository rep = new AlunosRepository(conexao);
 		PrintWriter out = response.getWriter();
 		String xml = "";
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 
 		try {
 			xml = rep.listarAlunos();

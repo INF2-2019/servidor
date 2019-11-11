@@ -1,5 +1,6 @@
 package diario.professores;
 
+import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 import utils.ConnectionFactory;
@@ -29,8 +30,7 @@ public class LogarProfessor extends HttpServlet {
 	protected void doPost(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws IOException {
 
-		resposta.addHeader("Access-Control-Allow-Origin", "*");
-		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
+		Headers.XMLHeaders(requisicao, resposta);
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
