@@ -2,10 +2,20 @@ package biblioteca.reservas;
 
 import biblioteca.reservas.model.ReservaModel;
 import biblioteca.reservas.repository.ReservaRepository;
-import biblioteca.reservas.views.ReservaConsultaView;
 import biblioteca.reservas.views.ErroView;
 import biblioteca.reservas.views.RenderException;
+import biblioteca.reservas.views.ReservaConsultaView;
 import biblioteca.reservas.views.View;
+import utils.ConnectionFactory;
+import utils.Headers;
+import utils.autenticador.BibliotecaAutenticador;
+import utils.autenticador.BibliotecaCargos;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -13,23 +23,12 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import utils.ConnectionFactory;
-import utils.Headers;
-import utils.autenticador.BibliotecaAutenticador;
-import utils.autenticador.BibliotecaCargos;
 
 @WebServlet(name = "ConsultarReservasId", urlPatterns = {"/biblioteca/reservas/consultarporid"})
 public class ConsultarReservasId extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		PrintWriter out = response.getWriter();
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);

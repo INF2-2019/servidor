@@ -34,7 +34,7 @@ public class SignupAdminController extends HttpServlet {
 	private final static String SOMENTE_ADMIN = "Você não tem permissão para acessar essa rota!";
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		PrintWriter out = response.getWriter();
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 

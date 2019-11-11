@@ -3,8 +3,6 @@ package diario.campi.servlets;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,7 +27,7 @@ public class AlterarCampi extends HttpServlet {
 		Connection conexao = ConnectionFactory.getDiario();
 		CampiRepository rep = new CampiRepository(conexao);
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 
 		if (rep.checarAutorizacaoADM(request, response)) {
 

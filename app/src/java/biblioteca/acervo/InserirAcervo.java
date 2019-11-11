@@ -1,21 +1,18 @@
 package biblioteca.acervo;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Time;
+import utils.ConnectionFactory;
+import utils.Headers;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.ConnectionFactory;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.*;
 
 @WebServlet(name = "inserir", urlPatterns = {"/biblioteca/acervo/inserir"})
 /**
@@ -31,10 +28,9 @@ public class InserirAcervo extends HttpServlet {
 	/*id-acervo nas 4 outras tabelas equivale ao 'id' em paramsAcervo*/
 	@Override
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
 
-		resposta.addHeader("Access-Control-Allow-Origin", "*");
-		resposta.setContentType("application/xml;charset=UTF-8");
+		Headers.XMLHeaders(requisicao, resposta);
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getBiblioteca()) {
@@ -53,8 +49,8 @@ public class InserirAcervo extends HttpServlet {
 			Validacao.validarIdObra(Integer.parseInt(requisicao.getParameter("id-obra")), conexao);
 
 			String clausulaSql = "INSERT INTO `acervo` "
-					+ "(`id-campi`, `nome`, `tipo`, `local`, `ano`, `editora`, `paginas`)"
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
+				+ "(`id-campi`, `nome`, `tipo`, `local`, `ano`, `editora`, `paginas`)"
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = conexao.prepareStatement(clausulaSql, Statement.RETURN_GENERATED_KEYS);
 			ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-campi")));
 			ps.setString(2, requisicao.getParameter("nome"));
@@ -113,7 +109,7 @@ public class InserirAcervo extends HttpServlet {
 	}
 
 	private void inserirAcademico(int idAcervo, HttpServletRequest requisicao, Connection conexao)
-			throws SQLException, NumberFormatException {
+		throws SQLException, NumberFormatException {
 		PreparedStatement ps = conexao.prepareStatement("INSERT INTO `academicos` VALUES (?, ?, ?)");
 		ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
 		ps.setInt(2, idAcervo);
@@ -123,7 +119,7 @@ public class InserirAcervo extends HttpServlet {
 	}
 
 	private void inserirLivro(int idAcervo, HttpServletRequest requisicao, Connection conexao)
-			throws SQLException, NumberFormatException {
+		throws SQLException, NumberFormatException {
 		PreparedStatement ps = conexao.prepareStatement("INSERT INTO `livros` VALUES (?, ?, ?, ?)");
 		ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
 		ps.setInt(2, idAcervo);
@@ -134,7 +130,7 @@ public class InserirAcervo extends HttpServlet {
 	}
 
 	private void inserirMidia(int idAcervo, HttpServletRequest requisicao, Connection conexao)
-			throws SQLException, NumberFormatException {
+		throws SQLException, NumberFormatException {
 		PreparedStatement ps = conexao.prepareStatement("INSERT INTO `midias` VALUES (?, ?, ?, ?)");
 		ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
 		ps.setInt(2, idAcervo);
@@ -145,10 +141,10 @@ public class InserirAcervo extends HttpServlet {
 	}
 
 	private void inserirPeriodico(int idAcervo, HttpServletRequest requisicao, Connection conexao)
-			throws SQLException, NumberFormatException {
+		throws SQLException, NumberFormatException {
 		PreparedStatement ps = conexao.prepareStatement("INSERT INTO `periodicos` "
-				+ "(`id`, `id-acervo`, `periodicidade`, `mes`, `volume`, `subtipo`, `issn`) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?)");
+			+ "(`id`, `id-acervo`, `periodicidade`, `mes`, `volume`, `subtipo`, `issn`) "
+			+ "VALUES (?, ?, ?, ?, ?, ?, ?)");
 		ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
 		ps.setInt(2, idAcervo);
 		ps.setString(3, requisicao.getParameter("periodicidade"));

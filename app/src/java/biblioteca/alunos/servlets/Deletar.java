@@ -1,15 +1,6 @@
 package biblioteca.alunos.servlets;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import biblioteca.alunos.repository.*;
+import biblioteca.alunos.repository.AlunosRepository;
 import diario.cursos.view.ErroView;
 import diario.cursos.view.RenderException;
 import diario.cursos.view.SucessoView;
@@ -17,16 +8,26 @@ import diario.cursos.view.View;
 import utils.ConnectionFactory;
 import utils.Headers;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 
 @WebServlet(name = "DeletarAluno", urlPatterns = {"/biblioteca/alunos/deletar"})
-public class Delet extends HttpServlet {
+public class Deletar extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		AlunosRepository rep = new AlunosRepository(conexao);
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		String id = request.getParameter("id");
 
 		if (rep.checarAutorizacaoADM(request, response) || rep.checarAutorizacaoOperador(request, response)) {

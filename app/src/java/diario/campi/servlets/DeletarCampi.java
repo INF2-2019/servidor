@@ -11,10 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import diario.campi.repository.*;
 import diario.cursos.view.*;
 import java.io.PrintWriter;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import utils.ConnectionFactory;
 import utils.Headers;
 
@@ -30,7 +27,7 @@ public class DeletarCampi extends HttpServlet {
 		CampiRepository rep = new CampiRepository(conexao);
 		PrintWriter out = response.getWriter();
 
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		String id = request.getParameter("id");
 		if (rep.checarAutorizacaoADM(request, response)) {
 			try {
