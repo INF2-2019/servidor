@@ -31,16 +31,17 @@ public class ConsultarPorId extends HttpServlet {
 		String id = request.getParameter("id");
 		Connection conexao = ConnectionFactory.getDiario();
 		CampiRepository rep = new CampiRepository(conexao);
-		
+
 		try {
 
 			xml = rep.consultarPorId(id);
 			out.println(xml);
 			conexao.close();
-		} catch(SQLException ex) {
+		} catch (SQLException ex) {
+			response.setStatus(500);
 			out.println("<erro><mensagem>Falha ao consultar campis do banco de dados</mensagem></erro>");
 		}
-		
-    }
+
+	}
 
 }

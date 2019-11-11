@@ -34,10 +34,11 @@ public class ListarCampi extends HttpServlet {
 			xml = rep.listarCampi();
 			out.println(xml);
 			conexao.close();
-		} catch(SQLException ex) {
+		} catch (SQLException ex) {
+			response.setStatus(500);
 			out.println("<erro><mensagem>Falha ao listar campis do banco de dados</mensagem></erro>");
 		}
-               
-    }
+
+	}
 
 }
