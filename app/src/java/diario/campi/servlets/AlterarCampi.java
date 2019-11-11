@@ -31,7 +31,7 @@ public class AlterarCampi extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		Headers.XMLHeaders(response);
 		
-		if (!rep.checarAutorizacaoADM(request, response)) {
+		if (rep.checarAutorizacaoADM(request, response)) {
 
 			String id = request.getParameter("id");
 			String nome = request.getParameter("nome");
@@ -42,7 +42,7 @@ public class AlterarCampi extends HttpServlet {
 				View sucessoView = new SucessoView("Atualizado com sucesso.");
 				sucessoView.render(out);
 			} catch (NumberFormatException excecaoFormatoErrado) {
-				response.setStatus(400);
+				response.setStatus(422);
 				System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
 
 				View erroView = new ErroView(excecaoFormatoErrado);
@@ -52,7 +52,7 @@ public class AlterarCampi extends HttpServlet {
 					throw new ServletException(e);
 				}
 			} catch (SQLException excecaoSQL) {
-				response.setStatus(400);
+				response.setStatus(500);
 				System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
 
 				View erroView = new ErroView(excecaoSQL);
@@ -64,11 +64,12 @@ public class AlterarCampi extends HttpServlet {
 			} catch (RenderException e) {
 				throw new ServletException(e);
 			} catch (TransformerException | ParserConfigurationException ex) {
-				Logger.getLogger(AlterarCampi.class.getName()).log(Level.SEVERE, null, ex);
+				response.setStatus(500);
+				out.println("<erro><mensagem>Erro severo</mensagem></erro>");
 			}
 		
 		} else {
-			response.setStatus(401);
+			response.setStatus(403);
 			out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
 		} 
 

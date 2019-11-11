@@ -34,11 +34,12 @@ public class ConsultarPorId extends HttpServlet {
 		
 		try {
 
-			xml = rep.consultarPorId(id);
-			out.println(xml);
-			conexao.close();
+                    xml = rep.consultarPorId(id);
+                    out.println(xml);
+                    conexao.close();
 		} catch(SQLException ex) {
-			out.println("<erro><mensagem>Falha ao consultar campis do banco de dados</mensagem></erro>");
+                    response.setStatus(500);
+                    out.println("<erro><mensagem>Falha ao consultar campis do banco de dados</mensagem></erro>");
 		}
 		
     }

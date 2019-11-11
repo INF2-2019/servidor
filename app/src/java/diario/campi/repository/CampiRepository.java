@@ -25,15 +25,14 @@ public class CampiRepository {
 	}
     
     
-	public String deletarCampi(String id, HttpServletRequest request, HttpServletResponse response) throws SQLException{
+	public String deletarCampi(String id) throws SQLException{
 		String sql;
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM `departamentos` WHERE `id-campi` = ?");
 		int idParsed = Integer.parseUnsignedInt(id);
 		ps.setInt(1, idParsed);
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()) {
-			response.setStatus(409);
-			return("<erro><mensagem>Existe um departamento registrado neste campi, delete-o antes de deletar o campi</mensagem></erro>");
+                    return("dep");
 		}
 		sql = "DELETE FROM `campi` WHERE `id` = ?";
 
@@ -42,7 +41,11 @@ public class CampiRepository {
 
 		int sucesso = stat.executeUpdate();
 		
-		return "sucesso";
+		if (sucesso != 0)
+                    return ("sucesso");
+                else
+                    return ("erro");
+                
     }
     
 	public boolean inserirCampi(String nome, String cidade, String uf) throws NumberFormatException, SQLException {
@@ -63,28 +66,51 @@ public class CampiRepository {
     
 	public boolean alterarCampi(String id, String nome, String cidade, String uf) throws NumberFormatException, SQLException, TransformerException, ParserConfigurationException {
 		int adcs = 0;
+                int cont = 1;
+                boolean[] pars = new boolean[3];
+                for (int i = 0; i < 3; i++) {
+			pars[i] = false;
+		}
 		String query = "UPDATE campi SET";
 		if (!"".equals(nome)) {
-			query += " nome='"+nome+"'";
+			query += " nome= ?";
 			adcs++;
+                        pars[0] = true;
 		}
 		if (!"".equals(cidade)) {
 		   if (adcs > 0) 
 			query += ",";
-		   query += " cidade='"+cidade+"'";
+		   query += " cidade= ?";
 		  adcs++;
+                  pars[1] = true;
 		}
 		if (!"".equals(uf)) {
 		   if (adcs > 0) 
 			query += ",";
-		   query += " uf='"+uf+"'";
+		   query += " uf= ?";
+                   pars[2] = true;
 		}
+                
 		
 		query += " WHERE `id` = ?";  
 		
 		PreparedStatement ps = con.prepareStatement(query);
+                
+                if (pars[0]) {
+			ps.setString(cont, nome);
+			cont++;
+		}
+		if (pars[1]) {
+			ps.setString(cont, cidade);
+			cont++;
+		}
+
+		if (pars[2]) {
+			ps.setString(cont, uf);
+			cont++;
+		}
 		
-		ps.setInt(1, Integer.parseUnsignedInt(id));
+		ps.setInt(cont, Integer.parseUnsignedInt(id));
                 
 		int sucesso = ps.executeUpdate();
 
