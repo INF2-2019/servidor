@@ -1,14 +1,14 @@
 package diario.diario.diario;
 
-import diario.diario.utils.ErroException;
+import diario.diario.diario.views.DiarioView;
+import diario.diario.diario.views.ErroView;
+import diario.diario.diario.views.ExcecaoNaoAutorizado;
+import diario.diario.diario.views.ExcecaoPadrao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -25,52 +25,47 @@ import utils.Headers;
  */
 @WebServlet(urlPatterns = {"/diario/diario/diario/consulta"})
 public class Consulta extends HttpServlet {
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-        /*
-            [tipo:String[conteudo,atividade]] - String que filtra consulta entre conteudo e atividade 
+	/*
+            [tipo:String[conteudo,atividade]] - String que filtra consulta entre conteudo e atividade
                 tipo = "conteudo" - mostra apenas conteudo
                 tipo = "atividade" - mostra apenas atividade
             conteudo:int - id do conteudo a ser consultado
-            [matricula:int] - id da matricula a ser consultado 
-        */
-        
-        PrintWriter out = response.getWriter();
-        Headers.XMLHeaders(response);
-        
-        try{
-            DiarioParametros p = new DiarioParametros();
-            p.setParametros(request);
-            p.obrigatorios("tipo");
-            
-            boolean tem_conteudo = p.existe("conteudo"),
-                    tem_matricula = p.existe("matricula"),
-                    e_atividade = p.getTipo().equals("atividade");
-            
-            ArrayList<DiarioModel> resultado;
-            if(tem_conteudo && tem_matricula){
-                resultado = DiarioRepository.consulta(p.getIdConteudo(), p.getIdMatricula());
-                out.print(DiarioView.consulta(resultado));
-                
-            } else if(tem_conteudo){
-                resultado = DiarioRepository.consultaPorConteudo(p.getIdConteudo());
-                out.print(DiarioView.consultaSemNota(resultado));
-                
-            } else if(tem_matricula){
-                resultado = DiarioRepository.consultaPorMatricula(p.getIdMatricula(),e_atividade);
-                out.print(DiarioView.consultaSemFalta(resultado));
-                
-            } else
-                throw new ErroException("Acesso negado!","O acesso a toda tabela é um recurso exclusivo do Administrador");
-            
-            
-        }catch(Exception e){
-            if(e instanceof ErroException && ((ErroException)e).causa!=null)
-                out.print(DiarioView.erro(e.getMessage(),((ErroException)e).causa));
-            else
-                out.print(DiarioView.erro("Erro inesperado!",e.getMessage()));
-            e.printStackTrace();
-        }
+            [matricula:int] - id da matricula a ser consultado
+	 */
+
+	PrintWriter out = response.getWriter();
+	Headers.XMLHeaders(response);
+
+	try {
+	    Connection conexao = ConnectionFactory.getDiario();
+	    DiarioRepository repositorio = new DiarioRepository(conexao);
+	    DiarioParametros p = new DiarioParametros(request);
+	    p.obrigatorios("tipo");
+
+	    boolean e_atividade = p.getTipo().equals("atividade");
+
+	    ArrayList<DiarioModel> resultado;
+	    resultado = repositorio.consulta(p);
+	    out.print(new DiarioView(resultado));
+
+	} catch (SQLException e) {
+	    response.setStatus(500);
+	    ErroView erro = new ErroView("Erro no banco de dados!", e.getMessage());
+	    erro.render(out);
+	    e.printStackTrace();
+	} catch (ExcecaoNaoAutorizado e) {
+	    response.setStatus(403);
+	    ErroView erro = new ErroView(e.mensagem, e.causa);
+	    erro.render(out);
+	    e.printStackTrace();
+	} catch (ExcecaoPadrao e) {
+	    response.setStatus(400);
+	    ErroView erro = new ErroView(e.mensagem, e.causa);
+	    erro.render(out);
+	    e.printStackTrace();
+	}
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -84,12 +79,12 @@ public class Consulta extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(Consulta.class.getName()).log(Level.SEVERE, null, ex);
-        }
+	    throws ServletException, IOException {
+	try {
+	    processRequest(request, response);
+	} catch (SQLException ex) {
+	    Logger.getLogger(Consulta.class.getName()).log(Level.SEVERE, null, ex);
+	}
     }
 
     /**
@@ -102,12 +97,12 @@ public class Consulta extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(Consulta.class.getName()).log(Level.SEVERE, null, ex);
-        }
+	    throws ServletException, IOException {
+	try {
+	    processRequest(request, response);
+	} catch (SQLException ex) {
+	    Logger.getLogger(Consulta.class.getName()).log(Level.SEVERE, null, ex);
+	}
     }
 
     /**
@@ -117,7 +112,7 @@ public class Consulta extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+	return "Short description";
     }// </editor-fold>
 
 }

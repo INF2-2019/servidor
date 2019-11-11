@@ -5,10 +5,6 @@
  */
 package diario.diario.diario;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import javax.servlet.http.HttpServletRequest;
-
 /**
  *
  * @author juanr
@@ -18,62 +14,64 @@ public class DiarioModel {
     protected Integer idConteudo, idMatricula, falta;
     protected Double nota;
 
-    public DiarioModel(){
+    public DiarioModel() {
+	idConteudo = null;
+	idMatricula = null;
+	falta = null;
+	nota = null;
+    }
 
+    public DiarioModel(int idConteudo, int idMatricula, int falta) {
+	this.idConteudo = idConteudo;
+	this.idMatricula = idMatricula;
+	this.falta = falta;
+	this.nota = null;
     }
-    
-    public DiarioModel(int idConteudo, int idMatricula, int falta){
-        this.idConteudo = idConteudo;
-        this.idMatricula = idMatricula;
-        this.falta = falta;
-        this.nota = null;
+
+    public DiarioModel(int idConteudo, int idMatricula, int falta, Double nota) {
+	this.idConteudo = idConteudo;
+	this.idMatricula = idMatricula;
+	this.falta = falta;
+	this.nota = nota;
     }
-    
-    public DiarioModel(int idConteudo, int idMatricula, int falta, Double nota){
-        this.idConteudo = idConteudo;
-        this.idMatricula = idMatricula;
-        this.falta = falta;
-        this.nota = nota;
+
+    public DiarioModel(int idConteudo, int idMatricula, Double nota) {
+	this.idConteudo = idConteudo;
+	this.idMatricula = idMatricula;
+	this.nota = nota;
+	this.falta = null;
     }
-    
-    public DiarioModel(int idConteudo, int idMatricula, Double nota){
-        this.idConteudo = idConteudo;
-        this.idMatricula = idMatricula;
-        this.nota = nota;
-        this.falta = null;
-    }
-    
+
     /* GETTERS E SETTERS*/
-
-    public int getIdConteudo() {
-        return idConteudo;
+    public Integer getIdConteudo() {
+	return idConteudo;
     }
 
     public void setIdConteudo(int idConteudo) {
-        this.idConteudo = idConteudo;
+	this.idConteudo = idConteudo;
     }
 
-    public int getIdMatricula() {
-        return idMatricula;
+    public Integer getIdMatricula() {
+	return idMatricula;
     }
 
     public void setIdMatricula(int idMatricula) {
-        this.idMatricula = idMatricula;
+	this.idMatricula = idMatricula;
     }
 
     public Integer getFalta() {
-        return falta;
+	return falta;
     }
 
     public void setFalta(int falta) {
-        this.falta = falta;
+	this.falta = falta;
     }
 
     public Double getNota() {
-        return nota;
+	return nota;
     }
 
     public void setNota(Double nota) {
-        this.nota = nota;
+	this.nota = nota;
     }
 }

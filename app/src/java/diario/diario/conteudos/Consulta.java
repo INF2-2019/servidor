@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import utils.ConnectionFactory;
 import utils.Headers;
-import diario.diario.utils.ErroException;
 
 /**
  *

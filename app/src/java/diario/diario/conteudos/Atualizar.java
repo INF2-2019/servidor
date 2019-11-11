@@ -1,6 +1,5 @@
 package diario.diario.conteudos;
 
-import diario.diario.utils.ErroException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;

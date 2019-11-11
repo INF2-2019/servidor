@@ -5,7 +5,6 @@
  */
 package diario.diario.conteudos;
 
-import diario.diario.utils.ErroException;
 import java.sql.Date;
 import javax.servlet.http.HttpServletRequest;
 

@@ -7,7 +7,6 @@ package diario.diario.conteudos;
 
 import diario.diario.diario.DiarioModel;
 import diario.diario.diario.DiarioRepository;
-import diario.diario.utils.ErroException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;

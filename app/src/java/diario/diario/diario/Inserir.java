@@ -1,8 +1,13 @@
 package diario.diario.diario;
 
-import diario.diario.utils.ErroException;
+import diario.diario.diario.views.DiarioView;
+import diario.diario.diario.views.ErroView;
+import diario.diario.diario.views.ExcecaoNaoAutorizado;
+import diario.diario.diario.views.ExcecaoPadrao;
+import diario.diario.diario.views.SucessoView;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +27,7 @@ import utils.Headers;
 public class Inserir extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-        /*
+	/*
             conteudo:int - id do conteudo a ser lançada a falta ou nota
             matricula:int - id da matricula a ser lançada a falta ou nota
             tipo:String[conteudo,atividade] - String que especifica se esta sendo lançado a um conteudo ou atividade,
@@ -30,40 +35,48 @@ public class Inserir extends HttpServlet {
                 tipo = "atividade" - permite que seja inserido a nota
             falta:int - quantidade de faltas do aluno
             nota:Double - nota do aluno
-        */
-        
-        PrintWriter out = response.getWriter();
-        Headers.XMLHeaders(response);
+	 */
 
-        try{
-            DiarioParametros p = new DiarioParametros();
-            p.setParametros(request);
-            p.obrigatorios("conteudo", "matricula","tipo");
-            
-            
-            if(p.getTipo().equals("atividade")){
-                p.obrigatorios("falta","nota");
-                DiarioRepository.insere(p.getIdConteudo(), p.getIdMatricula(), p.getFalta(), p.getNota());
-                out.print(DiarioView.sucesso("Nota lançada com sucesso!"));
-                
-            }
-            else if(p.getTipo().equals("conteudo")){
-                p.obrigatorios("falta");
-                DiarioRepository.insere(p.getIdConteudo(), p.getIdMatricula(), p.getFalta());
-                out.print(DiarioView.sucesso("Falta lançada com sucesso!"));
-            } else {
-                throw new ErroException("Erro inesperado!");
-            }
-            
-        }catch(Exception e){
-            if(e instanceof ErroException && ((ErroException)e).causa!=null)
-                out.print(DiarioView.erro(e.getMessage(),((ErroException)e).causa));
-            else
-                out.print(DiarioView.erro("Erro inesperado!",e.getMessage()));
-            e.printStackTrace();
-        }
-        
-        
+	PrintWriter out = response.getWriter();
+	Headers.XMLHeaders(response);
+
+	try {
+	    Connection conexao = ConnectionFactory.getDiario();
+	    DiarioRepository repositorio = new DiarioRepository(conexao);
+	    DiarioParametros p = new DiarioParametros(request);
+	    p.obrigatorios("conteudo", "matricula", "tipo");
+
+	    if (p.getTipo().equals("atividade")) {
+		p.obrigatorios("falta", "nota");
+	    } else if (p.getTipo().equals("conteudo")) {
+		p.obrigatorios("falta");
+	    }
+
+	    if (repositorio.insere(p)) {
+		SucessoView view = new SucessoView("Falta lançada com sucesso!");
+		view.render(out);
+	    } else {
+		ErroView view = new ErroView();
+		view.render(out);
+	    }
+
+	} catch (SQLException e) {
+	    response.setStatus(500);
+	    ErroView erro = new ErroView("Erro no banco de dados!", e.getMessage());
+	    erro.render(out);
+	    e.printStackTrace();
+	} catch (ExcecaoNaoAutorizado e) {
+	    response.setStatus(403);
+	    ErroView erro = new ErroView(e.mensagem, e.causa);
+	    erro.render(out);
+	    e.printStackTrace();
+	} catch (ExcecaoPadrao e) {
+	    response.setStatus(400);
+	    ErroView erro = new ErroView(e.mensagem, e.causa);
+	    erro.render(out);
+	    e.printStackTrace();
+	}
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -77,12 +90,12 @@ public class Inserir extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(Inserir.class.getName()).log(Level.SEVERE, null, ex);
-        }
+	    throws ServletException, IOException {
+	try {
+	    processRequest(request, response);
+	} catch (SQLException ex) {
+	    Logger.getLogger(Inserir.class.getName()).log(Level.SEVERE, null, ex);
+	}
     }
 
     /**
@@ -95,12 +108,12 @@ public class Inserir extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(Inserir.class.getName()).log(Level.SEVERE, null, ex);
-        }
+	    throws ServletException, IOException {
+	try {
+	    processRequest(request, response);
+	} catch (SQLException ex) {
+	    Logger.getLogger(Inserir.class.getName()).log(Level.SEVERE, null, ex);
+	}
     }
 
     /**
@@ -110,7 +123,7 @@ public class Inserir extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+	return "Short description";
     }// </editor-fold>
 
 }
