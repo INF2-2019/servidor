@@ -114,9 +114,8 @@ public class ReservaRepository {
 		} else {
 			throw new AlunoException("O id(CPF) do aluno é obrigatório");
 		}
-		//Verifica a existência do aluno
-		Connection diarioCom = utils.ConnectionFactory.getDiario();
-		ps = diarioCom.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
+		
+		ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
 		ps.setLong(1, idAlunos);
 		resultadoBusca = ps.executeQuery();
 		if (!resultadoBusca.next()) {
