@@ -6,7 +6,6 @@ import biblioteca.emprestimos.views.RenderException;
 import biblioteca.emprestimos.views.SucessoView;
 import biblioteca.emprestimos.views.View;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.BibliotecaAutenticador;
 import utils.autenticador.BibliotecaCargos;
 
@@ -27,7 +26,7 @@ import java.util.logging.Logger;
 public class DeletarEmprestimos extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(request, response);
+
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
 		PrintWriter out = response.getWriter();

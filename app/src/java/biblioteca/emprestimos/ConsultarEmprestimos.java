@@ -4,7 +4,6 @@ import biblioteca.emprestimos.model.EmprestimoModel;
 import biblioteca.emprestimos.repository.EmprestimoRepository;
 import biblioteca.emprestimos.views.*;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.BibliotecaAutenticador;
 import utils.autenticador.BibliotecaCargos;
 
@@ -26,7 +25,7 @@ import java.util.Set;
 public class ConsultarEmprestimos extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(request, response);
+
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		PrintWriter out = response.getWriter();
 

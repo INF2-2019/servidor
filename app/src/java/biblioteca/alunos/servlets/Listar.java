@@ -2,7 +2,6 @@ package biblioteca.alunos.servlets;
 
 import biblioteca.alunos.repository.AlunosRepository;
 import utils.ConnectionFactory;
-import utils.Headers;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +22,7 @@ public class Listar extends HttpServlet {
 		AlunosRepository rep = new AlunosRepository(conexao);
 		PrintWriter out = response.getWriter();
 		String xml = "";
-		Headers.XMLHeaders(request, response);
+
 
 		try {
 			xml = rep.listarAlunos();

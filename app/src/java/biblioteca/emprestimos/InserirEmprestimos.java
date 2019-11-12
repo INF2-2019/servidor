@@ -4,7 +4,6 @@ import biblioteca.emprestimos.model.EmprestimoModel;
 import biblioteca.emprestimos.repository.EmprestimoRepository;
 import biblioteca.emprestimos.views.*;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.BibliotecaAutenticador;
 import utils.autenticador.BibliotecaCargos;
 
@@ -26,7 +25,7 @@ public class InserirEmprestimos extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		EmprestimoRepository emprestimoRep = new EmprestimoRepository(conexao);
-		Headers.XMLHeaders(request, response);
+
 		PrintWriter out = response.getWriter();
 
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);

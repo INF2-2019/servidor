@@ -2,7 +2,6 @@ package diario.turmas.controllers;
 
 import diario.turmas.repository.TurmasRepository;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 
 import javax.servlet.ServletException;
@@ -24,7 +23,7 @@ public class DeletaTurma extends HttpServlet {
 
 	protected void processRequest(HttpServletRequest req, HttpServletResponse res)
 		throws ServletException, IOException {
-		Headers.XMLHeaders(req, res);
+
 
 		PrintWriter out = res.getWriter();
 

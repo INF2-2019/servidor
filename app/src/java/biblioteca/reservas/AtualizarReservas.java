@@ -6,7 +6,6 @@ import biblioteca.reservas.views.RenderException;
 import biblioteca.reservas.views.SucessoView;
 import biblioteca.reservas.views.View;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.BibliotecaAutenticador;
 import utils.autenticador.BibliotecaCargos;
 
@@ -27,7 +26,7 @@ import java.util.Map;
 public class AtualizarReservas extends HttpServlet {
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		Headers.XMLHeaders(req, res);
+
 		Connection con = ConnectionFactory.getBiblioteca();
 		PrintWriter out = res.getWriter();
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(req, res);

@@ -1,20 +1,19 @@
 package diario.professores;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import utils.ConnectionFactory;
-import utils.Headers;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @WebServlet(name = "ConsultarProfessores", urlPatterns = "/diario/professores/consultar")
 /**
@@ -30,8 +29,8 @@ public class ConsultarProfessor extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
-			throws IOException {
-		Headers.XMLHeaders(requisicao, resposta);
+		throws IOException {
+
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
 		if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {

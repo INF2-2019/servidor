@@ -1,21 +1,19 @@
 package diario.campi.servlets;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
+import diario.campi.repository.CampiRepository;
+import utils.ConnectionFactory;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import diario.campi.repository.*;
+import java.io.IOException;
 import java.io.PrintWriter;
-
-import utils.ConnectionFactory;
-import utils.Headers;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- *
  * @author User
  */
 @WebServlet(name = "ListarCampi", urlPatterns = {"/diario/campi/listar"})
@@ -26,7 +24,7 @@ public class ListarCampi extends HttpServlet {
 		CampiRepository rep = new CampiRepository(conexao);
 		PrintWriter out = response.getWriter();
 		String xml;
-		Headers.XMLHeaders(request, response);
+
 
 		try {
 			xml = rep.listarCampi();
