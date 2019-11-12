@@ -1,5 +1,12 @@
 package diario.professores;
 
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+import utils.ConnectionFactory;
+import utils.Hasher;
+import diario.professores.services.ExcecaoNaoAutorizado;
+import diario.professores.services.ExcecaoParametrosIncorretos;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -10,13 +17,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
-import utils.ConnectionFactory;
-import utils.Hasher;
-import diario.professores.services.ExcecaoNaoAutorizado;
-import diario.professores.services.ExcecaoParametrosIncorretos;
 
 /**
  * <h1> Servlet de Log-in</h1>
