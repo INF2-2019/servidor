@@ -1,35 +1,32 @@
 package biblioteca.emprestimos;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.Set;
+import biblioteca.emprestimos.model.EmprestimoModel;
+import biblioteca.emprestimos.repository.EmprestimoRepository;
+import biblioteca.emprestimos.views.*;
+import utils.ConnectionFactory;
+import utils.Headers;
+import utils.autenticador.BibliotecaAutenticador;
+import utils.autenticador.BibliotecaCargos;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import biblioteca.emprestimos.model.EmprestimoModel;
-import biblioteca.emprestimos.repository.EmprestimoRepository;
-import biblioteca.emprestimos.views.AlunoException;
-import biblioteca.emprestimos.views.EmprestimoConsultaView;
-import utils.ConnectionFactory;
-import biblioteca.emprestimos.views.RenderException;
-import biblioteca.emprestimos.views.View;
-import biblioteca.emprestimos.views.ErroView;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.HashSet;
-import utils.Headers;
-import utils.autenticador.BibliotecaAutenticador;
-import utils.autenticador.BibliotecaCargos;
+import java.util.Map;
+import java.util.Set;
 
 @WebServlet(name = "ConsultarEmprestimos", urlPatterns = {"/biblioteca/emprestimos/consultar"})
 public class ConsultarEmprestimos extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		PrintWriter out = response.getWriter();
 
