@@ -23,8 +23,8 @@ import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
 
-@WebServlet(name = "ConsultarPorId", urlPatterns = {"/biblioteca/emprestimos/consultarporid"})
-public class ConsultarPorId extends HttpServlet {
+@WebServlet(name = "ConsultarEmprestimoPorId", urlPatterns = {"/biblioteca/emprestimos/consultarporid"})
+public class ConsultarEmprestimoPorId extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
