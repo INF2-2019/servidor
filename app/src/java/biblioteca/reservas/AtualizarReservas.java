@@ -32,7 +32,7 @@ public class AtualizarReservas extends HttpServlet {
 		Connection con = ConnectionFactory.getBiblioteca();
 		PrintWriter out = res.getWriter();
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(req, res);
-		/*
+	
 		if (autenticador.cargoLogado() != BibliotecaCargos.ADMIN) {
 			res.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
@@ -43,7 +43,7 @@ public class AtualizarReservas extends HttpServlet {
 			}
 			return;
 		}
-		*/
+	
 		if (con == null) {
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {
