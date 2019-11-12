@@ -29,8 +29,6 @@ public class AtualizarSenha extends HttpServlet {
 	protected void doPost(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws ServletException, IOException {
 
-		Headers.XMLHeaders(requisicao, resposta);
-
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
 

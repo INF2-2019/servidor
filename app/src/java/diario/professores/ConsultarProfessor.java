@@ -33,13 +33,6 @@ public class ConsultarProfessor extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws IOException {
-		Headers.XMLHeaders(requisicao, resposta);
-
-		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
-		if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
-			resposta.setStatus(403);
-			return;
-		}
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {

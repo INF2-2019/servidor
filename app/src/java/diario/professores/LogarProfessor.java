@@ -1,6 +1,5 @@
 package diario.professores;
 
-import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 import utils.ConnectionFactory;
@@ -30,8 +29,7 @@ public class LogarProfessor extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest requisicao, HttpServletResponse resposta)
-		throws IOException {
-
+			throws IOException {
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
