@@ -83,8 +83,8 @@ public class EmprestimoRepository {
                         idAlunos = Long.parseLong(SidAlunos);
 		}
                 else throw new AlunoException("O id(CPF) do aluno é obrigatório");
-               Connection conDiario = utils.ConnectionFactory.getDiario();
-                ps = conDiario.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ?");
+          
+                ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ?");
                 ps.setLong(1, idAlunos);
                 resultadoBusca = ps.executeQuery();
 
@@ -95,21 +95,21 @@ public class EmprestimoRepository {
 		if (valores.containsKey("id-acervo")) {
 			idAcervo = Integer.parseUnsignedInt(valores.get("id-acervo"));
 		}
-
+                
                 ps = con.prepareStatement("SELECT * FROM `acervo` WHERE `id` = ? ");
                 ps.setInt(1, idAcervo);
                 resultadoBusca = ps.executeQuery();
 
                 if(!resultadoBusca.next()) throw new AlunoException("Não existe esse acervo.");
-
-
+                
+               
 		ps = con.prepareStatement("SELECT * FROM `emprestimos` WHERE `id-acervo` = ? AND `data-devolucao`= '1970-01-01'");
 		ps.setInt(1, idAcervo);
 		resultadoBusca = ps.executeQuery();
 		while (resultadoBusca.next()) {
 			throw new InacessivelException("Este livro, atualmente, já está emprestado");
 		}
-
+                
 		Date dataEmprestimo = new Date(new Date().getTime());
 
 		if (valores.containsKey("data-emprestimo")) {
@@ -158,15 +158,15 @@ public class EmprestimoRepository {
 		}
 
 		if (filtros.containsKey("data-emprestimo")) {
-			Date.parse(filtros.get("data-emprestimo"));
+			simpleFormat.parse(filtros.get("data-emprestimo"));
 		}
 
 		if (filtros.containsKey("data-prev-devol")) {
-			Date.parse(filtros.get("data-pre-devol"));
+			simpleFormat.parse(filtros.get("data-prev-devol"));
 		}
 
 		if (filtros.containsKey("data-devolucao")) {
-			Date.parse(filtros.get("data-devolucao"));
+			simpleFormat.parse(filtros.get("data-devolucao"));
 		}
 
 		if (filtros.containsKey("multa")) {
@@ -189,15 +189,15 @@ public class EmprestimoRepository {
 		long idAlunos = Long.parseUnsignedLong(parametros.get("id-alunos").toString());
 		int idAcervo = Integer.parseUnsignedInt(parametros.get("id-acervo").toString());
 
-		Date dataEmprestimo = (Date) (parametros.get("data-emprestimo"));
+		Date dataEmprestimo = simpleFormat.parse(parametros.get("data-emprestimo").toString());
 
-		Date dataPrevDevol = (Date) (parametros.get("data-prev-devol"));
+		Date dataPrevDevol = simpleFormat.parse(parametros.get("data-prev-devol").toString());
 
-		Date dataDevolucao = (Date) (parametros.get("data-devolucao"));
+		Date dataDevolucao = simpleFormat.parse(parametros.get("data-devolucao").toString());
 		double multa = Double.parseDouble(parametros.get("multa").toString());
 
-		Connection conDiario = utils.ConnectionFactory.getDiario();
-		PreparedStatement ps = conDiario.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
+	
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
                 ps.setLong(1, idAlunos);
                 ResultSet resultadoBusca = ps.executeQuery();
                 if(!resultadoBusca.next()) throw new AlunoException("Não existe esse aluno.");

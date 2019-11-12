@@ -26,7 +26,7 @@ import utils.autenticador.DiarioCargos;
 public class ConsultarPorId extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		Connection conexao = ConnectionFactory.getDiario();
 		PrintWriter out = response.getWriter();
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);

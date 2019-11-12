@@ -26,7 +26,7 @@ public class DeletarAlunos extends HttpServlet {
 		Connection conexao = ConnectionFactory.getDiario();
 		AlunosRepository rep = new AlunosRepository(conexao);
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		String id = request.getParameter("id");
 
 		if (rep.checarAutorizacaoADM(request, response)) {

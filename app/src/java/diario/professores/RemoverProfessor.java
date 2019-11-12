@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import utils.ConnectionFactory;
+import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -28,8 +29,7 @@ public class RemoverProfessor extends HttpServlet {
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws IOException {
 
-		resposta.addHeader("Access-Control-Allow-Origin", "*");
-		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
+		Headers.XMLHeaders(requisicao, resposta);
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
 		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {

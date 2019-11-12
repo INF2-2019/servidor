@@ -1,32 +1,29 @@
 package diario.turmas.controllers;
 
 import diario.turmas.models.TurmaModel;
-import static diario.turmas.views.Views.retornaConsulta;
-import static diario.turmas.views.Views.retornaErro;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import utils.ConnectionFactory;
+import utils.Headers;
+import utils.autenticador.DiarioAutenticador;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.ConnectionFactory;
-import utils.Headers;
-import utils.autenticador.DiarioAutenticador;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.*;
+import java.util.ArrayList;
+
+import static diario.turmas.views.Views.retornaConsulta;
+import static diario.turmas.views.Views.retornaErro;
 import static utils.autenticador.DiarioCargos.CONVIDADO;
 
 @WebServlet(name = "ConsultaTurmas", urlPatterns = {"/diario/turmas/consultar"})
 public class ConsultaTurmas extends HttpServlet {
 
 	protected void processRequest(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		Headers.XMLHeaders(res);
-		res.setContentType("application/xml;charset=UTF-8");
+		Headers.XMLHeaders(req, res);
 
 		PrintWriter out = res.getWriter();
 		Connection con = ConnectionFactory.getDiario();
@@ -63,13 +60,13 @@ public class ConsultaTurmas extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
 		processRequest(request, response);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
 		processRequest(request, response);
 	}
 

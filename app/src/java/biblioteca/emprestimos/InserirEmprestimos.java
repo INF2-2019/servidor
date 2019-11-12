@@ -2,27 +2,23 @@ package biblioteca.emprestimos;
 
 import biblioteca.emprestimos.model.EmprestimoModel;
 import biblioteca.emprestimos.repository.EmprestimoRepository;
-import biblioteca.emprestimos.views.AlunoException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Map;
+import biblioteca.emprestimos.views.*;
+import utils.ConnectionFactory;
+import utils.Headers;
+import utils.autenticador.BibliotecaAutenticador;
+import utils.autenticador.BibliotecaCargos;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.ConnectionFactory;
-import utils.Headers;
-import biblioteca.emprestimos.views.RenderException;
-import biblioteca.emprestimos.views.View;
-import biblioteca.emprestimos.views.SucessoView;
-import biblioteca.emprestimos.views.ErroView;
-import biblioteca.emprestimos.views.InacessivelException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.ParseException;
-import utils.autenticador.BibliotecaAutenticador;
-import utils.autenticador.BibliotecaCargos;
+import java.util.Map;
 
 @WebServlet(name = "InserirEmprestimos", urlPatterns = {"/biblioteca/emprestimos/inserir"})
 public class InserirEmprestimos extends HttpServlet {
@@ -30,11 +26,11 @@ public class InserirEmprestimos extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		EmprestimoRepository emprestimoRep = new EmprestimoRepository(conexao);
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		PrintWriter out = response.getWriter();
 
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
-		
+
 		if ((autenticador.cargoLogado() != BibliotecaCargos.ADMIN) && (autenticador.cargoLogado() != BibliotecaCargos.OPERADOR)) {
 			response.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
@@ -45,7 +41,7 @@ public class InserirEmprestimos extends HttpServlet {
 			}
 			return;
 		}
-		
+
 		if (conexao == null) {
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {

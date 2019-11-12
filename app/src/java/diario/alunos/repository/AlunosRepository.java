@@ -1,21 +1,18 @@
 package diario.alunos.repository;
 
 import diario.campi.view.viewConsulta;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import javax.servlet.http.HttpServletRequest;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import javax.servlet.http.HttpServletResponse;
 import utils.Hasher;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class AlunosRepository {
@@ -277,13 +274,13 @@ public class AlunosRepository {
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT * FROM `alunos`");
 		while (rs.next()) {
-			int id = rs.getInt("id");
-			String idStr = Integer.toString(id);
+			Long id = rs.getLong("id");
+			String idStr = Long.toString(id);
 			String zeros = "";
 			for (int i = idStr.length(); i < 11; i++)
-				zeros+="0";
-			zeros+=idStr;
-				xml += viewConsulta.XMLAluno(zeros, rs.getString("nome"), rs.getString("email"));
+				zeros += "0";
+			zeros += idStr;
+			xml += viewConsulta.XMLAluno(zeros, rs.getString("nome"), rs.getString("email"));
 		}
 		xml = viewConsulta.XMLConsultaAlunos(xml);
 		return xml;
@@ -296,25 +293,25 @@ public class AlunosRepository {
 		ps.setLong(1, idParsed);
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
-			int id2 = rs.getInt("id");
-			String idStr = Integer.toString(id2);
+			Long id2 = rs.getLong("id");
+			String idStr = Long.toString(id2);
 			String zeros = "";
 			for (int i = idStr.length(); i < 11; i++)
-				zeros+="0";
-			zeros+=idStr;
+				zeros += "0";
+			zeros += idStr;
 			xml += viewConsulta.XMLAlunoCompleto(zeros,
-					rs.getString("nome"),
-					rs.getString("email"),
-					rs.getString("sexo"),
-					rs.getDate("nascimento"),
-					rs.getString("logradouro"),
-					rs.getInt("numero"),
-					rs.getString("complemento"),
-					rs.getString("bairro"),
-					rs.getString("cidade"),
-					rs.getInt("cep"),
-					rs.getString("uf"),
-					rs.getString("foto"));
+				rs.getString("nome"),
+				rs.getString("email"),
+				rs.getString("sexo"),
+				rs.getDate("nascimento"),
+				rs.getString("logradouro"),
+				rs.getInt("numero"),
+				rs.getString("complemento"),
+				rs.getString("bairro"),
+				rs.getString("cidade"),
+				rs.getInt("cep"),
+				rs.getString("uf"),
+				rs.getString("foto"));
 		}
 		return xml;
 	}
@@ -322,7 +319,7 @@ public class AlunosRepository {
 	public boolean checarAutorizacaoAluno(HttpServletRequest request, HttpServletResponse response, String id) {
 		DiarioAutenticador x = new DiarioAutenticador(request, response);
 		long idParsed = Long.parseLong(id);
-		return x.cargoLogado() == DiarioCargos.ALUNO && x.idLogado() == idParsed;
+		return x.cargoLogado() == DiarioCargos.ALUNO && (Long) x.idLogado() == idParsed;
 	}
 
 	public Boolean alterarSenha(String id, String senha) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException {

@@ -21,7 +21,7 @@ public class ConsultarPorId extends HttpServlet {
 		Connection conexao = ConnectionFactory.getDiario();
 		PrintWriter out = response.getWriter();
 		String xml = "";
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		String id = request.getParameter("id");
 		AlunosRepository rep = new AlunosRepository(conexao);
 		try {

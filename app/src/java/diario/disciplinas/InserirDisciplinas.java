@@ -29,9 +29,9 @@ public class InserirDisciplinas extends HttpServlet {
 		Connection conexao = ConnectionFactory.getDiario();
 		DisciplinaRepository disciplinaRep = new DisciplinaRepository(conexao);
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
-        
+
 		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
 			response.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario nao tem permisao para essa operacao"));
@@ -42,7 +42,7 @@ public class InserirDisciplinas extends HttpServlet {
 			}
 			return;
 		}
-		
+
 		if (conexao == null) {
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {

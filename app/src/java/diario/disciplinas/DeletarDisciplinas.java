@@ -17,8 +17,6 @@ import diario.disciplinas.views.View;
 import diario.disciplinas.views.SucessoView;
 import diario.disciplinas.views.ErroView;
 import diario.disciplinas.views.ExcecaoConteudoVinculado;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -26,7 +24,7 @@ import utils.autenticador.DiarioCargos;
 public class DeletarDisciplinas extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		Connection conexao = ConnectionFactory.getDiario();
 
 		PrintWriter out = response.getWriter();

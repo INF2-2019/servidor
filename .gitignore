@@ -1,6 +1,3 @@
-# JDBC Driver
-!mysql-connector-java-8.0.18.jar
-
 # Compiled class file
 *.class
 
@@ -158,3 +155,5 @@ local.properties
 .gradle/
 **/**/.idea/dictionaries/
 
+# Libs
+!/**/lib/*.jar

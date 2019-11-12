@@ -1,29 +1,30 @@
 package diario.turmas.controllers;
 
 import diario.turmas.repository.TurmasRepository;
-import static diario.turmas.views.Views.retornaErro;
-import static diario.turmas.views.Views.retornaSucesso;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
+import utils.ConnectionFactory;
+import utils.Headers;
+import utils.autenticador.DiarioAutenticador;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.ConnectionFactory;
-import utils.Headers;
-import utils.autenticador.DiarioAutenticador;
-import static utils.autenticador.DiarioCargos.*;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import static diario.turmas.views.Views.retornaErro;
+import static diario.turmas.views.Views.retornaSucesso;
+import static utils.autenticador.DiarioCargos.ADMIN;
 
 @WebServlet(name = "DeletaTurma", urlPatterns = {"/diario/turmas/deletar"})
 public class DeletaTurma extends HttpServlet {
 
 	protected void processRequest(HttpServletRequest req, HttpServletResponse res)
-			throws ServletException, IOException {
-		Headers.XMLHeaders(res);
-		res.setContentType("application/xml;charset=UTF-8");
+		throws ServletException, IOException {
+		Headers.XMLHeaders(req, res);
 
 		PrintWriter out = res.getWriter();
 
@@ -56,13 +57,13 @@ public class DeletaTurma extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
 		processRequest(request, response);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
 		processRequest(request, response);
 	}
 
