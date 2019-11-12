@@ -1,6 +1,5 @@
 package diario.professores_disciplinas;
 
-import diario.disciplinas.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -10,22 +9,21 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import diario.disciplinas.repository.DisciplinaRepository;
 import utils.ConnectionFactory;
 import utils.Headers;
-import diario.disciplinas.views.RenderException;
-import diario.disciplinas.views.View;
-import diario.disciplinas.views.SucessoView;
-import diario.disciplinas.views.ErroView;
-import diario.disciplinas.views.ExcecaoConteudoVinculado;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import diario.professores_disciplinas.View.RenderException;
+import diario.professores_disciplinas.View.View;
+import diario.professores_disciplinas.View.SucessoView;
+import diario.professores_disciplinas.View.ErroView;
+import diario.professores_disciplinas.Repository.ProfessoresDisciplinasRepository;
+import diario.professores_disciplinas.View.ExcecaoConteudoVinculado;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
-@WebServlet(name = "DeletarDisciplinas", urlPatterns = {"/diario/disciplinas/deletar"})
+@WebServlet(name = "DeletarDisciplinas", urlPatterns = {"/diario/professoresdisciplinas/deletar"})
 public class DeletarProfessoresDisciplinas extends HttpServlet {
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Headers.XMLHeaders(response);
 		Connection conexao = ConnectionFactory.getDiario();
@@ -43,7 +41,6 @@ public class DeletarProfessoresDisciplinas extends HttpServlet {
 			}
 			return;
 		}
-
 		if (conexao == null) {
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {
@@ -54,11 +51,16 @@ public class DeletarProfessoresDisciplinas extends HttpServlet {
 			return;
 		}
 
-		DisciplinaRepository disciplinaRep = new DisciplinaRepository(conexao);
+		ProfessoresDisciplinasRepository disciplinaRep = new ProfessoresDisciplinasRepository(conexao);
 
-		String id = request.getParameter("id");
+		String[] id = {request.getParameter("id-professores"), request.getParameter("id-disciplinas")};
+
+		int v = 1;
+		if (request.getParameter("v") != null) {
+			v = Integer.parseUnsignedInt(request.getParameter("v"));
+		}
 		try {
-			disciplinaRep.deletar(id);
+			disciplinaRep.deletar(id[v - 1], v);
 			View sucessoView = new SucessoView("Deletado com sucesso.");
 			sucessoView.render(out);
 		} catch (NumberFormatException excecaoFormatoErrado) {

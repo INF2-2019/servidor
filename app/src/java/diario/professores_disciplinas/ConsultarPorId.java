@@ -1,12 +1,11 @@
 package diario.professores_disciplinas;
 
-import diario.disciplinas.*;
-import diario.disciplinas.model.DisciplinaModel;
-import diario.disciplinas.repository.DisciplinaRepository;
-import diario.disciplinas.views.DisciplinaConsultaView;
-import diario.disciplinas.views.ErroView;
-import diario.disciplinas.views.RenderException;
-import diario.disciplinas.views.View;
+import diario.professores_disciplinas.Model.ProfessoresDisciplinasModel;
+import diario.professores_disciplinas.Repository.ProfessoresDisciplinasRepository;
+import diario.professores_disciplinas.View.ProfDisConsultaView;
+import diario.professores_disciplinas.View.RenderException;
+import diario.professores_disciplinas.View.View;
+import diario.professores_disciplinas.View.ErroView;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -23,7 +22,7 @@ import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
-@WebServlet(name = "ConsultarPorId", urlPatterns = {"/diario/disciplinas/consultarporid"})
+@WebServlet(name = "ConsultarPorId", urlPatterns = {"/diario/professoresdisciplinas/consultarporid"})
 public class ConsultarPorId extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -43,7 +42,6 @@ public class ConsultarPorId extends HttpServlet {
 			return;
 		}
 		if (conexao == null) {
-			System.err.println("Falha ao conectar ao bd");
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {
 				erroView.render(out);
@@ -52,13 +50,18 @@ public class ConsultarPorId extends HttpServlet {
 			}
 			return;
 		}
-		DisciplinaRepository disciplinaRep = new DisciplinaRepository(conexao);
-		Set<DisciplinaModel> resultado;
+		ProfessoresDisciplinasRepository disciplinaRep = new ProfessoresDisciplinasRepository(conexao);
+		Set<ProfessoresDisciplinasModel> resultado;
+		int v = 1;
+		if (request.getParameter("v") != null) {
+			v = Integer.parseUnsignedInt(request.getParameter("v"));
+		}
+		String[] id = {request.getParameter("id-professores"), request.getParameter("id-disciplinas")};
 		try {
 			resultado = new HashSet<>();
-			resultado.add(disciplinaRep.consultarId(request.getParameter("id")));
+			resultado.add(disciplinaRep.consultarId(id[v - 1], v));
 
-			View DisciplinaConsultaView = new DisciplinaConsultaView(resultado);
+			View DisciplinaConsultaView = new ProfDisConsultaView(resultado);
 			DisciplinaConsultaView.render(out);
 
 		} catch (NumberFormatException excecaoFormatoErrado) {
