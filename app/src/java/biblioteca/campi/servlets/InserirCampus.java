@@ -25,7 +25,7 @@ public class InserirCampus extends HttpServlet {
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		CampiRepository rep = new CampiRepository(conexao);
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 
 		if (rep.checarAutorizacaoADM(request, response)) {
 
