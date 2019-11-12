@@ -6,16 +6,15 @@
 package biblioteca.descartes.views;
 
 /**
- *
  * @author juanr
  */
-public class ExcecaoParametroIncorreto extends ExcecaoPadrao{
+public class ExcecaoParametroIncorreto extends ExcecaoPadrao {
 
-    public ExcecaoParametroIncorreto(String causa, String mensagem) {
-        super(causa, mensagem);
-    }
+	public ExcecaoParametroIncorreto(String causa, String mensagem) {
+		super(causa, mensagem);
+	}
 
-    public ExcecaoParametroIncorreto(String string) {
-        super(string);
-    }
+	public ExcecaoParametroIncorreto(String string) {
+		super(string);
+	}
 }

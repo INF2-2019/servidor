@@ -7,26 +7,25 @@ package biblioteca.descartes.views;
 
 
 /**
- *
  * @author juanr
  */
-public class ExcecaoPadrao extends Exception{
-    public String causa = null, mensagem = null; 
-    
-    public ExcecaoPadrao(String causa, String mensagem){
-        this.causa = causa;
-        this.mensagem = mensagem;
-    }
+public class ExcecaoPadrao extends Exception {
+	public String causa = null, mensagem = null;
 
-    public ExcecaoPadrao(String string) {
-        super(string);
-        this.mensagem = string;
-        this.causa = super.getMessage();
-    }
-    
-    @Override
-    public String getMessage(){
-        return this.mensagem;
-    }
-    
+	public ExcecaoPadrao(String causa, String mensagem) {
+		this.causa = causa;
+		this.mensagem = mensagem;
+	}
+
+	public ExcecaoPadrao(String string) {
+		super(string);
+		this.mensagem = string;
+		this.causa = super.getMessage();
+	}
+
+	@Override
+	public String getMessage() {
+		return this.mensagem;
+	}
+
 }

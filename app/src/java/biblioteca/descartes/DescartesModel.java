@@ -8,57 +8,55 @@ package biblioteca.descartes;
 import java.sql.Date;
 
 /**
- *
  * @author juanr
  */
 public class DescartesModel {
-    int idAcervo;
-    Date dataDescarte;
-    String motivos, operador;
+	int idAcervo;
+	Date dataDescarte;
+	String motivos, operador;
 
-    public DescartesModel() {
-    }
+	public DescartesModel() {
+	}
 
-    public DescartesModel(int idAcervo, Date dataDescarte, String motivos, String operador) {
-        this.idAcervo = idAcervo;
-        this.dataDescarte = dataDescarte;
-        this.motivos = motivos;
-        this.operador = operador;
-    }
-    
-    
+	public DescartesModel(int idAcervo, Date dataDescarte, String motivos, String operador) {
+		this.idAcervo = idAcervo;
+		this.dataDescarte = dataDescarte;
+		this.motivos = motivos;
+		this.operador = operador;
+	}
 
-    public int getIdAcervo() {
-        return idAcervo;
-    }
 
-    public void setIdAcervo(int idAcervo) {
-        this.idAcervo = idAcervo;
-    }
+	public int getIdAcervo() {
+		return idAcervo;
+	}
 
-    public Date getDataDescarte() {
-        return dataDescarte;
-    }
+	public void setIdAcervo(int idAcervo) {
+		this.idAcervo = idAcervo;
+	}
 
-    public void setDataDescarte(Date dataDescarte) {
-        this.dataDescarte = dataDescarte;
-    }
+	public Date getDataDescarte() {
+		return dataDescarte;
+	}
 
-    public String getMotivos() {
-        return motivos;
-    }
+	public void setDataDescarte(Date dataDescarte) {
+		this.dataDescarte = dataDescarte;
+	}
 
-    public void setMotivos(String motivos) {
-        this.motivos = motivos;
-    }
+	public String getMotivos() {
+		return motivos;
+	}
 
-    public String getOperador() {
-        return operador;
-    }
+	public void setMotivos(String motivos) {
+		this.motivos = motivos;
+	}
 
-    public void setOperador(String operador) {
-        this.operador = operador;
-    }
-    
-    
+	public String getOperador() {
+		return operador;
+	}
+
+	public void setOperador(String operador) {
+		this.operador = operador;
+	}
+
+
 }
