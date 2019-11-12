@@ -55,7 +55,8 @@ public class ConsultarProfessor extends HttpServlet {
 				String sqlQuery = "SELECT * FROM `professores` WHERE `id` = ?";
 				PreparedStatement ps = conexao.prepareStatement(sqlQuery);
 				ps.setInt(1, Integer.parseInt(requisicao.getParameter("id")));
-				rs = ps.executeQuery();
+				try { rs = ps.executeQuery(); }
+				catch (SQLException e) { throw new ExcecaoParametrosIncorretos("Professor não existe"); }
 			}
 
 			saida.println("<professores>");
@@ -72,6 +73,9 @@ public class ConsultarProfessor extends HttpServlet {
 
 		} catch (ExcecaoNaoAutorizado e) {
 			resposta.setStatus(403);
+			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
+		} catch (ExcecaoParametrosIncorretos e) {
+			resposta.setStatus(422);
 			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
 		} catch (SQLException e) {
 			resposta.setStatus(500);

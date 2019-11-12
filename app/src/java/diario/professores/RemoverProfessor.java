@@ -61,7 +61,7 @@ public class RemoverProfessor extends HttpServlet {
 			saida.println("</sucesso>");
 
 		} catch (ExcecaoParametrosIncorretos e) {
-			resposta.setStatus(400);
+			resposta.setStatus(422);
 			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
 		} catch (ExcecaoNaoAutorizado e) {
 			resposta.setStatus(403);
