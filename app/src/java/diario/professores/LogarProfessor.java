@@ -47,11 +47,11 @@ public class LogarProfessor extends HttpServlet {
 			senha = requisicao.getParameter("senha");
 			manter = requisicao.getParameter("manter") != null;
 
-			if (siape == null) {
-				throw new ExcecaoParametrosIncorretos("'siape' é um parâmetro obrigatório");
+			if (siape == null || siape.equals("")) {
+				throw new ExcecaoParametrosIncorretos("'siape' é um campo obrigatório");
 			}
-			if (senha == null) {
-				throw new ExcecaoParametrosIncorretos("'senha' é um parâmetro obrigatório");
+			if (senha == null || senha.equals("")) {
+				throw new ExcecaoParametrosIncorretos("'senha' é um campo obrigatório");
 			}
 
 			// Valida credenciais
