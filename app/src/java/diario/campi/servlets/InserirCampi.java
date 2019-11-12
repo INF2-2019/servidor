@@ -1,21 +1,23 @@
 package diario.campi.servlets;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
+import diario.campi.repository.CampiRepository;
+import diario.cursos.view.ErroView;
+import diario.cursos.view.RenderException;
+import diario.cursos.view.SucessoView;
+import diario.cursos.view.View;
+import utils.ConnectionFactory;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import diario.campi.repository.*;
-import diario.cursos.view.*;
+import java.io.IOException;
 import java.io.PrintWriter;
-import utils.ConnectionFactory;
-import utils.Headers;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- *
  * @author User
  */
 @WebServlet(name = "InserirCampi", urlPatterns = {"/diario/campi/inserir"})
@@ -25,7 +27,7 @@ public class InserirCampi extends HttpServlet {
 		Connection conexao = ConnectionFactory.getDiario();
 		CampiRepository rep = new CampiRepository(conexao);
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(request, response);
+
 
 		if (rep.checarAutorizacaoADM(request, response)) {
 

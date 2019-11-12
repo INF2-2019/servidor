@@ -2,7 +2,6 @@ package biblioteca.alunos.servlets;
 
 import biblioteca.alunos.repository.AlunosRepository;
 import utils.ConnectionFactory;
-import utils.Headers;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,7 +21,7 @@ public class Consultar extends HttpServlet {
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		PrintWriter out = response.getWriter();
 		String xml = "";
-		Headers.XMLHeaders(request, response);
+
 		String id = request.getParameter("id");
 		AlunosRepository rep = new AlunosRepository(conexao);
 		try {

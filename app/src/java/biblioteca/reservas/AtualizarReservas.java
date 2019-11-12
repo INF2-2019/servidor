@@ -1,12 +1,12 @@
 package biblioteca.reservas;
 
 import biblioteca.reservas.repository.ReservaRepository;
+import biblioteca.reservas.views.AlunoException;
 import biblioteca.reservas.views.ErroView;
 import biblioteca.reservas.views.RenderException;
 import biblioteca.reservas.views.SucessoView;
 import biblioteca.reservas.views.View;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.BibliotecaAutenticador;
 import utils.autenticador.BibliotecaCargos;
 
@@ -27,11 +27,11 @@ import java.util.Map;
 public class AtualizarReservas extends HttpServlet {
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		Headers.XMLHeaders(req, res);
+
 		Connection con = ConnectionFactory.getBiblioteca();
 		PrintWriter out = res.getWriter();
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(req, res);
-
+	
 		if (autenticador.cargoLogado() != BibliotecaCargos.ADMIN) {
 			res.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
@@ -42,7 +42,7 @@ public class AtualizarReservas extends HttpServlet {
 			}
 			return;
 		}
-
+	
 		if (con == null) {
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {
@@ -95,6 +95,16 @@ public class AtualizarReservas extends HttpServlet {
 		} catch (ParseException ex) {
 			res.setStatus(400);
 			System.err.println("Algum dado está com seu tipo errado. Erro: " + ex.toString());
+
+			View erroView = new ErroView(ex);
+			try {
+				erroView.render(out);
+			} catch (RenderException e) {
+				throw new ServletException(e);
+			}
+		} catch (AlunoException ex) {
+			res.setStatus(404);
+			System.err.println("O aluno não existe. Erro: " + ex.toString());
 
 			View erroView = new ErroView(ex);
 			try {

@@ -1,14 +1,19 @@
 package diario.professores;
 
+import utils.ConnectionFactory;
+import utils.Hasher;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import utils.ConnectionFactory;
 import utils.Hasher;
@@ -31,9 +36,8 @@ public class InsercaoProfessor extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest requisicao, HttpServletResponse resposta)
-			throws IOException {
+		throws IOException {
 
-		Headers.XMLHeaders(requisicao, resposta);
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {

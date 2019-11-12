@@ -1,5 +1,9 @@
 package diario.professores;
 
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -31,9 +35,8 @@ public class AtualizarProfessor extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest requisicao, HttpServletResponse resposta)
-			throws IOException {
+		throws IOException {
 
-		Headers.XMLHeaders(requisicao, resposta);
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
@@ -56,7 +59,7 @@ public class AtualizarProfessor extends HttpServlet {
 			Validacao.validarDepartamento(requisicao.getParameter("id-depto"), conexao);
 
 			String statement = "UPDATE `professores` SET "
-					+ "`id-depto` = ?, `nome` = ?, "
+					+ "`id-depto` = ?, `nome` = ?, `senha` = ?, "
 					+ "`email` = ?, `titulacao` = ? WHERE `id` = ?";
 			PreparedStatement ps = conexao.prepareStatement(statement);
 

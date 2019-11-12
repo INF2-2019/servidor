@@ -1,15 +1,15 @@
 package diario.professores;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import utils.ConnectionFactory;
 import utils.Headers;
@@ -34,6 +34,13 @@ public class ConsultarProfessor extends HttpServlet {
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws IOException {
 		Headers.XMLHeaders(requisicao, resposta);
+
+		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
+		if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
+			resposta.setStatus(403);
+			return;
+		}
+
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
 
