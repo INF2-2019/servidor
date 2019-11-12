@@ -52,7 +52,7 @@ public class AtualizarProfessor extends HttpServlet {
 			Validacao.validarDepartamento(requisicao.getParameter("id-depto"), conexao);
 
 			String statement = "UPDATE `professores` SET "
-					+ "`id-depto` = ?, `nome` = ?, `senha` = ?, "
+					+ "`id-depto` = ?, `nome` = ?, "
 					+ "`email` = ?, `titulacao` = ? WHERE `id` = ?";
 			PreparedStatement ps = conexao.prepareStatement(statement);
 
