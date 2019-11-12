@@ -26,7 +26,7 @@ public class ConsultarAcervo extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 
 		Headers.XMLHeaders(requisicao, resposta);
 
@@ -58,7 +58,7 @@ public class ConsultarAcervo extends HttpServlet {
 
 				String tipo = acervo.getString("tipo").toLowerCase();
 				PreparedStatement stmt = conexao.prepareStatement(
-					String.format("SELECT * FROM `%s` WHERE `id-acervo` = ?", tipo));
+						String.format("SELECT * FROM `%s` WHERE `id-acervo` = ?", tipo));
 				stmt.setInt(1, acervo.getInt("id"));
 				ResultSet item = stmt.executeQuery();
 

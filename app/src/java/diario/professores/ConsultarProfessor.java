@@ -28,19 +28,18 @@ import diario.professores.services.ExcecaoNaoAutorizado;
  */
 public class ConsultarProfessor extends HttpServlet {
 
-	private static final String[] params = {"id", "id-depto", "nome", "senha", "email", "titulacao"};
+	private static final String[] PARAMS = {"id", "id-depto", "nome", "senha", "email", "titulacao"};
 
 	@Override
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws IOException {
 		Headers.XMLHeaders(requisicao, resposta);
-
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
 
 			DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
 			if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
-				throw new ExcecaoNaoAutorizado("Você não tem permissão para realiazr esta operação");
+				throw new ExcecaoNaoAutorizado("Você não tem permissão para realizar esta operação");
 			}
 
 			if (conexao == null) {
@@ -52,9 +51,13 @@ public class ConsultarProfessor extends HttpServlet {
 				String sqlQuery = "SELECT * FROM `professores`";
 				rs = conexao.createStatement().executeQuery(sqlQuery);
 			} else {
+				int tempId = Integer.parseInt(requisicao.getParameter("id"));
+				if (tempId == -1) {
+					tempId = (Integer) autenticador.idLogado();
+				}
 				String sqlQuery = "SELECT * FROM `professores` WHERE `id` = ?";
 				PreparedStatement ps = conexao.prepareStatement(sqlQuery);
-				ps.setInt(1, Integer.parseInt(requisicao.getParameter("id")));
+				ps.setInt(1, tempId);
 				rs = ps.executeQuery();
 				if (!rs.first()) {
 					throw new ExcecaoParametrosIncorretos("Professor não existe");
@@ -65,7 +68,7 @@ public class ConsultarProfessor extends HttpServlet {
 			saida.println("<professores>");
 			while (rs.next()) {
 				saida.println("<professor>");
-				for (String param : params) {
+				for (String param : PARAMS) {
 					if (!param.equals("senha")) {
 						saida.println("<" + param + ">" + rs.getString(param) + "</" + param + ">");
 					}

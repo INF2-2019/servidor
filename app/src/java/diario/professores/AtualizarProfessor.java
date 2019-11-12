@@ -38,8 +38,10 @@ public class AtualizarProfessor extends HttpServlet {
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
 
+			int id = Integer.parseInt(requisicao.getParameter("id"));
 			DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
-			if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			if (autenticador.cargoLogado() != DiarioCargos.ADMIN
+					&& (Integer) autenticador.idLogado() != id) {
 				throw new ExcecaoNaoAutorizado("Você não tem permissão para realizar esta operação");
 			}
 
@@ -47,21 +49,29 @@ public class AtualizarProfessor extends HttpServlet {
 				throw new SQLException("Impossível se conectar ao banco de dados");
 			}
 
-			Validacao.validarParametros(requisicao.getParameterMap());
+			String senha = requisicao.getParameter("senha");
+			boolean haSenha = senha != null && !senha.equals("");
+
+			Validacao.validarParametros(requisicao.getParameterMap(), haSenha);
 			Validacao.validarDepartamento(requisicao.getParameter("id-depto"), conexao);
 
 			String statement = "UPDATE `professores` SET "
-					+ "`id-depto` = ?, `nome` = ?, `senha` = ?, "
+					+ "`id-depto` = ?, `nome` = ?, "
 					+ "`email` = ?, `titulacao` = ? WHERE `id` = ?";
 			PreparedStatement ps = conexao.prepareStatement(statement);
 
 			ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-depto")));
 			ps.setString(2, requisicao.getParameter("nome"));
-			ps.setString(3, Hasher.hash(requisicao.getParameter("senha")));
-			ps.setString(4, requisicao.getParameter("email"));
-			ps.setString(5, requisicao.getParameter("titulacao"));
-			ps.setInt(6, Integer.parseInt(requisicao.getParameter("id")));
+			ps.setString(3, requisicao.getParameter("email"));
+			ps.setString(4, requisicao.getParameter("titulacao"));
+			ps.setInt(5, id);
 			ps.execute();
+			ps.close();
+
+			if (haSenha) {
+				AtualizarSenha.atualizarSenha(id, senha, conexao);
+			}
+
 			conexao.close();
 
 			saida.println("<sucesso>");
