@@ -15,6 +15,7 @@ import utils.ConnectionFactory;
 import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
+import diario.professores.services.ExcecaoParametrosIncorretos;
 import diario.professores.services.ExcecaoNaoAutorizado;
 
 @WebServlet(name = "ConsultarProfessores", urlPatterns = "/diario/professores/consultar")
@@ -55,8 +56,9 @@ public class ConsultarProfessor extends HttpServlet {
 				PreparedStatement ps = conexao.prepareStatement(sqlQuery);
 				ps.setInt(1, Integer.parseInt(requisicao.getParameter("id")));
 				rs = ps.executeQuery();
-				if (!rs.first())
+				if (!rs.first()) {
 					throw new ExcecaoParametrosIncorretos("Professor não existe");
+				}
 				rs.previous();
 			}
 
