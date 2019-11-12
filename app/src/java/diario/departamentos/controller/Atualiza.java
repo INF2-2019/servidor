@@ -14,7 +14,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -22,16 +21,14 @@ import utils.autenticador.DiarioCargos;
 public class Atualiza extends HttpServlet {
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
 
-		Headers.XMLHeaders(response);
 		PrintWriter out = response.getWriter();
 
 		Exception excecao = null;
 
 		try {
-
-			DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
+			DiarioAutenticador autenticador = new DiarioAutenticador (request, response);
 			if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
 				throw new AutenticacaoException();
 			}
@@ -86,7 +83,7 @@ public class Atualiza extends HttpServlet {
 			response.setStatus(500);
 			excecao = ex;
 		} catch (RenderException ex) {
-			throw new ServletException();
+		throw new ServletException();
 		} finally {
 			if (excecao != null) {
 				ErroView erroView = new ErroView(excecao);
@@ -101,7 +98,7 @@ public class Atualiza extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
 		processRequest(request, response);
 	}
 

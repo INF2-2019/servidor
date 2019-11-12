@@ -1,34 +1,34 @@
 package diario.disciplinas;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import diario.disciplinas.model.DisciplinaModel;
+import diario.disciplinas.repository.DisciplinaRepository;
+import diario.disciplinas.views.DisciplinaConsultaView;
+import diario.disciplinas.views.ErroView;
+import diario.disciplinas.views.RenderException;
+import diario.disciplinas.views.View;
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import diario.disciplinas.model.DisciplinaModel;
-import diario.disciplinas.repository.DisciplinaRepository;
-import utils.ConnectionFactory;
-import diario.disciplinas.views.RenderException;
-import diario.disciplinas.views.View;
-import diario.disciplinas.views.DisciplinaConsultaView;
-import diario.disciplinas.views.ErroView;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashSet;
-import utils.Headers;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 @WebServlet(name = "ConsultarDisciplinas", urlPatterns = {"/diario/disciplinas/consultar"})
 public class ConsultarDisciplinas extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+
 		Connection conexao = ConnectionFactory.getDiario();
 		PrintWriter out = response.getWriter();
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);

@@ -7,7 +7,6 @@ import diario.etapas.view.ErroSqlView;
 import diario.etapas.view.SucessoView;
 import diario.etapas.view.View;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -29,7 +28,7 @@ public class InserirEtapas extends HttpServlet {
 
 	// método doGet será alterado para doPost quando for terminado o front-end
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
@@ -89,13 +88,13 @@ public class InserirEtapas extends HttpServlet {
 		Map<String, String> dados = new LinkedHashMap<>();
 
 		// definir os valores do map condicionalmente, conforme a requisição
-		if (req.getParameter("ano") != null  && !req.getParameter("ano").equals("")) {
+		if (req.getParameter("ano") != null && !req.getParameter("ano").equals("")) {
 			dados.put("ano", req.getParameter("ano"));
 		} else {
 			dados.put("ano", Integer.toString(LocalDate.now().getYear()));
 		}
 
-		if (req.getParameter("valor") != null  && !req.getParameter("valor").equals("")) {
+		if (req.getParameter("valor") != null && !req.getParameter("valor").equals("")) {
 			dados.put("valor", req.getParameter("valor"));
 		}
 

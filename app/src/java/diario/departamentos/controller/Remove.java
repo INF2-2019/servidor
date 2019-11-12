@@ -23,7 +23,6 @@ public class Remove extends HttpServlet {
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		Headers.XMLHeaders(response);
 		PrintWriter out = response.getWriter();
 
 		Exception excecao = null;

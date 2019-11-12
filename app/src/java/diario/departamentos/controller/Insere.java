@@ -21,9 +21,8 @@ import utils.autenticador.DiarioCargos;
 public class Insere extends HttpServlet {
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
 
-		Headers.XMLHeaders(response);
 		PrintWriter out = response.getWriter();
 
 		Exception excecao = null;
@@ -81,7 +80,7 @@ public class Insere extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
 		processRequest(request, response);
 	}
 

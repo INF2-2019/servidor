@@ -1,18 +1,19 @@
 package biblioteca.acervo;
 
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import utils.ConnectionFactory;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
 
 /**
  * Servlet dedicado a atualizar registros do acervo e outras tabelas da biblioteca
@@ -25,10 +26,8 @@ public class AtualizarAcervo extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
-			throws IOException {
+		throws IOException {
 
-		resposta.addHeader("Access-Control-Allow-Origin", "*");
-		resposta.setContentType("application/xml;charset=UTF-8");
 
 		PrintWriter saida = resposta.getWriter();
 
@@ -121,8 +120,8 @@ public class AtualizarAcervo extends HttpServlet {
 
 			/*MODIFICAÇÃO DO ACERVO:*/
 			String statement = "UPDATE `acervo` SET "
-					+ "`id` = ? , `id-campi` = ? ,`nome` = ? , `tipo` = ? , `local` = ?, "
-					+ "`ano` = ? , `editora` = ? , `paginas` = ? WHERE `id` = ?";
+				+ "`id` = ? , `id-campi` = ? ,`nome` = ? , `tipo` = ? , `local` = ?, "
+				+ "`ano` = ? , `editora` = ? , `paginas` = ? WHERE `id` = ?";
 			PreparedStatement ps = conexao.prepareStatement(statement);
 			ps.setInt(1, idAcervo);
 			ps.setString(2, requisicao.getParameter("id-campi"));
@@ -168,9 +167,9 @@ public class AtualizarAcervo extends HttpServlet {
 	}
 
 	private void atualizarAcademico(int idAcervo, HttpServletRequest requisicao, Connection conexao)
-			throws SQLException, NumberFormatException {
+		throws SQLException, NumberFormatException {
 		PreparedStatement ps = conexao.prepareStatement("UPDATE `academicos` "
-				+ "SET `id-obra` = ?, `id-acervo` = ?, `programa` = ? WHERE `id-acervo` = ?");
+			+ "SET `id-obra` = ?, `id-acervo` = ?, `programa` = ? WHERE `id-acervo` = ?");
 		ps.setInt(1, Integer.parseInt("id-obra"));
 		ps.setInt(2, idAcervo);
 		ps.setString(3, requisicao.getParameter("programa"));
@@ -180,7 +179,7 @@ public class AtualizarAcervo extends HttpServlet {
 	}
 
 	private void atualizarLivro(int idAcervo, HttpServletRequest requisicao, Connection conexao)
-			throws SQLException, NumberFormatException {
+		throws SQLException, NumberFormatException {
 		PreparedStatement ps = conexao.prepareStatement("UPDATE `livros` SET `id-obra` = ? , `id-acervo` = ? ,`edicao` = ? ,`isbn` = ?  WHERE `id-acervo` = ?");
 		ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
 		ps.setInt(2, idAcervo);
@@ -192,7 +191,7 @@ public class AtualizarAcervo extends HttpServlet {
 	}
 
 	private void atualizarMidia(int idAcervo, HttpServletRequest requisicao, Connection conexao)
-			throws SQLException, NumberFormatException {
+		throws SQLException, NumberFormatException {
 		PreparedStatement ps = conexao.prepareStatement("UPDATE `midias` SET `id-obra` = ? , `id-acervo` = ? ,`tempo` = ? ,`subtipo` = ?  WHERE `id-acervo` = ?");
 		ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-obra")));
 		ps.setInt(2, idAcervo);
@@ -204,10 +203,10 @@ public class AtualizarAcervo extends HttpServlet {
 	}
 
 	private void atualizarPeriodico(int idAcervo, HttpServletRequest requisicao, Connection conexao)
-			throws SQLException, NumberFormatException {
+		throws SQLException, NumberFormatException {
 		PreparedStatement ps = conexao.prepareStatement("UPDATE `periodicos` SET "
-				+ "`id-acervo`=?, `periodicidade`=?, `mes`=?, `volume`=?, `subtipo`=?, `issn`=? "
-				+ "WHERE `id-acervo` = ?");
+			+ "`id-acervo`=?, `periodicidade`=?, `mes`=?, `volume`=?, `subtipo`=?, `issn`=? "
+			+ "WHERE `id-acervo` = ?");
 		ps.setInt(1, idAcervo);
 		ps.setString(2, requisicao.getParameter("periodicidade"));
 		ps.setString(3, requisicao.getParameter("mes"));

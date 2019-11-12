@@ -17,10 +17,16 @@ public class CargoLogadoController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
+
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 		try {
 			SucessoView sucessoView = new SucessoView("Cargo consultado com sucesso!");
 			sucessoView.addParameter("cargo", autenticador.cargoLogado().toString());
+			Object id = autenticador.idLogado();
+			if (id == null) {
+				id = "";
+			}
+			sucessoView.addParameter("id", id.toString());
 			sucessoView.render(out);
 		} catch (RenderException ex) {
 			throw new ServletException(ex);
