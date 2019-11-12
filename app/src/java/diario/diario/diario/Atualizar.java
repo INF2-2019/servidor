@@ -1,9 +1,14 @@
 package diario.diario.diario;
 
-import diario.diario.diario.views.DiarioView;
-import diario.diario.diario.views.ExcecaoPadrao;
+import diario.diario.views.DiarioView;
+import diario.diario.views.ErroView;
+import diario.diario.views.ExcecaoNaoAutorizado;
+import diario.diario.views.ExcecaoPadrao;
+import diario.diario.views.ExcecaoParametroIncorreto;
+import diario.diario.views.SucessoView;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,32 +39,36 @@ public class Atualizar extends HttpServlet {
 	Headers.XMLHeaders(response);
 
 	try {
-	    DiarioParametros p = new DiarioParametros();
-	    p.setParametros(request);
+	    Connection conexao = ConnectionFactory.getDiario();
+	    DiarioRepository repositorio = new DiarioRepository(conexao);
+	    DiarioParametros p = new DiarioParametros(request);
 	    p.obrigatorios("conteudo", "matricula");
 
-	    boolean tem_falta = p.existe("falta"),
-		    tem_nota = p.existe("nota");
+	    DiarioModel filtro = new DiarioModel(p.getIdConteudo(), p.getIdMatricula());
 
-	    if (tem_falta && tem_nota) {
-		DiarioRepository.atualizar(p.getIdConteudo(), p.getIdMatricula(), p.getFalta(), p.getNota());
-	    } else if (tem_nota) {
-		DiarioRepository.atualizar(p.getIdConteudo(), p.getIdMatricula(), p.getNota());
-	    } else if (tem_falta) {
-		DiarioRepository.atualizar(p.getIdConteudo(), p.getIdMatricula(), p.getFalta());
+	    if (!(p.getFalta() == null && p.getNota() == null)) {
+		repositorio.atualizar(p, filtro);
 	    } else {
-		throw new ExcecaoPadrao("Nenhuma alteração detectada!", "Nenhum parametro de modificação recebido");
+		throw new ExcecaoParametroIncorreto("Nenhuma alteração detectada!", "Nenhum parametro de modificação recebido");
 	    }
 
-	    String xml = DiarioView.sucesso("Atualizado com sucesso!");
-	    out.print(xml);
+	    SucessoView view = new SucessoView("Atualizado com sucesso!");
+	    view.render(out);
 
-	} catch (Exception e) {
-	    if (e instanceof ExcecaoPadrao && ((ExcecaoPadrao) e).causa != null) {
-		out.print(DiarioView.erro(e.getMessage(), ((ExcecaoPadrao) e).causa));
-	    } else {
-		out.print(DiarioView.erro("Erro inesperado!", e.getMessage()));
-	    }
+	} catch (SQLException e) {
+	    response.setStatus(500);
+	    ErroView erro = new ErroView("Erro no banco de dados!", e.getMessage());
+	    erro.render(out);
+	    e.printStackTrace();
+	} catch (ExcecaoNaoAutorizado e) {
+	    response.setStatus(403);
+	    ErroView erro = new ErroView(e.mensagem, e.causa);
+	    erro.render(out);
+	    e.printStackTrace();
+	} catch (ExcecaoPadrao e) {
+	    response.setStatus(400);
+	    ErroView erro = new ErroView(e.mensagem, e.causa);
+	    erro.render(out);
 	    e.printStackTrace();
 	}
     }

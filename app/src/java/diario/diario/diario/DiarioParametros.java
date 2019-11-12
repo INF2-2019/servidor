@@ -5,7 +5,7 @@
  */
 package diario.diario.diario;
 
-import diario.diario.diario.views.ExcecaoPadrao;
+import diario.diario.views.ExcecaoPadrao;
 import javax.servlet.http.HttpServletRequest;
 
 /**

@@ -1,9 +1,9 @@
 package diario.diario.diario;
 
-import diario.diario.diario.views.DiarioView;
-import diario.diario.diario.views.ErroView;
-import diario.diario.diario.views.ExcecaoNaoAutorizado;
-import diario.diario.diario.views.ExcecaoPadrao;
+import diario.diario.views.DiarioView;
+import diario.diario.views.ErroView;
+import diario.diario.views.ExcecaoNaoAutorizado;
+import diario.diario.views.ExcecaoPadrao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -42,14 +42,11 @@ public class Consulta extends HttpServlet {
 	    Connection conexao = ConnectionFactory.getDiario();
 	    DiarioRepository repositorio = new DiarioRepository(conexao);
 	    DiarioParametros p = new DiarioParametros(request);
-	    p.obrigatorios("tipo");
-
-	    boolean e_atividade = p.getTipo().equals("atividade");
 
 	    ArrayList<DiarioModel> resultado;
 	    resultado = repositorio.consulta(p);
-	    out.print(new DiarioView(resultado));
-
+	    DiarioView view = new DiarioView(resultado);
+	    view.render(out);
 	} catch (SQLException e) {
 	    response.setStatus(500);
 	    ErroView erro = new ErroView("Erro no banco de dados!", e.getMessage());

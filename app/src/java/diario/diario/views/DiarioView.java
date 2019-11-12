@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package diario.diario.diario.views;
+package diario.diario.views;
 
 import diario.diario.diario.DiarioModel;
 import java.io.PrintWriter;

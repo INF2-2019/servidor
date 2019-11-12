@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package diario.diario.diario.views;
+package diario.diario.views;
 
 /**
  *
@@ -21,7 +21,7 @@ public class ExcecaoPadrao extends Exception {
     public ExcecaoPadrao(String string) {
 	super(string);
 	this.mensagem = string;
-	this.causa = super.getMessage();
+	this.causa = null;
     }
 
     @Override

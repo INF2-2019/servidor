@@ -5,7 +5,7 @@
  */
 package diario.diario.diario;
 
-import diario.diario.diario.views.ExcecaoPadrao;
+import diario.diario.views.ExcecaoPadrao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -123,7 +123,8 @@ public class DiarioRepository {
 	    st = conexao.prepareStatement(query);
 	    st.setInt(1, filtro.getIdMatricula());
 	} else {
-	    throw new ExcecaoPadrao("Operação Inválida: Não pode mostrar tudo.");
+	    st = conexao.prepareStatement(query);
+	    //throw new ExcecaoPadrao("Operação Inválida: Não pode mostrar tudo.");
 	}
 
 	ResultSet resultado = st.executeQuery();

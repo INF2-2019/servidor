@@ -21,6 +21,13 @@ public class DiarioModel {
 	nota = null;
     }
 
+    public DiarioModel(int idConteudo, int idMatricula) {
+	this.idConteudo = idConteudo;
+	this.idMatricula = idMatricula;
+	this.falta = null;
+	this.nota = null;
+    }
+
     public DiarioModel(int idConteudo, int idMatricula, int falta) {
 	this.idConteudo = idConteudo;
 	this.idMatricula = idMatricula;
@@ -73,5 +80,9 @@ public class DiarioModel {
 
     public void setNota(Double nota) {
 	this.nota = nota;
+    }
+
+    public String getTipo() {
+	return nota == 0.0 ? "conteudo" : "atividade";
     }
 }

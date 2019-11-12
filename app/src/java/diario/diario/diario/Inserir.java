@@ -1,10 +1,9 @@
 package diario.diario.diario;
 
-import diario.diario.diario.views.DiarioView;
-import diario.diario.diario.views.ErroView;
-import diario.diario.diario.views.ExcecaoNaoAutorizado;
-import diario.diario.diario.views.ExcecaoPadrao;
-import diario.diario.diario.views.SucessoView;
+import diario.diario.views.ErroView;
+import diario.diario.views.ExcecaoNaoAutorizado;
+import diario.diario.views.ExcecaoPadrao;
+import diario.diario.views.SucessoView;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;

@@ -1,9 +1,14 @@
 package diario.diario.diario;
 
-import diario.diario.diario.views.DiarioView;
-import diario.diario.diario.views.ExcecaoPadrao;
+import diario.diario.views.DiarioView;
+import diario.diario.views.ErroView;
+import diario.diario.views.ExcecaoNaoAutorizado;
+import diario.diario.views.ExcecaoPadrao;
+import diario.diario.views.ExcecaoParametroIncorreto;
+import diario.diario.views.SucessoView;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,30 +40,33 @@ public class Deletar extends HttpServlet {
 	Headers.XMLHeaders(response);
 
 	try {
-	    DiarioParametros p = new DiarioParametros();
-	    p.setParametros(request);
+	    Connection conexao = ConnectionFactory.getDiario();
+	    DiarioRepository repositorio = new DiarioRepository(conexao);
+	    DiarioParametros p = new DiarioParametros(request);
 
-	    boolean tem_matricula = p.existe("matricula"),
-		    tem_conteudo = p.existe("conteudo");
-
-	    if (tem_matricula && tem_conteudo) {
-		DiarioRepository.remover(p.getIdConteudo(), p.getIdMatricula());
-	    } else if (tem_matricula) {
-		DiarioRepository.removerPorMatricula(p.getIdMatricula());
-	    } else if (tem_conteudo) {
-		DiarioRepository.removerPorConteudo(p.getIdConteudo());
+	    if (!(p.getFalta() == null && p.getNota() == null)) {
+		repositorio.remover(p);
 	    } else {
-		throw new ExcecaoPadrao("Nenhum parametro selecionado!", "Ao menos um dos parametros deve estar presente: 'matricula' ou 'conteudo'");
+		throw new ExcecaoParametroIncorreto("Nenhum parametro selecionado!", "Ao menos um dos parametros deve estar presente: 'matricula' ou 'conteudo'");
 	    }
 
-	    String xml = DiarioView.sucesso("Deletado com sucesso!");
-	    out.print(xml);
-	} catch (Exception e) {
-	    if (e instanceof ExcecaoPadrao && ((ExcecaoPadrao) e).causa != null) {
-		out.print(DiarioView.erro(e.getMessage(), ((ExcecaoPadrao) e).causa));
-	    } else {
-		out.print(DiarioView.erro("Erro inesperado!", e.getMessage()));
-	    }
+	    SucessoView view = new SucessoView("Atualizado com sucesso!");
+	    view.render(out);
+
+	} catch (SQLException e) {
+	    response.setStatus(500);
+	    ErroView erro = new ErroView("Erro no banco de dados!", e.getMessage());
+	    erro.render(out);
+	    e.printStackTrace();
+	} catch (ExcecaoNaoAutorizado e) {
+	    response.setStatus(403);
+	    ErroView erro = new ErroView(e.mensagem, e.causa);
+	    erro.render(out);
+	    e.printStackTrace();
+	} catch (ExcecaoPadrao e) {
+	    response.setStatus(400);
+	    ErroView erro = new ErroView(e.mensagem, e.causa);
+	    erro.render(out);
 	    e.printStackTrace();
 	}
 

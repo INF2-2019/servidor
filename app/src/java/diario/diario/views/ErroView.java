@@ -3,30 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package diario.diario.diario.views;
+package diario.diario.views;
 
 import java.io.PrintWriter;
 
 /**
  *
- * @author juan
+ * @author Aluno
  */
-public class SucessoView {
+public class ErroView {
 
     String mensagem, causa;
 
-    public SucessoView(String mensagem, String causa) {
+    public ErroView(ExcecaoPadrao erro) {
+	this(erro.mensagem, erro.causa);
+    }
+
+    public ErroView(String mensagem, String causa) {
 	this.mensagem = mensagem;
 	this.causa = causa;
     }
 
-    public SucessoView(String mensagem) {
+    public ErroView(String mensagem) {
 	this.mensagem = mensagem;
 	this.causa = null;
     }
 
-    public SucessoView() {
-	this("Operação bem sucedida!");
+    public ErroView() {
+	this("Ocorreu um erro!");
     }
 
     public void render(PrintWriter out) {
@@ -35,12 +39,12 @@ public class SucessoView {
 
     public String gerar() {
 	String resposta = "<info>\n"
-		+ "<sucesso>\n"
+		+ "<erro>\n"
 		+ "<mensagem>" + mensagem + "</mensagem>\n";
 	if (causa != null) {
 	    resposta += "<causa>" + causa + "</causa>\n";
 	}
-	resposta += "</sucesso>\n"
+	resposta += "</erro>"
 		+ "</info>";
 	return resposta;
     }
