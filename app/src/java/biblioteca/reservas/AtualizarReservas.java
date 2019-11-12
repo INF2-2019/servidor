@@ -134,7 +134,6 @@ public class AtualizarReservas extends HttpServlet {
 		if (req.getParameter("data-reserva") != null) {
 			dados.put("data-reserva", req.getParameter("data-reserva"));
 		}
-		System.out.println(req.getParameter("emprestou"));
 		if (req.getParameter("emprestou") != null) {
 			dados.put("emprestou", req.getParameter("emprestou"));
 		}
