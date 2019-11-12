@@ -7,7 +7,6 @@ import biblioteca.admin.views.RenderException;
 import biblioteca.admin.views.SucessoView;
 import utils.ConnectionFactory;
 import utils.Hasher;
-import utils.Headers;
 import utils.autenticador.BibliotecaAutenticador;
 import utils.autenticador.BibliotecaCargos;
 
@@ -36,7 +35,6 @@ public class SignupAdminController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 
-		Headers.XMLHeaders(request, response);
 
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
 

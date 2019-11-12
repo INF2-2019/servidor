@@ -2,7 +2,6 @@ package diario.admin.controllers;
 
 import diario.admin.views.RenderException;
 import diario.admin.views.SucessoView;
-import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 
 import javax.servlet.ServletException;
@@ -16,7 +15,7 @@ import java.io.PrintWriter;
 @WebServlet(name = "LogoutDiarioController", urlPatterns = "/diario/admin/logout")
 public class LogoutController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(request, response);
+
 		PrintWriter out = response.getWriter();
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 		try {

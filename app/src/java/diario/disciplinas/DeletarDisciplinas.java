@@ -1,30 +1,26 @@
 package diario.disciplinas;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
+import diario.disciplinas.repository.DisciplinaRepository;
+import diario.disciplinas.views.*;
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import diario.disciplinas.repository.DisciplinaRepository;
-import utils.ConnectionFactory;
-import utils.Headers;
-import diario.disciplinas.views.RenderException;
-import diario.disciplinas.views.View;
-import diario.disciplinas.views.SucessoView;
-import diario.disciplinas.views.ErroView;
-import diario.disciplinas.views.ExcecaoConteudoVinculado;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 @WebServlet(name = "DeletarDisciplinas", urlPatterns = {"/diario/disciplinas/deletar"})
 public class DeletarDisciplinas extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(request, response);
+
 		Connection conexao = ConnectionFactory.getDiario();
 
 		PrintWriter out = response.getWriter();

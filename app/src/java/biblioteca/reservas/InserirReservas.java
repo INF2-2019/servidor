@@ -3,7 +3,6 @@ package biblioteca.reservas;
 import biblioteca.reservas.repository.ReservaRepository;
 import biblioteca.reservas.views.*;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.BibliotecaAutenticador;
 import utils.autenticador.BibliotecaCargos;
 
@@ -27,7 +26,7 @@ public class InserirReservas extends HttpServlet {
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		ReservaRepository ReservaRep = new ReservaRepository(conexao);
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(request, response);
+
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
 		if (autenticador.cargoLogado() == BibliotecaCargos.CONVIDADO) {
 			response.setStatus(403);

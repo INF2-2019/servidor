@@ -1,7 +1,6 @@
 package biblioteca.acervo;
 
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -28,7 +27,6 @@ public class ConsultarAcervo extends HttpServlet {
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
 		throws ServletException, IOException {
 
-		Headers.XMLHeaders(requisicao, resposta);
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getBiblioteca()) {

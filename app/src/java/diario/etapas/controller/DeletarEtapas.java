@@ -1,13 +1,14 @@
 package diario.etapas.controller;
 
-import diario.etapas.repository.EtapasRepository;
-import utils.ConnectionFactory;
-import utils.Headers;
 import diario.etapas.RenderException;
-import diario.etapas.view.View;
+import diario.etapas.repository.EtapasRepository;
 import diario.etapas.view.ErroFormatView;
 import diario.etapas.view.ErroSqlView;
 import diario.etapas.view.SucessoView;
+import diario.etapas.view.View;
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,16 +20,13 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
-
 @WebServlet(name = "Deletar", urlPatterns = "/diario/etapas/deletar")
 public class DeletarEtapas extends HttpServlet {
 
 	// método doGet será alterado para doPost quando for terminado o front-end
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(request, response);
+
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
