@@ -24,8 +24,8 @@ import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
 
-@WebServlet(name = "ConsultarPorId", urlPatterns = {"/biblioteca/emprestimos/consultarporid"})
-public class ConsultarPorId extends HttpServlet {
+@WebServlet(name = "ConsultarEmprestimoPorId", urlPatterns = {"/biblioteca/emprestimos/consultarporid"})
+public class ConsultarEmprestimoPorId extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Headers.XMLHeaders(request, response);
@@ -33,6 +33,7 @@ public class ConsultarPorId extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
+		/*
 		if ((autenticador.cargoLogado() != BibliotecaCargos.ADMIN) && (autenticador.cargoLogado() != BibliotecaCargos.OPERADOR)) {
 			response.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
@@ -43,6 +44,7 @@ public class ConsultarPorId extends HttpServlet {
 			}
 			return;
 		}
+		*/
 		if (conexao == null) {
 			response.setStatus(500);
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
