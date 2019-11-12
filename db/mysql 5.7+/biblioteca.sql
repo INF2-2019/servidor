@@ -6,7 +6,7 @@ USE biblioteca;
 
 DROP TABLE IF EXISTS `alunos`;
 CREATE TABLE IF NOT EXISTS `alunos` (
-  `id` INT NOT NULL,
+  `id` BIGINT NOT NULL,
   `nome` VARCHAR(255) NOT NULL,
   `senha` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL UNIQUE,
@@ -20,6 +20,15 @@ CREATE TABLE IF NOT EXISTS `alunos` (
   `cep` INT NOT NULL,
   `uf` VARCHAR(255) NOT NULL,
   `foto` text,
+  PRIMARY KEY(id)
+);
+
+DROP TABLE IF EXISTS `campi`;
+CREATE TABLE IF NOT EXISTS `campi` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NOT NULL,
+  `cidade` VARCHAR(255) NOT NULL,
+  `uf` VARCHAR(255) NOT NULL,
   PRIMARY KEY(id)
 );
 
@@ -128,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `descartes` (
 DROP TABLE IF EXISTS `emprestimos`;
 CREATE TABLE IF NOT EXISTS `emprestimos` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `id-alunos` INT NOT NULL,
+  `id-alunos` BIGINT NOT NULL,
   `id-acervo` INT NOT NULL,
   `data-emprestimo` DATE NOT NULL,
   `data-prev-devol` DATE NOT NULL,
@@ -140,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `emprestimos` (
 DROP TABLE IF EXISTS `reservas`;
 CREATE TABLE IF NOT EXISTS `reservas` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `id-aluno` INT NOT NULL,
+  `id-alunos` BIGINT NOT NULL,
   `id-acervo` INT NOT NULL,
   `data-reserva` DATE NOT NULL,
   `tempo-espera` INT NOT NULL,

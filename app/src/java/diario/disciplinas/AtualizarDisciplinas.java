@@ -25,7 +25,7 @@ import utils.autenticador.DiarioCargos;
 public class AtualizarDisciplinas extends HttpServlet {
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		Headers.XMLHeaders(res);
+		Headers.XMLHeaders(req, res);
 		Connection con = ConnectionFactory.getDiario();
 		PrintWriter out = res.getWriter();
 		DiarioAutenticador autenticador = new DiarioAutenticador(req, res);
@@ -41,7 +41,7 @@ public class AtualizarDisciplinas extends HttpServlet {
 			return;
 		}
 
-		 
+
 		if (con == null) {
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {

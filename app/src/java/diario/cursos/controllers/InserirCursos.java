@@ -26,7 +26,7 @@ import java.util.Map;
 public class InserirCursos extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		Connection conexao = ConnectionFactory.getDiario();
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);

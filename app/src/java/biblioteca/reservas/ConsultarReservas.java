@@ -1,37 +1,36 @@
 package biblioteca.reservas;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import biblioteca.reservas.model.ReservaModel;
+import biblioteca.reservas.repository.ReservaRepository;
+import biblioteca.reservas.views.ErroView;
+import biblioteca.reservas.views.RenderException;
+import biblioteca.reservas.views.ReservaConsultaView;
+import biblioteca.reservas.views.View;
+import utils.ConnectionFactory;
+import utils.Headers;
+import utils.autenticador.BibliotecaAutenticador;
+import utils.autenticador.BibliotecaCargos;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import biblioteca.reservas.model.ReservaModel;
-import biblioteca.reservas.repository.ReservaRepository;
-import utils.ConnectionFactory;
-import biblioteca.reservas.views.RenderException;
-import biblioteca.reservas.views.View;
-import biblioteca.reservas.views.ReservaConsultaView;
-import biblioteca.reservas.views.ErroView;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.HashSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import utils.Headers;
-import utils.autenticador.BibliotecaAutenticador;
-import utils.autenticador.BibliotecaCargos;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 @WebServlet(name = "ConsultarReservas", urlPatterns = {"/biblioteca/reservas/consultar"})
 public class ConsultarReservas extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		PrintWriter out = response.getWriter();
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);

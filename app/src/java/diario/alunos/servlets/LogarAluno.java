@@ -25,7 +25,7 @@ public class LogarAluno extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		String senha = request.getParameter("senha");
 		String id = request.getParameter("id");
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 
 		try {
 			if (rep.logarAluno(request, response, id, senha)) {

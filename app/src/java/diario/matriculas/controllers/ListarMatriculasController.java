@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 public class ListarMatriculasController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		try {
 			DiarioAutenticador diarioAutenticador = new DiarioAutenticador(request, response);
 			if (diarioAutenticador.cargoLogado() == DiarioCargos.CONVIDADO) {

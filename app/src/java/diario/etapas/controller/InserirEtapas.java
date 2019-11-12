@@ -29,7 +29,7 @@ public class InserirEtapas extends HttpServlet {
 
 	// método doGet será alterado para doPost quando for terminado o front-end
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import utils.ConnectionFactory;
+import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 import diario.professores.services.ExcecaoNaoAutorizado;
@@ -31,9 +32,7 @@ public class ConsultarProfessor extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
 			throws IOException {
-
-		resposta.addHeader("Access-Control-Allow-Origin", "*");
-		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
+		Headers.XMLHeaders(requisicao, resposta);
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {

@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import utils.Headers;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
 
 @WebServlet(name = "InsereDepartamentos", urlPatterns = "/diario/departamentos/insere")
 public class Insere extends HttpServlet {
@@ -20,7 +18,7 @@ public class Insere extends HttpServlet {
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 
 		try(PrintWriter out = response.getWriter()) {
 			try {
