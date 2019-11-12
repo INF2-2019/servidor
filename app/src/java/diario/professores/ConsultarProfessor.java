@@ -55,8 +55,10 @@ public class ConsultarProfessor extends HttpServlet {
 				String sqlQuery = "SELECT * FROM `professores` WHERE `id` = ?";
 				PreparedStatement ps = conexao.prepareStatement(sqlQuery);
 				ps.setInt(1, Integer.parseInt(requisicao.getParameter("id")));
-				try { rs = ps.executeQuery(); }
-				catch (SQLException e) { throw new ExcecaoParametrosIncorretos("Professor não existe"); }
+				rs = ps.executeQuery();
+				if (!rs.first())
+					throw new ExcecaoParametrosIncorretos("Professor não existe");
+				rs.previous();
 			}
 
 			saida.println("<professores>");
