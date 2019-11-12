@@ -36,14 +36,12 @@ public class ErroView {
 	}
 
 	public String gerar() {
-		String resposta = "<info>\n"
-			+ "<erro>\n"
+		String resposta = "<erro>\n"
 			+ "<mensagem>" + mensagem + "</mensagem>\n";
 		if (causa != null) {
 			resposta += "<causa>" + causa + "</causa>\n";
 		}
-		resposta += "</erro>"
-			+ "</info>";
+		resposta += "</erro>";
 		return resposta;
 	}
 

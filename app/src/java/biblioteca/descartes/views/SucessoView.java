@@ -32,14 +32,12 @@ public class SucessoView {
 	}
 
 	public String gerar() {
-		String resposta = "<info>\n"
-			+ "<sucesso>\n"
+		String resposta = "<sucesso>\n"
 			+ "<mensagem>" + mensagem + "</mensagem>\n";
 		if (causa != null) {
 			resposta += "<causa>" + causa + "</causa>\n";
 		}
-		resposta += "</sucesso>\n"
-			+ "</info>";
+		resposta += "</sucesso>\n";
 		return resposta;
 	}
 }
