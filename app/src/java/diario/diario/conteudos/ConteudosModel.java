@@ -6,11 +6,14 @@
 package diario.diario.conteudos;
 
 import java.sql.Date;
+import java.util.Calendar;
+
 /**
  *
  * @author juanr
  */
 public class ConteudosModel {
+
     Integer id = null, idEtapa = null, idDisciplina = null;
     String conteudo = null;
     Date data = null;
@@ -18,83 +21,82 @@ public class ConteudosModel {
 
     public ConteudosModel() {
     }
-    
 
-    
     public ConteudosModel(int id, int idEtapa, int idDisciplina, String conteudo, Date data, Double valor) {
-        this.id = id;
-        this.idEtapa = idEtapa;
-        this.idDisciplina = idDisciplina;
-        this.conteudo = conteudo;
-        this.valor = valor;
-        this.data = data;
+	this.id = id;
+	this.idEtapa = idEtapa;
+	this.idDisciplina = idDisciplina;
+	this.conteudo = conteudo;
+	this.valor = valor;
+	setData(data);
     }
 
     public ConteudosModel(int idEtapa, int idDisciplina, String conteudo, Date data, Double valor) {
-        this.idEtapa = idEtapa;
-        this.idDisciplina = idDisciplina;
-        this.conteudo = conteudo;
-        this.valor = valor;
-        this.data = data;
+	this.idEtapa = idEtapa;
+	this.idDisciplina = idDisciplina;
+	this.conteudo = conteudo;
+	this.valor = valor;
+	setData(data);
     }
 
     public ConteudosModel(int idEtapa, int idDisciplina, String conteudo, Date data) {
-        this.idEtapa = idEtapa;
-        this.idDisciplina = idDisciplina;
-        this.conteudo = conteudo;
-        this.data = data;
-        valor = null;
+	this.idEtapa = idEtapa;
+	this.idDisciplina = idDisciplina;
+	this.conteudo = conteudo;
+	setData(data);
+	valor = null;
     }
- 
+
     /* Getters e Setters */
-    
     public Integer getId() {
-        return id;
+	return id;
     }
 
     public void setId(int id) {
-        this.id = id;
+	this.id = id;
     }
 
     public Integer getIdEtapa() {
-        return idEtapa;
+	return idEtapa;
     }
 
     public void setIdEtapa(int idEtapa) {
-        this.idEtapa = idEtapa;
+	this.idEtapa = idEtapa;
     }
 
     public Integer getIdDisciplina() {
-        return idDisciplina;
+	return idDisciplina;
     }
 
     public void setIdDisciplina(int idDisciplina) {
-        this.idDisciplina = idDisciplina;
+	this.idDisciplina = idDisciplina;
     }
 
     public String getConteudo() {
-        return conteudo;
+	return conteudo;
     }
 
     public void setConteudo(String conteudo) {
-        this.conteudo = conteudo;
+	this.conteudo = conteudo;
     }
 
     public Double getValor() {
-        return valor;
+	return valor;
     }
 
     public void setValor(Double valor) {
-        this.valor = valor;
+	this.valor = valor;
     }
 
     public Date getData() {
-        return data;
+	return data;
     }
 
     public void setData(Date data) {
-        this.data = data;
+	Calendar c = Calendar.getInstance();
+	c.setTime(data);
+	c.add(Calendar.DATE, 1);
+	this.data = new Date(c.getTimeInMillis());
     }
-    
-    
+
 }

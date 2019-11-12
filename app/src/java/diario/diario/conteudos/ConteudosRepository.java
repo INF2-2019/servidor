@@ -7,196 +7,236 @@ package diario.diario.conteudos;
 
 import diario.diario.diario.DiarioModel;
 import diario.diario.diario.DiarioRepository;
+import diario.diario.views.ExcecaoPadrao;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
-import utils.ConnectionFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author juanr
  */
 public class ConteudosRepository {
-    /* Utils */
 
-    public static void update(String query) throws ErroException, SQLException{
-        Connection conexao = ConnectionFactory.getDiario();
-        
-        if(conexao==null)
-            throw new ErroException("Falha na conexão!","Falha em tentar conectar com o banco de dados");
-        
-        PreparedStatement st = conexao.prepareStatement(query);
-        st.executeUpdate();
+    protected Connection conexao;
 
-        st.close();
-        conexao.close();
-    }
-    
-    public static boolean temColuna(ResultSet rs, String coluna) throws SQLException{
-        /* Código baseado em: https://stackoverflow.com/questions/3942583/how-to-check-that-a-resultset-contains-a-specifically-named-field */
-        ResultSetMetaData rsMetaData = rs.getMetaData();
-        int numberOfColumns = rsMetaData.getColumnCount();
-
-        for (int i = 1; i < numberOfColumns + 1; i++) {
-            String columnName = rsMetaData.getColumnName(i);
-            if (coluna.equals(columnName))
-                return true;
-        }
-        return false;
-    }
-    
-    public static ArrayList execute(String query) throws ErroException, SQLException{
-        Connection conexao = ConnectionFactory.getDiario();
-        
-        if(conexao==null)
-            throw new ErroException("Falha na conexão!","Falha em tentar conectar com o banco de dados");
-        
-        PreparedStatement st = conexao.prepareStatement(query);
-        ResultSet resultado = st.executeQuery();
-        
-        ArrayList<ConteudosModel> lista = new ArrayList<ConteudosModel>();
-        while(resultado.next()){
-            ConteudosModel modelo = new ConteudosModel(resultado.getInt("id"),resultado.getInt("id-etapas"),resultado.getInt("id-disciplinas"),resultado.getString("conteudos"),resultado.getDate("data"),resultado.getDouble("valor"));
-            lista.add(modelo);
-        }
-
-        st.close();
-        conexao.close();
-        
-        return lista;
-    }
-    
-    /* Inserir */
-
-    public static void insere(int idEtapas, int idDisciplinas, String conteudo, Date data ,Double nota) throws ErroException, SQLException{
-        update("INSERT INTO conteudos(`id-etapas`,`id-disciplinas`, conteudos , data, valor) VALUES ("+idEtapas+","+idDisciplinas+",\""+conteudo+"\",\""+data.toString()+"\","+nota+")");
-    }
-    
-    public static void insere(int idEtapas, int idDisciplinas, String conteudo, Date data) throws ErroException, SQLException{
-        update("INSERT INTO conteudos(`id-etapas`,`id-disciplinas`, conteudos , data, valor) VALUES ("+idEtapas+","+idDisciplinas+",\""+conteudo+"\",\""+data.toString()+"\", 0.0)");
-    }
-    
-    /* Atualizar */
-    /* Nessa parte tive que fazer uma escolha, pois se eu fizesse um metodo pra cada possibilidade de combinação de campos ficaria muito grande
-    então optei por utilizar o ConteudosModel já que desse jeito só um metodo é necessário e faz integração direta com os parametros do servlet (ConteudosParametros)
-    */
-    public static void atualizar(ConteudosModel modelo) throws ErroException, SQLException{        
-        ArrayList modificacoes = new ArrayList();
-        int id = modelo.getId();
-        if(modelo.getIdEtapa()!=null)
-            modificacoes.add("`id-etapas`="+modelo.getIdEtapa());
-        if(modelo.getIdDisciplina()!=null)
-            modificacoes.add("`id-disciplinas`="+modelo.getIdDisciplina());
-        if(modelo.getConteudo()!=null)
-            modificacoes.add("conteudos=\""+modelo.getConteudo()+"\"");
-        if(modelo.getData()!=null)
-            modificacoes.add("data=\""+modelo.getData()+"\"");
-        if(modelo.getValor()!=null)
-            modificacoes.add("valor="+modelo.getValor());
-
-        if(modificacoes.size()==0)
-            throw new ErroException("Nenhuma alteração detectada!","Nenhum parametro de modificação recebido");
-        
-        update("UPDATE conteudos SET "+String.join(",",modificacoes)+" WHERE id="+id);
+    public ConteudosRepository(Connection conexao) {
+	this.conexao = conexao;
     }
 
-    
-    /* Deletar */
-    
-    public static void remover(int id) throws ErroException, SQLException{
-        DiarioRepository.removerPorConteudo(id);
-        update("DELETE FROM conteudos WHERE id="+id);
+    public boolean insere(ConteudosModel modelo) throws SQLException {
+	String query = "INSERT INTO conteudos(`id-etapas`,`id-disciplinas`, conteudos , data, valor) VALUES (?,?,?,?,?)";
+	PreparedStatement st = conexao.prepareStatement(query);
+
+	st.setInt(1, modelo.getIdEtapa());
+	st.setInt(2, modelo.getIdDisciplina());
+	st.setString(3, modelo.getConteudo());
+	st.setDate(4, modelo.getData());
+	if (modelo.getValor() != null) {
+	    st.setDouble(5, modelo.getValor());
+	} else {
+	    st.setDouble(5, 0.0);
+	}
+
+	int r = st.executeUpdate();
+	st.close();
+	return r != 0;
     }
-    
-    public static void removerPorEtapa(int idEtapa) throws ErroException, SQLException{
-        ConteudosModel modelo = new ConteudosModel();
-        modelo.setIdEtapa(idEtapa);
-        ArrayList<ConteudosModel> resultados = consulta(modelo);
-        
-        if(resultados.size()==0)
-            throw new ErroException("Não existe!","Não há nenhum conteudo nessa etapa");
-        
-        for(ConteudosModel resultado : resultados){
-            int id = resultado.getId();
-            DiarioRepository.removerPorConteudo(id);
-        }
-        
-        update("DELETE FROM conteudos WHERE `id-etapas`="+idEtapa);
-        
+
+    public boolean atualizar(ConteudosModel modelo) throws SQLException {
+	String query = "UPDATE conteudos SET "
+		+ "`id-etapas`= COALESCE(?, conteudos.`id-etapas`),"
+		+ "`id-disciplinas`= COALESCE(?, conteudos.`id-disciplinas`),"
+		+ "`conteudos`= COALESCE(?, conteudos.`conteudos`),"
+		+ "`data`= COALESCE(?, conteudos.`data`),"
+		+ "`valor`= COALESCE(?, conteudos.`valor`)"
+		+ " WHERE id=?";
+
+	PreparedStatement st = conexao.prepareStatement(query);
+
+	if (modelo.getIdEtapa() != null) {
+	    st.setInt(1, modelo.getIdEtapa());
+	} else {
+	    st.setNull(1, Types.INTEGER);
+	}
+
+	if (modelo.getIdDisciplina() != null) {
+	    st.setInt(2, modelo.getIdDisciplina());
+	} else {
+	    st.setNull(2, Types.INTEGER);
+	}
+
+	if (modelo.getConteudo() != null) {
+	    st.setString(3, modelo.getConteudo());
+	} else {
+	    st.setNull(3, Types.OTHER);
+	}
+
+	if (modelo.getData() != null) {
+	    st.setDate(4, modelo.getData());
+	} else {
+	    st.setNull(4, Types.DATE);
+	}
+
+	if (modelo.getValor() != null) {
+	    st.setDouble(5, modelo.getValor());
+	} else {
+	    st.setNull(5, Types.DECIMAL);
+	}
+
+	st.setInt(6, modelo.getId());
+
+	int r = st.executeUpdate();
+	st.close();
+	return r != 0;
     }
-    
-    public static void removerPorDisciplina(int idDisciplina) throws ErroException, SQLException{
-        ConteudosModel modelo = new ConteudosModel();
-        modelo.setIdDisciplina(idDisciplina);
-        ArrayList<ConteudosModel> resultados = consulta(modelo);
-        
-        if(resultados.size()==0)
-            throw new ErroException("Não existe!","Não há nenhum conteudo nessa disciplina");
-        
-        for(ConteudosModel resultado : resultados){
-            int id = resultado.getId();
-            DiarioRepository.removerPorConteudo(id);
-        }
-        
-        update("DELETE FROM conteudos WHERE `id-disciplinas`="+idDisciplina);
+
+    public boolean remover(ConteudosModel filtro) throws SQLException, ExcecaoPadrao {
+	String query;
+	PreparedStatement st;
+
+	if (filtro.getId() != null) {
+	    query = "DELETE FROM conteudos WHERE id=?";
+	    st = conexao.prepareStatement(query);
+	    st.setInt(1, filtro.getId());
+
+	    int r = st.executeUpdate();
+	    if (r != 0) {
+		DiarioRepository repositorioDiario = new DiarioRepository(conexao);
+		DiarioModel filtroDiario = new DiarioModel();
+		filtroDiario.setIdConteudo(filtro.getId());
+		repositorioDiario.remover(filtroDiario);
+	    }
+	    return r != 0;
+	} else {
+	    query = "SELECT id FROM conteudos";
+	    ArrayList<ConteudosModel> resultado = consulta(filtro);
+
+	    int pos = 1;
+	    for (ConteudosModel modelo : resultado) {
+		if (pos > 1) {
+		    query += " OR";
+		}
+		query += " id=?";
+		pos++;
+	    }
+
+	    st = conexao.prepareStatement(query);
+
+	    pos = 1;
+	    for (ConteudosModel modelo : resultado) {
+		st.setInt(pos, modelo.getId());
+		pos++;
+	    }
+
+	    int r = st.executeUpdate();
+	    if (r != 0) {
+		DiarioRepository repositorioDiario = new DiarioRepository(conexao);
+		DiarioModel filtroDiario = new DiarioModel();
+
+		for (ConteudosModel modelo : resultado) {
+		    filtroDiario.setIdConteudo(modelo.getId());
+		    repositorioDiario.remover(filtroDiario);
+		}
+	    }
+
+	    return r != 0;
+	}
+
     }
-    
-    public static void removerPorEtapaEDisciplina(int idEtapa, int idDisciplina) throws ErroException, SQLException{
-        ConteudosModel modelo = new ConteudosModel();
-        modelo.setIdEtapa(idEtapa);
-        modelo.setIdDisciplina(idDisciplina);
-        ArrayList<ConteudosModel> resultados = consulta(modelo);
-        
-        if(resultados.size()==0)
-            throw new ErroException("Não existe!","Não há nenhum conteudo que esteja simultaneamente nesse conteudo e disciplina");
-        
-        for(ConteudosModel resultado : resultados){
-            int id = resultado.getId();
-            DiarioRepository.removerPorConteudo(id);
-        }
-        
-        update("DELETE FROM conteudos WHERE `id-etapas`="+idEtapa +" AND `id-disciplinas`="+idDisciplina);
+
+    public ArrayList consulta(ConteudosModel modelo) throws SQLException {
+	return consulta(modelo, null);
     }
-   
-    
-    /* Consulta */
-    
-    public static ArrayList consulta(ConteudosModel modelo, String complemento)throws ErroException, SQLException{
-        ArrayList filtro = new ArrayList();
-        
-        
-        if(modelo.getId()!=null)
-            filtro.add("id="+modelo.getId());
-        else{
-            if(modelo.getIdEtapa()!=null)
-                filtro.add("`id-etapas`="+modelo.getIdEtapa());
-            if(modelo.getIdDisciplina()!=null)
-                filtro.add("`id-disciplinas`="+modelo.getIdDisciplina());
-            if(modelo.getData()!=null)
-                filtro.add("data=\""+modelo.getData()+"\"");
-        }
-        
-        if(filtro.size()==0)
-            throw new ErroException("Nenhum parametro detectado!","Nenhum parametro de consulta recebido");
-        
-        return execute("SELECT * FROM conteudos WHERE "+String.join(" AND ",filtro)+complemento);
+
+    public ArrayList consulta(ConteudosModel modelo, String tipo) throws SQLException {
+	String query = "SELECT * FROM conteudos";
+	PreparedStatement st;
+
+	Map<String, Object> filtros = new HashMap<>();
+
+	if (modelo.getId() != null) {
+	    filtros.put("id", modelo.getId());
+	} else {
+	    if (modelo.getIdEtapa() != null) {
+		filtros.put("id-etapas", modelo.getIdEtapa());
+	    }
+	    if (modelo.getIdDisciplina() != null) {
+		filtros.put("id-disciplinas", modelo.getIdDisciplina());
+	    }
+	    if (modelo.getData() != null) {
+		filtros.put("data", modelo.getData());
+	    }
+	    if (modelo.getConteudo() != null) {
+		filtros.put("conteudos", modelo.getConteudo());
+	    }
+	    if (modelo.getValor() != null) {
+		filtros.put("valor", modelo.getValor());
+	    }
+	}
+
+	if (filtros.size() > 0 || tipo != null) {
+	    query += " WHERE";
+	}
+
+	if (tipo != null) {
+	    if (tipo.equals("conteudo")) {
+		query += " valor=0";
+	    } else if (tipo.equals("atividade")) {
+		query += " valor>0.0";
+	    }
+
+	    if (filtros.size() > 0) {
+		query += " AND";
+	    }
+	}
+
+	int pos = 1;
+	for (String filtro : filtros.keySet()) {
+	    if (pos > 1) {
+		query += " AND";
+	    }
+	    query += " `" + filtro + "` = ?";
+	    pos++;
+	}
+	query += " ORDER BY `data`";
+
+	st = conexao.prepareStatement(query);
+
+	pos = 1;
+	for (String filtro : filtros.keySet()) {
+	    if (filtro.equals("id-etapas") || filtro.equals("id-disciplinas")) {
+		st.setInt(pos, (Integer) filtros.get(filtro));
+	    }
+	    if (filtro.equals("data")) {
+		st.setDate(pos, (Date) filtros.get(filtro));
+	    }
+	    if (filtro.equals("conteudos")) {
+		st.setString(pos, (String) filtros.get(filtro));
+	    }
+	    if (filtro.equals("valor")) {
+		st.setDouble(pos, (Double) filtros.get(filtro));
+	    }
+
+	    pos++;
+	}
+
+	ResultSet resultado = st.executeQuery();
+
+	ArrayList<ConteudosModel> lista = new ArrayList<>();
+	while (resultado.next()) {
+	    modelo = new ConteudosModel(resultado.getInt("id"), resultado.getInt("id-etapas"), resultado.getInt("id-disciplinas"), resultado.getString("conteudos"), resultado.getDate("data"), resultado.getDouble("valor"));
+	    lista.add(modelo);
+	}
+
+	st.close();
+
+	return lista;
     }
-    
-    public static ArrayList consulta(ConteudosModel modelo)throws ErroException, SQLException{
-        return consulta(modelo,"");
-    }
-    
-    public static ArrayList consultaAtividade(ConteudosModel modelo) throws ErroException, SQLException{
-        return consulta(modelo," AND valor>0.0");
-    }
-    
-    public static ArrayList consultaConteudo(ConteudosModel modelo) throws ErroException, SQLException{
-        return consulta(modelo," AND valor=0.0");
-    }
-    
-    
 }

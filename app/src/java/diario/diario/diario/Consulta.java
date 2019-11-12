@@ -36,7 +36,7 @@ public class Consulta extends HttpServlet {
 	 */
 
 	PrintWriter out = response.getWriter();
-	Headers.XMLHeaders(response);
+	Headers.XMLHeaders(request, response);
 
 	try {
 	    Connection conexao = ConnectionFactory.getDiario();

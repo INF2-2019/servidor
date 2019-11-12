@@ -37,7 +37,7 @@ public class Inserir extends HttpServlet {
 	 */
 
 	PrintWriter out = response.getWriter();
-	Headers.XMLHeaders(response);
+	Headers.XMLHeaders(request, response);
 
 	try {
 	    Connection conexao = ConnectionFactory.getDiario();
@@ -47,12 +47,19 @@ public class Inserir extends HttpServlet {
 
 	    if (p.getTipo().equals("atividade")) {
 		p.obrigatorios("falta", "nota");
-	    } else if (p.getTipo().equals("conteudo")) {
+	    } else {
 		p.obrigatorios("falta");
 	    }
 
 	    if (repositorio.insere(p)) {
-		SucessoView view = new SucessoView("Falta lançada com sucesso!");
+		SucessoView view;
+
+		if (p.getTipo().equals("atividade")) {
+		    view = new SucessoView("Nota lançada com sucesso!");
+		} else {
+		    view = new SucessoView("Falta lançada com sucesso!");
+		}
+
 		view.render(out);
 	    } else {
 		ErroView view = new ErroView();
