@@ -30,7 +30,7 @@ public class DeletarCampus extends HttpServlet {
 		CampiRepository rep = new CampiRepository(conexao);
 		PrintWriter out = response.getWriter();
 
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 		String id = request.getParameter("id");
 		if (rep.checarAutorizacaoADM(request, response)) {
 			try {

@@ -28,7 +28,7 @@ public class ListarCampus extends HttpServlet {
 		CampiRepository rep = new CampiRepository(conexao);
 		PrintWriter out = response.getWriter();
 		String xml;
-		Headers.XMLHeaders(response);
+		Headers.XMLHeaders(request, response);
 
 		try {
 			xml = rep.listarCampi();
