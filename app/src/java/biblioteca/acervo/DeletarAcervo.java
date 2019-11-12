@@ -1,5 +1,13 @@
 package biblioteca.acervo;
 
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -8,14 +16,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import utils.ConnectionFactory;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
 
 @WebServlet(name = "DeletarAcervo", urlPatterns = "/biblioteca/acervo/deletar")
 /**
@@ -27,10 +27,8 @@ public class DeletarAcervo extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
-			throws IOException {
+		throws IOException {
 
-		resposta.addHeader("Access-Control-Allow-Origin", "*");
-		resposta.addHeader("Content-Type", "application/xml; charset=utf-8");
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getBiblioteca()) {
@@ -63,7 +61,7 @@ public class DeletarAcervo extends HttpServlet {
 			if (resultado.first()) {
 				String tipo = resultado.getString(1).toLowerCase();
 				PreparedStatement ps2 = conexao.prepareStatement(
-						String.format("DELETE FROM `%s` WHERE `id-acervo` = ?", tipo));
+					String.format("DELETE FROM `%s` WHERE `id-acervo` = ?", tipo));
 				ps2.setInt(1, Integer.parseInt(id));
 				ps2.execute();
 				ps2.close();
@@ -96,7 +94,7 @@ public class DeletarAcervo extends HttpServlet {
 	}
 
 	private boolean haEmprestimos(String id, Connection con)
-			throws SQLException, NumberFormatException {
+		throws SQLException, NumberFormatException {
 
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM `emprestimos` WHERE `id-acervo` = ?");
 		ps.setInt(1, Integer.parseInt(id));
@@ -106,7 +104,7 @@ public class DeletarAcervo extends HttpServlet {
 	}
 
 	private HashMap alunosQueReservaram(String id, Connection con)
-			throws SQLException, NumberFormatException {
+		throws SQLException, NumberFormatException {
 
 		HashMap<String, String> alunos = new HashMap<>();
 

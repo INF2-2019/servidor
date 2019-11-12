@@ -1,5 +1,17 @@
 package diario.etapas.controller;
 
+import diario.etapas.RenderException;
+import diario.etapas.repository.EtapasRepository;
+import diario.etapas.view.*;
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -7,32 +19,13 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import utils.ConnectionFactory;
-import utils.Headers;
-import diario.etapas.view.ErroFormatView;
-import diario.etapas.view.ErroSqlView;
-import diario.etapas.view.ErroSemParametroView;
-import diario.etapas.view.SucessoView;
-import diario.etapas.view.View;
-import diario.etapas.RenderException;
-import diario.etapas.repository.EtapasRepository;
-
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
-
 @WebServlet(name = "AtualizarEtapas", urlPatterns = "/diario/etapas/atualizar")
 public class AtualizarEtapas extends HttpServlet {
 
 	// método doGet será alterado para doPost quando for terminado o front-end
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {

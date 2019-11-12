@@ -114,7 +114,7 @@ public class ReservaRepository {
 		} else {
 			throw new AlunoException("O id(CPF) do aluno é obrigatório");
 		}
-		//Verifica a existência do aluno
+		
 		ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
 		ps.setLong(1, idAlunos);
 		resultadoBusca = ps.executeQuery();
@@ -135,19 +135,18 @@ public class ReservaRepository {
 			throw new AlunoException("Não existe esse acervo.");
 		}
 
-		ps = con.prepareStatement("SELECT * FROM `reservas` WHERE `id-acervo` = ? AND `tempo-espera`= ?");
+		ps = con.prepareStatement("SELECT * FROM `reservas` WHERE `id-acervo` = ? AND `emprestou`= ?");
 		ps.setInt(1, idAcervo);
-		ps.setInt(2, 0);
+		ps.setBoolean(2, false);
 		resultadoBusca = ps.executeQuery();
 
 		while (resultadoBusca.next()) {
 			throw new ExcecaoreservaExistente("Ja existe uma reserva sobre o item no Acervo");
 		}
 
-		int tempoEspera = 0;
-
+		int tempoEspera = 0 ;
 		if (valores.containsKey("tempo-espera")) {
-			idAcervo = Integer.parseUnsignedInt(valores.get("tempo-espera"));
+			tempoEspera = Integer.parseUnsignedInt(valores.get("tempo-espera"));
 		}
 		Date dataReserva = new Date(new Date().getTime());
 
@@ -155,13 +154,10 @@ public class ReservaRepository {
 			dataReserva = simpleFormat.parse(valores.get("data-reserva"));
 		}
 		boolean emprestou = false;
-
-		PreparedStatement busca = con.prepareStatement("SELECT * FROM `emprestimos` WHERE `id-acervo` = ? AND `data-devolucao`= '1970-01-01'");
-		busca.setInt(1, idAcervo);
-		resultadoBusca = busca.executeQuery();
-		while (resultadoBusca.next()) {
-			emprestou = true;
+		if (valores.containsKey("emprestou")) {
+			emprestou = Boolean.parseBoolean(valores.get("emprestou"));
 		}
+		
 
 		ps = con.prepareStatement("INSERT INTO `reservas` (`id-aluno`, `id-acervo`, `data-reserva`,`tempo-espera`,`emprestou`) VALUES (?, ?, ?, ?, ?)");
 
@@ -195,7 +191,7 @@ public class ReservaRepository {
 			simpleFormat.parse(filtros.get("data-reserva"));
 		}
 		if (filtros.containsKey("emprestou")) {
-			Boolean.parseBoolean(filtros.get("data-reserva"));
+			Boolean.parseBoolean(filtros.get("emprestou"));
 		}
 		ReservaModel reserva = consultarId(Integer.toString(idParsed));
 		Object[] vals = reserva.retornarValoresRestantes(filtros);

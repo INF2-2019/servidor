@@ -1,35 +1,36 @@
 package diario.campi.servlets;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
+import diario.campi.repository.CampiRepository;
+import diario.cursos.view.ErroView;
+import diario.cursos.view.RenderException;
+import diario.cursos.view.SucessoView;
+import diario.cursos.view.View;
+import utils.ConnectionFactory;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import diario.campi.repository.*;
-import diario.cursos.view.*;
+import java.io.IOException;
 import java.io.PrintWriter;
-import utils.ConnectionFactory;
-import utils.Headers;
-
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- *
  * @author User
  */
 @WebServlet(name = "InserirCampi", urlPatterns = {"/diario/campi/inserir"})
 public class InserirCampi extends HttpServlet {
 
-     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Connection conexao = ConnectionFactory.getDiario();
 		CampiRepository rep = new CampiRepository(conexao);
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(response);
 
-		if (!rep.checarAutorizacaoADM(request, response)) {
-			
+
+		if (rep.checarAutorizacaoADM(request, response)) {
+
 			String nome = request.getParameter("nome");
 			String cidade = request.getParameter("cidade");
 			String uf = request.getParameter("uf");
@@ -39,9 +40,7 @@ public class InserirCampi extends HttpServlet {
 				View sucessoView = new SucessoView("Inserido com sucesso.");
 				sucessoView.render(out);
 			} catch (NumberFormatException excecaoFormatoErrado) {
-				response.setStatus(400);
-				System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
-
+				response.setStatus(422);
 				View erroView = new ErroView(excecaoFormatoErrado);
 				try {
 					erroView.render(out);
@@ -49,9 +48,7 @@ public class InserirCampi extends HttpServlet {
 					throw new ServletException(e);
 				}
 			} catch (SQLException excecaoSQL) {
-				response.setStatus(400);
-				System.err.println("Busca SQL inválida. Erro: " + excecaoSQL.toString());
-
+				response.setStatus(500);
 				View erroView = new ErroView(excecaoSQL);
 				try {
 					erroView.render(out);
@@ -62,7 +59,7 @@ public class InserirCampi extends HttpServlet {
 				throw new ServletException(e);
 			}
 		} else {
-			response.setStatus(401);
+			response.setStatus(403);
 			out.println("<erro><mensagem>Voce nao tem permissao para fazer isso</mensagem></erro>");
 		}
 

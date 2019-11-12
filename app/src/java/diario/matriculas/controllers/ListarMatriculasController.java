@@ -6,7 +6,6 @@ import diario.matriculas.models.Matricula;
 import diario.matriculas.repositories.MatriculaRepository;
 import diario.matriculas.views.ListaMatriculasView;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -29,7 +28,7 @@ import java.util.logging.Logger;
 public class ListarMatriculasController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(response);
+
 		try {
 			DiarioAutenticador diarioAutenticador = new DiarioAutenticador(request, response);
 			if (diarioAutenticador.cargoLogado() == DiarioCargos.CONVIDADO) {

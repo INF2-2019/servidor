@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 @WebServlet(name = "LogoutDiarioController", urlPatterns = "/diario/admin/logout")
 public class LogoutController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		PrintWriter out = response.getWriter();
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 		try {

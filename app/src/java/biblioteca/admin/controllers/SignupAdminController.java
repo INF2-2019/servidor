@@ -7,7 +7,6 @@ import biblioteca.admin.views.RenderException;
 import biblioteca.admin.views.SucessoView;
 import utils.ConnectionFactory;
 import utils.Hasher;
-import utils.Headers;
 import utils.autenticador.BibliotecaAutenticador;
 import utils.autenticador.BibliotecaCargos;
 
@@ -34,8 +33,9 @@ public class SignupAdminController extends HttpServlet {
 	private final static String SOMENTE_ADMIN = "Você não tem permissão para acessar essa rota!";
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
 		PrintWriter out = response.getWriter();
+
+
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
 
 		String

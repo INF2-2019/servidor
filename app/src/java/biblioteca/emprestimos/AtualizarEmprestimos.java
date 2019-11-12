@@ -2,32 +2,28 @@ package biblioteca.emprestimos;
 
 import biblioteca.emprestimos.model.EmprestimoModel;
 import biblioteca.emprestimos.repository.EmprestimoRepository;
-import biblioteca.emprestimos.views.AlunoException;
-import biblioteca.emprestimos.views.SucessoView;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
+import biblioteca.emprestimos.views.*;
+import utils.ConnectionFactory;
+import utils.autenticador.BibliotecaAutenticador;
+import utils.autenticador.BibliotecaCargos;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.ConnectionFactory;
-import utils.Headers;
-import java.util.SortedMap;
-import biblioteca.emprestimos.views.View;
-import biblioteca.emprestimos.views.ErroView;
-import biblioteca.emprestimos.views.RenderException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.ParseException;
-import utils.autenticador.BibliotecaAutenticador;
-import utils.autenticador.BibliotecaCargos;
+import java.util.SortedMap;
 
 @WebServlet(name = "AtualizarEmprestimos", urlPatterns = {"/biblioteca/emprestimos/atualizar"})
 public class AtualizarEmprestimos extends HttpServlet {
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		Headers.XMLHeaders(res);
+
 		Connection con = ConnectionFactory.getBiblioteca();
 		PrintWriter out = res.getWriter();
 
