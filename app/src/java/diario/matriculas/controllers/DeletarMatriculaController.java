@@ -5,7 +5,6 @@ import diario.admin.views.RenderException;
 import diario.admin.views.SucessoView;
 import diario.matriculas.repositories.MatriculaRepository;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -30,7 +29,7 @@ public class DeletarMatriculaController extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(response);
+
 		try {
 			DiarioAutenticador diarioAutenticador = new DiarioAutenticador(request, response);
 			if (diarioAutenticador.cargoLogado() != DiarioCargos.ADMIN) {

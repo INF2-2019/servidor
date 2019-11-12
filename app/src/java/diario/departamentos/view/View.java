@@ -1,4 +1,4 @@
-package diario.professores_disciplinas.View;
+package diario.departamentos.view;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

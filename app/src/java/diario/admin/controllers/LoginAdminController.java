@@ -8,7 +8,6 @@ import diario.admin.views.RenderException;
 import diario.admin.views.SucessoView;
 import utils.ConnectionFactory;
 import utils.Hasher;
-import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -34,7 +33,7 @@ public class LoginAdminController extends HttpServlet {
 	private final static String LOGADO = "Logado com sucesso!";
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+
 		PrintWriter out = response.getWriter();
 
 		String login, senha;
@@ -81,7 +80,7 @@ public class LoginAdminController extends HttpServlet {
 				new ErroView(INTERNO).render(out);
 				return;
 			} catch (AdminNotFoundException ex) {
-				response.setStatus(401);
+				response.setStatus(403);
 				new ErroView(CREDENCIAIS).render(out);
 				return;
 			}

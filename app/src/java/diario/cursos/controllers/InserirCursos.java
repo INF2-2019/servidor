@@ -1,12 +1,11 @@
 package diario.cursos.controllers;
 
 import diario.cursos.repository.CursoRepository;
-import utils.ConnectionFactory;
-import utils.Headers;
-import diario.cursos.view.RenderException;
-import diario.cursos.view.View;
 import diario.cursos.view.ErroView;
+import diario.cursos.view.RenderException;
 import diario.cursos.view.SucessoView;
+import diario.cursos.view.View;
+import utils.ConnectionFactory;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -26,7 +25,7 @@ import java.util.Map;
 public class InserirCursos extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+
 		Connection conexao = ConnectionFactory.getDiario();
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);

@@ -1,35 +1,35 @@
 package diario.alunos.servlets;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
+import diario.alunos.repository.AlunosRepository;
+import diario.cursos.view.ErroView;
+import diario.cursos.view.RenderException;
+import diario.cursos.view.SucessoView;
+import diario.cursos.view.View;
+import utils.ConnectionFactory;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import diario.alunos.repository.*;
-import diario.cursos.view.ErroView;
-import diario.cursos.view.RenderException;
-import diario.cursos.view.SucessoView;
-import diario.cursos.view.View;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.ParseException;
-import utils.ConnectionFactory;
-import utils.Headers;
 
 
 @WebServlet(name = "AlterarAlunos", urlPatterns = {"/diario/alunos/alterar"})
 public class AlterarAlunos extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
 		Connection conexao = ConnectionFactory.getDiario();
 		AlunosRepository rep = new AlunosRepository(conexao);
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(response);
+
 
 		if (rep.checarAutorizacaoADM(request, response)) {
 

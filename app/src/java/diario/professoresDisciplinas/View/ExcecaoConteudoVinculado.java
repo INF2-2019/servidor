@@ -1,4 +1,4 @@
-package diario.professores_disciplinas.View;
+package diario.professoresDisciplinas.View;
 
 public class ExcecaoConteudoVinculado extends Exception {
 

@@ -1,20 +1,36 @@
-package diario.professores_disciplinas.View;
+package diario.professoresDisciplinas.View;
 
-import java.io.PrintWriter;
-import java.util.Set;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import diario.disciplinas.model.DisciplinaModel;
-import diario.professores_disciplinas.Model.ProfessoresDisciplinasModel;
+import diario.professoresDisciplinas.Model.ProfessoresDisciplinasModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Conversores;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.PrintWriter;
+import java.util.Set;
 
 public class ProfDisConsultaView extends View<Set<ProfessoresDisciplinasModel>> {
 
 	public ProfDisConsultaView(Set<ProfessoresDisciplinasModel> ProfessoresDisciplinasModel) {
 		super(ProfessoresDisciplinasModel);
+	}
+
+	private static Element criarElementoDocument(Document documento, ProfessoresDisciplinasModel c) {
+
+		Element elemento = documento.createElement("professor-disciplina");
+
+		Element idProf = documento.createElement("id-professores");
+		Element idDis = documento.createElement("id-disciplinas");
+
+		idProf.appendChild(documento.createTextNode("" + c.getIdProfessor()));
+		idDis.appendChild(documento.createTextNode("" + c.getIdDisciplina()));
+
+		elemento.appendChild(idProf);
+		elemento.appendChild(idDis);
+
+		return elemento;
 	}
 
 	@Override
@@ -44,22 +60,6 @@ public class ProfDisConsultaView extends View<Set<ProfessoresDisciplinasModel>> 
 		documento.appendChild(root);
 
 		return documento;
-	}
-
-	private static Element criarElementoDocument(Document documento, ProfessoresDisciplinasModel c) {
-
-		Element elemento = documento.createElement("professor-disciplina");
-
-		Element idProf = documento.createElement("id-professores");
-		Element idDis = documento.createElement("id-disciplinas");
-
-		idProf.appendChild(documento.createTextNode("" + c.getIdProfessor()));
-		idDis.appendChild(documento.createTextNode("" + c.getIdDisciplina()));
-
-		elemento.appendChild(idProf);
-		elemento.appendChild(idDis);
-
-		return elemento;
 	}
 
 }

@@ -26,7 +26,7 @@ import java.util.Set;
 public class ConsultarEmprestimos extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(request, response);
+
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		PrintWriter out = response.getWriter();
 

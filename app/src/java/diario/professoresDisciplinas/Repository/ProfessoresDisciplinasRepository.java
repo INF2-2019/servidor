@@ -1,7 +1,8 @@
-package diario.professores_disciplinas.Repository;
+package diario.professoresDisciplinas.Repository;
 
-import diario.professores_disciplinas.Model.ProfessoresDisciplinasModel;
-import diario.professores_disciplinas.View.ExcecaoConteudoVinculado;
+import diario.professoresDisciplinas.Model.ProfessoresDisciplinasModel;
+import diario.professoresDisciplinas.View.ExcecaoConteudoVinculado;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

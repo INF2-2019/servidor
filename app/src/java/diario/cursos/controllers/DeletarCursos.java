@@ -3,7 +3,6 @@ package diario.cursos.controllers;
 import diario.cursos.repository.CursoRepository;
 import diario.cursos.view.*;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -21,7 +20,7 @@ import java.sql.SQLException;
 public class DeletarCursos extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
@@ -56,12 +55,12 @@ public class DeletarCursos extends HttpServlet {
 			else
 				resultado = new ErroView(new Exception("Id inválido."));
 			resultado.render(out);
-		} catch(ExcecaoTurmaVinculada excecao) {
+		} catch (ExcecaoTurmaVinculada excecao) {
 			response.setStatus(400);
 			System.err.println("Turma vinculada ao curso, impossível deletar.");
 
 			View erro = new ErroView(excecao);
-			try{
+			try {
 				erro.render(out);
 			} catch (RenderException e) {
 				throw new ServletException(e);

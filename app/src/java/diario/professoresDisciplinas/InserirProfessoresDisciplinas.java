@@ -1,37 +1,31 @@
-package diario.professores_disciplinas;
+package diario.professoresDisciplinas;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Map;
+import diario.professoresDisciplinas.Model.ProfessoresDisciplinasModel;
+import diario.professoresDisciplinas.Repository.ProfessoresDisciplinasRepository;
+import diario.professoresDisciplinas.View.*;
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.ConnectionFactory;
-import utils.Headers;
-import diario.professores_disciplinas.View.RenderException;
-import diario.professores_disciplinas.View.ErroView;
-import diario.professores_disciplinas.View.SucessoView;
-import diario.professores_disciplinas.View.View;
-import diario.professores_disciplinas.Model.ProfessoresDisciplinasModel;
-import diario.professores_disciplinas.Repository.ProfessoresDisciplinasRepository;
-import diario.professores_disciplinas.View.ExcecaoConteudoVinculado;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Map;
 
 @WebServlet(name = "InserirProfessoresDisciplinas", urlPatterns = {"/diario/professoresdisciplinas/inserir"})
 public class InserirProfessoresDisciplinas extends HttpServlet {
 
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Connection conexao = ConnectionFactory.getDiario();
 		ProfessoresDisciplinasRepository disciplinaRep = new ProfessoresDisciplinasRepository(conexao);
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(response);
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 
 		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {

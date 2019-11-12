@@ -1,26 +1,25 @@
 package diario.disciplinas;
 
+import diario.disciplinas.repository.DisciplinaRepository;
+import diario.disciplinas.views.ErroView;
+import diario.disciplinas.views.RenderException;
+import diario.disciplinas.views.SucessoView;
+import diario.disciplinas.views.View;
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import diario.disciplinas.repository.DisciplinaRepository;
-import utils.ConnectionFactory;
-import utils.Headers;
-
-import diario.disciplinas.views.RenderException;
-import diario.disciplinas.views.View;
-import diario.disciplinas.views.SucessoView;
-import diario.disciplinas.views.ErroView;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
 
 @WebServlet(name = "InserirDisciplinas", urlPatterns = {"/diario/disciplinas/inserir"})
 public class InserirDisciplinas extends HttpServlet {
@@ -29,9 +28,9 @@ public class InserirDisciplinas extends HttpServlet {
 		Connection conexao = ConnectionFactory.getDiario();
 		DisciplinaRepository disciplinaRep = new DisciplinaRepository(conexao);
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(response);
+
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
-        
+
 		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
 			response.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario nao tem permisao para essa operacao"));
@@ -42,7 +41,7 @@ public class InserirDisciplinas extends HttpServlet {
 			}
 			return;
 		}
-		
+
 		if (conexao == null) {
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {

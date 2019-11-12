@@ -1,5 +1,21 @@
 package diario.etapas.controller;
 
+import diario.etapas.RenderException;
+import diario.etapas.model.EtapasModel;
+import diario.etapas.repository.EtapasRepository;
+import diario.etapas.view.ErroFormatView;
+import diario.etapas.view.ErroSqlView;
+import diario.etapas.view.EtapasConsultaView;
+import diario.etapas.view.View;
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -7,25 +23,6 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import javax.servlet.ServletException;
-
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import diario.etapas.model.EtapasModel;
-import diario.etapas.repository.EtapasRepository;
-import utils.ConnectionFactory;
-import utils.Headers;
-import diario.etapas.RenderException;
-import diario.etapas.view.View;
-import diario.etapas.view.EtapasConsultaView;
-import diario.etapas.view.ErroFormatView;
-import diario.etapas.view.ErroSqlView;
-
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
 
 @WebServlet(name = "ConsultarEtapas", urlPatterns = "/diario/etapas/consultar")
 public class ConsultarEtapas extends HttpServlet {
@@ -33,7 +30,7 @@ public class ConsultarEtapas extends HttpServlet {
 	// método doGet será alterado para doPost quando for terminado o front-end
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
+
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 		if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {
@@ -98,11 +95,11 @@ public class ConsultarEtapas extends HttpServlet {
 		Map<String, String> dados = new LinkedHashMap<>();
 
 		// definir os valores do map condicionalmente, conforme a requisição
-		if (req.getParameter("id") != null  && !req.getParameter("id").equals("")) {
+		if (req.getParameter("id") != null && !req.getParameter("id").equals("")) {
 			dados.put("id", req.getParameter("id"));
 		}
 
-		if (req.getParameter("ano") != null  && !req.getParameter("ano").equals("")) {
+		if (req.getParameter("ano") != null && !req.getParameter("ano").equals("")) {
 			dados.put("ano", req.getParameter("ano"));
 		}
 

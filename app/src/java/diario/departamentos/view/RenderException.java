@@ -1,8 +1,9 @@
-package diario.professores_disciplinas.View;
+package diario.departamentos.view;
 
 public class RenderException extends Exception {
 
 	public RenderException() {
+		super("Falha ao renderizar");
 	}
 
 	public RenderException(String message) {

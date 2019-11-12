@@ -1,32 +1,33 @@
-package diario.professores_disciplinas;
+package diario.professoresDisciplinas;
 
-import diario.professores_disciplinas.Model.ProfessoresDisciplinasModel;
-import diario.professores_disciplinas.Repository.ProfessoresDisciplinasRepository;
-import diario.professores_disciplinas.View.ProfDisConsultaView;
-import diario.professores_disciplinas.View.RenderException;
-import diario.professores_disciplinas.View.View;
-import diario.professores_disciplinas.View.ErroView;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
+import diario.professoresDisciplinas.Model.ProfessoresDisciplinasModel;
+import diario.professoresDisciplinas.Repository.ProfessoresDisciplinasRepository;
+import diario.professoresDisciplinas.View.ErroView;
+import diario.professoresDisciplinas.View.ProfDisConsultaView;
+import diario.professoresDisciplinas.View.RenderException;
+import diario.professoresDisciplinas.View.View;
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.ConnectionFactory;
-import utils.Headers;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-@WebServlet(name = "ConsultarPorId", urlPatterns = {"/diario/professoresdisciplinas/consultarporid"})
-public class ConsultarPorId extends HttpServlet {
+@WebServlet(name = "ConsultarDisciplinas", urlPatterns = {"/diario/professoresdisciplinas/consultar"})
+public class ConsultaProfessoresDisciplinas extends HttpServlet {
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(response);
 		Connection conexao = ConnectionFactory.getDiario();
 		PrintWriter out = response.getWriter();
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
@@ -42,6 +43,7 @@ public class ConsultarPorId extends HttpServlet {
 			return;
 		}
 		if (conexao == null) {
+			System.err.println("Falha ao conectar ao bd");
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {
 				erroView.render(out);
@@ -50,20 +52,16 @@ public class ConsultarPorId extends HttpServlet {
 			}
 			return;
 		}
-		ProfessoresDisciplinasRepository disciplinaRep = new ProfessoresDisciplinasRepository(conexao);
-		Set<ProfessoresDisciplinasModel> resultado;
-		int v = 1;
-		if (request.getParameter("v") != null) {
-			v = Integer.parseUnsignedInt(request.getParameter("v"));
-		}
-		String[] id = {request.getParameter("id-professores"), request.getParameter("id-disciplinas")};
-		try {
-			resultado = new HashSet<>();
-			resultado.add(disciplinaRep.consultarId(id[v - 1], v));
 
+		ProfessoresDisciplinasRepository disciplinaRep = new ProfessoresDisciplinasRepository(conexao);
+
+		Set<ProfessoresDisciplinasModel> resultado;
+		try {
+			Map<String, String> filtros = ProfessoresDisciplinasModel.definirMap(request); // criando um Map para armazenar os filtros de maneira pratica
+			resultado = new HashSet<>();
+			resultado = disciplinaRep.consultar(ProfessoresDisciplinasModel.definirMap(request));
 			View DisciplinaConsultaView = new ProfDisConsultaView(resultado);
 			DisciplinaConsultaView.render(out);
-
 		} catch (NumberFormatException excecaoFormatoErrado) {
 			response.setStatus(400);
 			System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
@@ -90,6 +88,5 @@ public class ConsultarPorId extends HttpServlet {
 		} catch (RenderException ex) {
 			throw new ServletException(ex);
 		}
-
 	}
 }

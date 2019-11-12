@@ -16,6 +16,8 @@ import java.io.PrintWriter;
 public class LogoutController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
+
+
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
 		try {
 			autenticador.encerrar();

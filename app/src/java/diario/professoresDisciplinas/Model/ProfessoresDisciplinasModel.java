@@ -1,9 +1,8 @@
-package diario.professores_disciplinas.Model;
+package diario.professoresDisciplinas.Model;
 
-import diario.professores_disciplinas.View.ExcecaoConteudoVinculado;
+import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 public class ProfessoresDisciplinasModel {
 
@@ -12,6 +11,20 @@ public class ProfessoresDisciplinasModel {
 	public ProfessoresDisciplinasModel(int idProfessor, int idDisciplina) {
 		this.idProfessor = idProfessor;
 		this.idDisciplina = idDisciplina;
+	}
+
+	public static Map<String, String> definirMap(HttpServletRequest req) {
+		Map<String, String> dados = new LinkedHashMap<>();
+
+		if (req.getParameter("id-professores") != null) {
+			dados.put("id-professores", req.getParameter("id-professores"));
+		}
+
+		if (req.getParameter("id-disciplinas") != null) {
+			dados.put("id-disciplinas", req.getParameter("id-disciplinas"));
+		}
+
+		return dados;
 	}
 
 	public int getIdProfessor() {
@@ -37,20 +50,6 @@ public class ProfessoresDisciplinasModel {
 		retorno[1] = parametros.get("id-disciplina");
 
 		return retorno;
-	}
-
-	public static Map<String, String> definirMap(HttpServletRequest req) {
-		Map<String, String> dados = new LinkedHashMap<>();
-
-		if (req.getParameter("id-professores") != null) {
-			dados.put("id-professores", req.getParameter("id-professores"));
-		}
-
-		if (req.getParameter("id-disciplinas") != null) {
-			dados.put("id-disciplinas", req.getParameter("id-disciplinas"));
-		}
-
-		return dados;
 	}
 
 }
