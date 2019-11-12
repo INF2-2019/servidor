@@ -81,7 +81,7 @@ public class LoginAdminController extends HttpServlet {
 				new ErroView(INTERNO).render(out);
 				return;
 			} catch (AdminNotFoundException ex) {
-				response.setStatus(401);
+				response.setStatus(403);
 				new ErroView(CREDENCIAIS).render(out);
 				return;
 			}

@@ -6,9 +6,8 @@
 		 version="3.0">
 	<session-config>
 		<cookie-config>
-			<name>EpsteinDidntKillHimself</name>
+			<name>SESSIONID</name>
 			<path>/</path>
 		</cookie-config>
 	</session-config>
-
 </web-app>
