@@ -4,7 +4,6 @@ import biblioteca.emprestimos.model.EmprestimoModel;
 import biblioteca.emprestimos.repository.EmprestimoRepository;
 import biblioteca.emprestimos.views.*;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.BibliotecaAutenticador;
 import utils.autenticador.BibliotecaCargos;
 
@@ -24,7 +23,7 @@ import java.util.SortedMap;
 public class AtualizarEmprestimos extends HttpServlet {
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		Headers.XMLHeaders(req, res);
+
 		Connection con = ConnectionFactory.getBiblioteca();
 		PrintWriter out = res.getWriter();
 

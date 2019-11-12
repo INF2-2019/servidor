@@ -2,7 +2,6 @@ package diario.turmas.controllers;
 
 import diario.turmas.models.TurmaModel;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 
 import javax.servlet.ServletException;
@@ -23,7 +22,7 @@ import static utils.autenticador.DiarioCargos.CONVIDADO;
 public class ConsultaTurmas extends HttpServlet {
 
 	protected void processRequest(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		Headers.XMLHeaders(req, res);
+
 
 		PrintWriter out = res.getWriter();
 		Connection con = ConnectionFactory.getDiario();

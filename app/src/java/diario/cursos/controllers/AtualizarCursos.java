@@ -6,7 +6,6 @@ import diario.cursos.view.RenderException;
 import diario.cursos.view.SucessoView;
 import diario.cursos.view.View;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -26,7 +25,7 @@ import java.util.Map;
 public class AtualizarCursos extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(request, response);
+
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
@@ -54,7 +53,7 @@ public class AtualizarCursos extends HttpServlet {
 
 		Map<String, String> parametros = definirParametros(request);
 		// Testa se todos parâmetros necessários foram inseridos
-		if (! request.getParameterMap().containsKey("id")) {
+		if (!request.getParameterMap().containsKey("id")) {
 			response.setStatus(400);
 			View erroView = new ErroView(new Exception("Um ID deve ser passado para a operação de atualização."));
 			try {
@@ -91,7 +90,7 @@ public class AtualizarCursos extends HttpServlet {
 			}
 		} catch (NullPointerException e) {
 			response.setStatus(400);
-			System.err.println("Id inválido. Erro: "+e.toString());
+			System.err.println("Id inválido. Erro: " + e.toString());
 
 			View erroView = new ErroView(e);
 			try {

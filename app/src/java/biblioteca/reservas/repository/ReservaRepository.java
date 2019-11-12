@@ -159,7 +159,7 @@ public class ReservaRepository {
 		}
 		
 
-		ps = con.prepareStatement("INSERT INTO `reservas` (`id-aluno`, `id-acervo`, `data-reserva`,`tempo-espera`,`emprestou`) VALUES (?, ?, ?, ?, ?)");
+		ps = con.prepareStatement("INSERT INTO `reservas` (`id-alunos`, `id-acervo`, `data-reserva`,`tempo-espera`,`emprestou`) VALUES (?, ?, ?, ?, ?)");
 
 		ps.setLong(1, idAlunos);
 		ps.setInt(2, idAcervo);
@@ -173,7 +173,7 @@ public class ReservaRepository {
 
 	}
 
-	public boolean atualizar(Map<String, String> filtros, String id) throws SQLException, NumberFormatException, ParseException {
+	public boolean atualizar(Map<String, String> filtros, String id) throws SQLException, NumberFormatException, ParseException, AlunoException {
 		int idParsed = Integer.parseUnsignedInt(id);
 		if (filtros.containsKey("id-alunos")) {
 			Long.parseUnsignedLong(filtros.get("id-alunos"));
@@ -204,14 +204,25 @@ public class ReservaRepository {
 		return atualizarPorId(valores);
 	}
 
-	public boolean atualizarPorId(Map<String, Object> parametros) throws NumberFormatException, SQLException, ParseException {
+	public boolean atualizarPorId(Map<String, Object> parametros) throws NumberFormatException, SQLException, ParseException, AlunoException {
 		int id = Integer.parseUnsignedInt(parametros.get("id").toString());
 		long idAluno = Long.parseUnsignedLong(parametros.get("id-alunos").toString());
 		int idAcervo = Integer.parseUnsignedInt(parametros.get("id-acervo").toString());
 		int tempoEspera = Integer.parseUnsignedInt(parametros.get("tempo-espera").toString());
 		Date dataReserva = simpleFormat.parse(parametros.get("data-reserva").toString());
 		Boolean emprestou = Boolean.parseBoolean(parametros.get("emprestou").toString());
-		PreparedStatement ps = con.prepareStatement("UPDATE `reservas` SET `id-aluno` = ?, `id-acervo` = ?, `tempo-espera` = ?, `data-reserva` = ?, `emprestou` = ?  WHERE `id` = ?");
+
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
+                ps.setLong(1, idAluno);
+                ResultSet resultadoBusca = ps.executeQuery();
+                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse aluno.");
+                ps = con.prepareStatement("SELECT * FROM `acervo` WHERE `id` = ? ");
+                ps.setInt(1, idAcervo);
+				System.out.println(idAcervo);
+                resultadoBusca = ps.executeQuery();
+                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse acervo.");
+
+		 ps = con.prepareStatement("UPDATE `reservas` SET `id-alunos` = ?, `id-acervo` = ?, `tempo-espera` = ?, `data-reserva` = ?, `emprestou` = ?  WHERE `id` = ?");
 		ps.setLong(1, idAluno);
 		ps.setInt(2, idAcervo);
 		ps.setInt(3, tempoEspera);
@@ -293,7 +304,7 @@ public class ReservaRepository {
 
 	private ReservaModel resultSetParaDisciplina(ResultSet res) throws SQLException, ParseException {
 		int id = res.getInt("id");
-		long idAlunos = res.getLong("id-aluno");
+		long idAlunos = res.getLong("id-alunos");
 		int idAcervo = res.getInt("id-acervo");
 		int tempoEspera = res.getInt("tempo-espera");
 		Date dataReserva = simpleFormat.parse(res.getDate("data-reserva").toString());

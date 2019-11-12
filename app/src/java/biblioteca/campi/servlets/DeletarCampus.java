@@ -1,25 +1,23 @@
 package biblioteca.campi.servlets;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
+import biblioteca.campi.repository.CampiRepository;
+import diario.cursos.view.ErroView;
+import diario.cursos.view.RenderException;
+import diario.cursos.view.SucessoView;
+import diario.cursos.view.View;
+import utils.ConnectionFactory;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import biblioteca.campi.repository.*;
-import diario.cursos.view.*;
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import utils.ConnectionFactory;
-import utils.Headers;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- *
  * @author User
  */
 @WebServlet(name = "DeletarCampus", urlPatterns = {"/biblioteca/campi/deletar"})
@@ -30,7 +28,7 @@ public class DeletarCampus extends HttpServlet {
 		CampiRepository rep = new CampiRepository(conexao);
 		PrintWriter out = response.getWriter();
 
-		Headers.XMLHeaders(response);
+
 		String id = request.getParameter("id");
 		if (rep.checarAutorizacaoADM(request, response)) {
 			try {
