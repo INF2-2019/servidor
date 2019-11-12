@@ -15,16 +15,20 @@ public class SessionAndHeadersFilter implements Filter {
 	private final static String SET_COOKIE_PARAMS = "SameSite=None";
 //	private final static String SET_COOKIE_PARAMS = "Secure; SameSite=None"; Se estiver com SSL
 
+	@Override
 	public void destroy() {
 
 	}
 
+	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
-		chain.doFilter(req, resp);
 		if (resp instanceof HttpServletResponse) {
 			sameSiteFix((HttpServletResponse) resp);
 			Headers.XMLHeaders((HttpServletRequest) req, (HttpServletResponse) resp);
 		}
+
+		// Continue chain after because of the probability of a writer being called beforehand
+		chain.doFilter(req, resp);
 	}
 
 	private void sameSiteFix(HttpServletResponse response) {
@@ -41,6 +45,7 @@ public class SessionAndHeadersFilter implements Filter {
 		}
 	}
 
+	@Override
 	public void init(FilterConfig config) throws ServletException {
 
 	}
