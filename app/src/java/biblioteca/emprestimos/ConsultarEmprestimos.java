@@ -4,7 +4,6 @@ import biblioteca.emprestimos.model.EmprestimoModel;
 import biblioteca.emprestimos.repository.EmprestimoRepository;
 import biblioteca.emprestimos.views.*;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.BibliotecaAutenticador;
 import utils.autenticador.BibliotecaCargos;
 
@@ -18,13 +17,13 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 @WebServlet(name = "ConsultarEmprestimos", urlPatterns = {"/biblioteca/emprestimos/consultar"})
 public class ConsultarEmprestimos extends HttpServlet {
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		Connection conexao = ConnectionFactory.getBiblioteca();
@@ -58,7 +57,6 @@ public class ConsultarEmprestimos extends HttpServlet {
 		Set<EmprestimoModel> resultado;
 		try {
 			Map<String, String> filtros = EmprestimoModel.definirMap(request);
-			resultado = new HashSet<>();
 			resultado = emprestimoRep.consultar(filtros);
 			View EmprestimoConsultaView = new EmprestimoConsultaView(resultado);
 			EmprestimoConsultaView.render(out);
