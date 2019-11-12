@@ -3,7 +3,6 @@ package biblioteca.reservas;
 import biblioteca.reservas.repository.ReservaRepository;
 import biblioteca.reservas.views.*;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.BibliotecaAutenticador;
 import utils.autenticador.BibliotecaCargos;
 
@@ -24,7 +23,7 @@ import java.util.logging.Logger;
 public class EmprestarReservas extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(request, response);
+
 		Connection conexao = ConnectionFactory.getBiblioteca();
 
 		PrintWriter out = response.getWriter();

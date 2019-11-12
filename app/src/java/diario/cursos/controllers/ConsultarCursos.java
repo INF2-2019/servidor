@@ -2,12 +2,11 @@ package diario.cursos.controllers;
 
 import diario.cursos.models.CursoModel;
 import diario.cursos.repository.CursoRepository;
-import utils.ConnectionFactory;
-import utils.Headers;
-import diario.cursos.view.RenderException;
-import diario.cursos.view.View;
 import diario.cursos.view.CursoConsultaView;
 import diario.cursos.view.ErroView;
+import diario.cursos.view.RenderException;
+import diario.cursos.view.View;
+import utils.ConnectionFactory;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -29,7 +28,7 @@ import java.util.Set;
 public class ConsultarCursos extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(request, response);
+
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 		if (autenticador.cargoLogado() == DiarioCargos.CONVIDADO) {

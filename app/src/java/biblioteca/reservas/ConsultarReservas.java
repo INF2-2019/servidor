@@ -7,7 +7,6 @@ import biblioteca.reservas.views.RenderException;
 import biblioteca.reservas.views.ReservaConsultaView;
 import biblioteca.reservas.views.View;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.BibliotecaAutenticador;
 import utils.autenticador.BibliotecaCargos;
 
@@ -30,7 +29,7 @@ import java.util.Set;
 public class ConsultarReservas extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(request, response);
+
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		PrintWriter out = response.getWriter();
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
