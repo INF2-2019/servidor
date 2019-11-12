@@ -5,23 +5,23 @@ import diario.departamentos.repository.DepartamentoRepository;
 import diario.departamentos.view.ErroView;
 import diario.departamentos.view.RenderException;
 import diario.departamentos.view.SucessoView;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.Headers;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.SQLException;
 
 @WebServlet(name = "RemoveDepartamentos", urlPatterns = "/diario/departamentos/remove")
 public class Remove extends HttpServlet {
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
 
 		PrintWriter out = response.getWriter();
 
@@ -79,7 +79,7 @@ public class Remove extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
 		processRequest(request, response);
 	}
 

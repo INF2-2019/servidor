@@ -1,21 +1,21 @@
 package diario.departamentos.controller;
 
+import diario.departamentos.model.DepartamentoValidation;
 import diario.departamentos.repository.DepartamentoRepository;
-import diario.departamentos.service.DepartamentoValidation;
 import diario.departamentos.view.ErroView;
 import diario.departamentos.view.RenderException;
 import diario.departamentos.view.SucessoView;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.Headers;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.SQLException;
 
 @WebServlet(name = "InsereDepartamentos", urlPatterns = "/diario/departamentos/insere")
 public class Insere extends HttpServlet {

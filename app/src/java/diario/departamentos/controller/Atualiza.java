@@ -1,21 +1,22 @@
 package diario.departamentos.controller;
 
+import diario.departamentos.model.DepartamentoValidation;
 import diario.departamentos.repository.DepartamentoInexistenteException;
 import diario.departamentos.repository.DepartamentoRepository;
-import diario.departamentos.service.DepartamentoValidation;
 import diario.departamentos.view.ErroView;
 import diario.departamentos.view.RenderException;
 import diario.departamentos.view.SucessoView;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.SQLException;
 
 @WebServlet(name = "AtualizaDepartamentos", urlPatterns = "/diario/departamentos/atualiza")
 public class Atualiza extends HttpServlet {
@@ -28,7 +29,7 @@ public class Atualiza extends HttpServlet {
 		Exception excecao = null;
 
 		try {
-			DiarioAutenticador autenticador = new DiarioAutenticador (request, response);
+			DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 			if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
 				throw new AutenticacaoException();
 			}
@@ -83,7 +84,7 @@ public class Atualiza extends HttpServlet {
 			response.setStatus(500);
 			excecao = ex;
 		} catch (RenderException ex) {
-		throw new ServletException();
+			throw new ServletException();
 		} finally {
 			if (excecao != null) {
 				ErroView erroView = new ErroView(excecao);
