@@ -1,9 +1,11 @@
 package diario.professores_disciplinas;
 
+import diario.disciplinas.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.ServletException;
@@ -11,20 +13,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import diario.professores_disciplinas.Model.ProfessoresDisciplinasModel;
-import diario.professores_disciplinas.Repository.ProfessoresDisciplinasRepository;
-import diario.professores_disciplinas.View.ExcecaoConteudoVinculado;
+import diario.disciplinas.model.DisciplinaModel;
+import diario.disciplinas.repository.DisciplinaRepository;
 import utils.ConnectionFactory;
-import diario.professores_disciplinas.View.ProfDisConsultaView;
-import diario.professores_disciplinas.View.RenderException;
-import diario.professores_disciplinas.View.View;
-import diario.professores_disciplinas.View.ErroView;
+import diario.disciplinas.views.RenderException;
+import diario.disciplinas.views.View;
+import diario.disciplinas.views.DisciplinaConsultaView;
+import diario.disciplinas.views.ErroView;
 import java.util.HashSet;
 import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
-@WebServlet(name = "ConsultarDisciplinas", urlPatterns = {"/diario/professoresdisciplinas/consultar"})
+@WebServlet(name = "ConsultarDisciplinas", urlPatterns = {"/diario/disciplinas/consultar"})
 public class ConsultaProfessoresDisciplinas extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -43,6 +44,7 @@ public class ConsultaProfessoresDisciplinas extends HttpServlet {
 			}
 			return;
 		}
+
 		if (conexao == null) {
 			System.err.println("Falha ao conectar ao bd");
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
@@ -54,14 +56,14 @@ public class ConsultaProfessoresDisciplinas extends HttpServlet {
 			return;
 		}
 
-		ProfessoresDisciplinasRepository disciplinaRep = new ProfessoresDisciplinasRepository(conexao);
+		DisciplinaRepository disciplinaRep = new DisciplinaRepository(conexao);
 
-		Set<ProfessoresDisciplinasModel> resultado;
+		Set<DisciplinaModel> resultado;
+		Map<String, String> filtros = definirMap(request); // criando um Map para armazenar os filtros de maneira pratica
 		try {
-			Map<String, String> filtros = ProfessoresDisciplinasModel.definirMap(request); // criando um Map para armazenar os filtros de maneira pratica
 			resultado = new HashSet<>();
-			resultado = disciplinaRep.consultar(ProfessoresDisciplinasModel.definirMap(request));
-			View DisciplinaConsultaView = new ProfDisConsultaView(resultado);
+			resultado = disciplinaRep.consultar(definirMap(request));
+			View DisciplinaConsultaView = new DisciplinaConsultaView(resultado);
 			DisciplinaConsultaView.render(out);
 		} catch (NumberFormatException excecaoFormatoErrado) {
 			response.setStatus(400);
@@ -89,5 +91,24 @@ public class ConsultaProfessoresDisciplinas extends HttpServlet {
 		} catch (RenderException ex) {
 			throw new ServletException(ex);
 		}
+	}
+
+	public Map<String, String> definirMap(HttpServletRequest req) {
+		Map<String, String> dados = new LinkedHashMap<>();
+
+		// definir os valores do map condicionalmente, conforme a requisição
+		if (req.getParameter("turma") != null) {
+			dados.put("id-turmas", req.getParameter("turma"));
+		}
+
+		if (req.getParameter("nome") != null) {
+			dados.put("nome", req.getParameter("nome"));
+		}
+
+		if (req.getParameter("horas") != null) {
+			dados.put("carga-horaria-min", req.getParameter("horas"));
+		}
+
+		return dados;
 	}
 }

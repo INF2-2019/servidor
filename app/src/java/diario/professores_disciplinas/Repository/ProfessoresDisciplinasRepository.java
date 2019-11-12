@@ -1,3 +1,4 @@
+
 package diario.professores_disciplinas.Repository;
 
 import diario.professores_disciplinas.Model.ProfessoresDisciplinasModel;
@@ -6,77 +7,74 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
 
 public class ProfessoresDisciplinasRepository {
-
-	private Connection con;
+    
+    private Connection con;
 
 	public ProfessoresDisciplinasRepository(Connection con) {
 		this.con = con;
 	}
 
 	public void deletar(String id, int v) throws SQLException, ExcecaoConteudoVinculado {
-		String sql = "";
-		ResultSet verificacao;
-		PreparedStatement stat = con.prepareCall("Init");
-		int idP = Integer.parseUnsignedInt(id);
-		if (v == 1) {
-			stat = con.prepareCall("SELECT * FROM `prof_disciplinas` WHERE `id-professores` = ?");
-			stat.setInt(1, idP);
-			verificacao = stat.executeQuery();
-			if (!verificacao.next()) {
-				throw new ExcecaoConteudoVinculado("Não existe esse professor.");
-			}
-			verificacao.close();
-			sql = "DELETE FROM `prof_disciplinas` WHERE `id-professores` = ?";
-		} else if (v == 2) {
-			stat = con.prepareCall("SELECT * FROM `prof_disciplinas` WHERE `id-disciplinas` = ?");
-			stat.setInt(1, idP);
-			verificacao = stat.executeQuery();
-			if (!verificacao.next()) {
-				throw new ExcecaoConteudoVinculado("Não existe essa disciplina.");
-			}
-			verificacao.close();
-			sql = "DELETE FROM `prof_disciplinas` WHERE `id-disciplinas` = ?";
-		}
+		String sql;
+                ResultSet verificacao;
+                PreparedStatement stat = con.prepareCall("Init");
+                int idP = Integer.parseUnsignedInt(id);
+                if(v==1){
+                    stat = con.prepareCall("SELECT * FROM `professores-discplinas` WHERE `id-professores` = ?");
+                    stat.setInt(1, idP);
+                    verificacao = stat.executeQuery();
+                    if (verificacao.next()) {
+                            throw new ExcecaoConteudoVinculado("Não existe esse professor.");
+                    }
+                    verificacao.close();
+                }
+                else if(v==2){
+                    int idDi = Integer.parseUnsignedInt(id);
+                    stat = con.prepareCall("SELECT * FROM `professores-discplinas` WHERE `id-disciplinas` = ?");
+                    stat.setInt(1, idP);
+                    verificacao = stat.executeQuery();
+                    if (verificacao.next()) {
+                            throw new ExcecaoConteudoVinculado("Não existe essa disciplina.");
+                    }
+                    verificacao.close();
+                }
+                
+		sql = "DELETE FROM `disciplinas` WHERE `id` = ?";
+
 		stat = con.prepareStatement(sql);
 		stat.setInt(1, idP);
 		stat.executeUpdate();
 	}
 
-	public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException, ExcecaoConteudoVinculado {
+	public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException {
 
-		ResultSet result;
-		if (valores.get("id-professores") == null) {
-			throw new ExcecaoConteudoVinculado("O siape do professor é obrigatório.");
-		}
-		if (valores.get("id-professores") == null) {
-			throw new ExcecaoConteudoVinculado("O siape do professor é obrigatório.");
-		}
-		int idProfessor = Integer.parseUnsignedInt(valores.get("id-professores"));
-		int idDisciplinas = Integer.parseUnsignedInt(valores.get("id-disciplinas"));
-
-		PreparedStatement ps = con.prepareStatement("SELECT  * FROM `professores` WHERE `id` = ? ");
-		ps.setInt(1, idProfessor);
-		result = ps.executeQuery();
-		if (!result.next()) {
-			throw new ExcecaoConteudoVinculado("Não existe esse professor cadastrado.");
+		if (valores.size() != 3) {
+			return false;
 		}
 
-		ps = con.prepareStatement("SELECT  * FROM `disciplinas` WHERE `id` = ? ");
-		ps.setInt(1, idDisciplinas);
-		result = ps.executeQuery();
-		if (!result.next()) {
-			throw new ExcecaoConteudoVinculado("Não existe essa disciplina cadastrada.");
+		int idTurmas = 0;
+
+		if (valores.containsKey("id-turmas")) {
+			idTurmas = Integer.parseUnsignedInt(valores.get("id-turmas"));
 		}
 
-		ps = con.prepareStatement("INSERT INTO `prof_disciplinas` (`id-professores`, `id-disciplinas`) VALUES (?, ?)");
+		int cargaHorariaMin = 0;
 
-		ps.setInt(1, idProfessor);
-		ps.setInt(2, idDisciplinas);
+		if (valores.containsKey("carga-horaria-min")) {
+			cargaHorariaMin = Integer.parseUnsignedInt(valores.get("carga-horaria-min"));
+		}
+
+		PreparedStatement ps = con.prepareStatement("INSERT INTO `disciplinas` (`id-turmas`, `nome`, `carga-horaria-min`) VALUES (?, ?, ?)");
+
+		ps.setInt(1, idTurmas);
+		ps.setString(2, valores.get("nome"));
+		ps.setInt(3, cargaHorariaMin);
 
 		int sucesso = ps.executeUpdate();
 
@@ -87,19 +85,20 @@ public class ProfessoresDisciplinasRepository {
 	public Set<ProfessoresDisciplinasModel> consultar(Map<String, String> filtros) throws NumberFormatException, SQLException {
 		String sql;
 		Set<ProfessoresDisciplinasModel> disciplinaResultado = new LinkedHashSet<>();
-		sql = "SELECT * FROM `prof_disciplinas` ORDER BY `id-professores`";
-		int idProfessor = -1, idDisciplina = -1;
+		sql = "SELECT * FROM `disciplinas` ORDER BY `id`";
+		int idTurma = -1, horas = -1;
 
-		if (filtros.containsKey("id-professores")) {
+		if (filtros.containsKey("id-turmas")) {
 			// Se lançar a exceção NumberFormatException, o valor não é um inteiro sem sinal
-			idProfessor = Integer.parseUnsignedInt(filtros.get("id-professores"));
+			idTurma = Integer.parseUnsignedInt(filtros.get("id-turmas"));
 		}
 
-		if (filtros.containsKey("id-disciplinas")) {
+		if (filtros.containsKey("carga-horaria-min")) {
 			// Se lançar a exceção NumberFormatException, o valor não é um inteiro sem
-			idDisciplina = Integer.parseUnsignedInt(filtros.get("id-disciplinas"));
+			horas = Integer.parseUnsignedInt(filtros.get("carga-horaria-min"));
 		}
 
+                
 		ResultSet resultadoBusca = con.prepareCall(sql).executeQuery();
 
 		boolean adicionar;
@@ -107,16 +106,22 @@ public class ProfessoresDisciplinasRepository {
 			adicionar = true;
 
 			ProfessoresDisciplinasModel disciplina = resultSetParaDisciplina(resultadoBusca);
-			if (filtros.containsKey("id-professores")) {
-				if (idProfessor != disciplina.getIdProfessor()) {
+			if (filtros.containsKey("id-turmas")) {
+				if (idTurma != disciplina.getIdTurmas()) {
 					adicionar = false;
 				}
 			}
-			if (filtros.containsKey("id-disciplinas")) {
-				if (idDisciplina != disciplina.getIdDisciplina()) {
+			if (filtros.containsKey("nome")) {
+				if (!filtros.get("nome").equals(disciplina.getNome())) {
 					adicionar = false;
 				}
 			}
+			if (filtros.containsKey("carga-horaria-min")) {
+				if (horas != disciplina.getCargaHorariaMin()) {
+					adicionar = false;
+				}
+			}
+
 			if (adicionar) {
 				disciplinaResultado.add(disciplina);
 			}
@@ -126,41 +131,29 @@ public class ProfessoresDisciplinasRepository {
 	}
 
 	private ProfessoresDisciplinasModel resultSetParaDisciplina(ResultSet res) throws SQLException {
-		int idProfessor = res.getInt("id-professores");
-		int idDisciplinas = res.getInt("id-disciplinas");
+		int id = res.getInt("id");
+		int idTurmas = res.getInt("id-turmas");
+		String nome = res.getString("nome");
+		int cargaHorariaMin = res.getInt("carga-horaria-min");
 
-		return new ProfessoresDisciplinasModel(idProfessor, idDisciplinas);
+		return new DisciplinaModel(id, idTurmas, nome, cargaHorariaMin);
 	}
 
-	public ProfessoresDisciplinasModel consultarId(String idStr, int v) throws NumberFormatException, SQLException {
+	public ProfessoresDisciplinasModel consultarId(String idStr) throws NumberFormatException, SQLException {
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM `disciplinas` WHERE `id` = ?");
+		// Se id não for um inteiro sem sinal, joga a exceção NumberFormatException
+		int id = Integer.parseUnsignedInt(idStr);
 
-		if (v == 1) {
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM `prof_disciplinas` WHERE `id-professores` = ?");
-			// Se id não for um inteiro sem sinal, joga a exceção NumberFormatException
-			int id = Integer.parseUnsignedInt(idStr);
+		ps.setInt(1, id);
 
-			ps.setInt(1, id);
+		ResultSet resultado = ps.executeQuery();
 
-			ResultSet resultado = ps.executeQuery();
-
-			if (resultado.next()) {
-				return resultSetParaDisciplina(resultado);
-			}
-		} else {
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM `prof_disciplinas` WHERE `id-disciplinas` = ?");
-			// Se id não for um inteiro sem sinal, joga a exceção NumberFormatException
-			int id = Integer.parseUnsignedInt(idStr);
-
-			ps.setInt(1, id);
-
-			ResultSet resultado = ps.executeQuery();
-
-			if (resultado.next()) {
-				return resultSetParaDisciplina(resultado);
-			}
+		if (resultado.next()) {
+			return resultSetParaDisciplina(resultado);
 		}
-
 		return null;
-	}
 
+	}
+    
+    
 }

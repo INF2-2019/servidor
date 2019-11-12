@@ -1,30 +1,30 @@
 package diario.professores_disciplinas;
 
+import diario.disciplinas.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import diario.disciplinas.repository.DisciplinaRepository;
 import utils.ConnectionFactory;
 import utils.Headers;
-import diario.professores_disciplinas.View.RenderException;
-import diario.professores_disciplinas.View.ErroView;
-import diario.professores_disciplinas.View.SucessoView;
-import diario.professores_disciplinas.View.View;
-import diario.professores_disciplinas.Model.ProfessoresDisciplinasModel;
+
+import diario.disciplinas.views.RenderException;
+import diario.disciplinas.views.View;
+import diario.disciplinas.views.SucessoView;
+import diario.disciplinas.views.ErroView;
 import diario.professores_disciplinas.Repository.ProfessoresDisciplinasRepository;
-import diario.professores_disciplinas.View.ExcecaoConteudoVinculado;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
-@WebServlet(name = "InserirProfessoresDisciplinas", urlPatterns = {"/diario/professoresdisciplinas/inserir"})
+@WebServlet(name = "InserirDisciplinas", urlPatterns = {"/diario/disciplinas/inserir"})
 public class InserirProfessoresDisciplinas extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -33,7 +33,7 @@ public class InserirProfessoresDisciplinas extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		Headers.XMLHeaders(response);
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
-
+        
 		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
 			response.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario nao tem permisao para essa operacao"));
@@ -44,6 +44,7 @@ public class InserirProfessoresDisciplinas extends HttpServlet {
 			}
 			return;
 		}
+		
 		if (conexao == null) {
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {
@@ -53,9 +54,9 @@ public class InserirProfessoresDisciplinas extends HttpServlet {
 			}
 			return;
 		}
+		Map<String, String> dados = definirMap(request);
 
 		try {
-			Map<String, String> dados = ProfessoresDisciplinasModel.definirMap(request);
 			disciplinaRep.inserir(dados);
 			View sucessoView = new SucessoView("Inserido com sucesso.");
 			sucessoView.render(out);
@@ -79,16 +80,28 @@ public class InserirProfessoresDisciplinas extends HttpServlet {
 			} catch (RenderException e) {
 				throw new ServletException(e);
 			}
-		} catch (ExcecaoConteudoVinculado ex) {
-			response.setStatus(400);
-			View erroView = new ErroView(ex);
-			try {
-				erroView.render(out);
-			} catch (RenderException e) {
-				throw new ServletException(e);
-			}
-		} catch (RenderException ex) {
-			throw new ServletException(ex);
+		} catch (RenderException e) {
+			throw new ServletException(e);
 		}
 	}
+
+	public Map<String, String> definirMap(HttpServletRequest req) {
+		Map<String, String> dados = new LinkedHashMap<>();
+
+		if (req.getParameter("turma") != null) {
+			dados.put("id-turmas", req.getParameter("turma"));
+		}
+
+		if (req.getParameter("nome") != null) {
+			dados.put("nome", req.getParameter("nome"));
+		}
+
+		if (req.getParameter("horas") != null) {
+			dados.put("carga-horaria-min", req.getParameter("horas"));
+		}
+
+		return dados;
+	}
+
 }
+

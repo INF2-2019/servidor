@@ -31,7 +31,7 @@ public class ConsultarEmprestimos extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
-
+		
 		if ((autenticador.cargoLogado() != BibliotecaCargos.ADMIN) && (autenticador.cargoLogado() != BibliotecaCargos.OPERADOR)) {
 			response.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
@@ -42,7 +42,7 @@ public class ConsultarEmprestimos extends HttpServlet {
 			}
 			return;
 		}
-
+		
 		if (conexao == null) {
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {

@@ -40,7 +40,7 @@ public class DeletarEmprestimos extends HttpServlet {
 			}
 			return;
 		}
-
+		
 		if (conexao == null) {
 			System.err.println("Falha ao conectar ao bd");
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
