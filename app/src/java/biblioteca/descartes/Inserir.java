@@ -1,6 +1,12 @@
 package biblioteca.descartes;
 
+import biblioteca.descartes.views.ErroView;
+import biblioteca.descartes.views.ExcecaoNaoAutorizado;
+import biblioteca.descartes.views.ExcecaoPadrao;
+import biblioteca.descartes.views.SucessoView;
 import utils.ConnectionFactory;
+import utils.autenticador.BibliotecaAutenticador;
+import utils.autenticador.BibliotecaCargos;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,8 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 @WebServlet(urlPatterns = {"/biblioteca/descartes/inserir"})
@@ -20,51 +24,43 @@ public class Inserir extends HttpServlet {
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException {
 
-		// Receber parametros do descarte de acervo
-		String id_acervo_string = request.getParameter("acervo"),
-			data = request.getParameter("data"),
-			motivo = request.getParameter("motivacao"),
-			id_funcionario = request.getParameter("funcionario");
+		PrintWriter out = response.getWriter();
 
-		int id_acervo;
-		Date date;
-
-		try (PrintWriter out = response.getWriter()) {
-
-			try {
-				id_acervo = Integer.parseInt(id_acervo_string);
-				date = Date.valueOf(data);
-			} catch (NumberFormatException | NullPointerException e) {
-				out.print(RespostaXML.erro("Input errado!", e.getMessage()));
-				return;
+		try {
+			BibliotecaAutenticador autenticador = new BibliotecaAutenticador(request, response);
+			if (autenticador.cargoLogado() == BibliotecaCargos.CONVIDADO) {
+				throw new ExcecaoNaoAutorizado("Você não tem permissão para essa operação");
 			}
 
-			try {
-				// Query SQL de inserção na tabela DESCARTES
-				String query = "INSERT INTO descartes(`id-acervo`,`data-descarte`, motivos, operador) VALUES (?,?,?,?)";
-				String queryDelete = "DELETE FROM acervo WHERE id=" + id_acervo;
-				// Conecta e executa Query SQL
-				Connection conexao = ConnectionFactory.getBiblioteca();
-				conexao.createStatement().executeUpdate(queryDelete);
-				PreparedStatement st = conexao.prepareStatement(query);
+			Connection conexao = ConnectionFactory.getBiblioteca();
+			DescartesRepository repositorio = new DescartesRepository(conexao);
+			DescartesParametros parametros = new DescartesParametros(request);
+			parametros.obrigatorios("acervo", "data", "funcionario", "motivacao");
 
-				st.setInt(1, id_acervo); //id-acervo
-				st.setDate(2, date); //data-descarte
-				st.setString(3, motivo); // motivos
-				st.setString(4, id_funcionario); //operador
-
-				int res = st.executeUpdate();
-				st.close();
-				conexao.close();
-
-				String xml = RespostaXML.sucesso("Acervo " + id_acervo + " foi descartado!");
-				out.print(xml);
-
-			} catch (SQLException e) {
-				out.print(RespostaXML.erro("Erro no banco de dados!", e.getMessage()));
-				e.printStackTrace();
+			if (repositorio.inserir(parametros)) {
+				SucessoView view = new SucessoView();
+				view.render(out);
+			} else {
+				ErroView view = new ErroView();
+				view.render(out);
 			}
 
+			conexao.close();
+		} catch (SQLException e) {
+			response.setStatus(500);
+			ErroView erro = new ErroView("Erro no banco de dados!", e.getMessage());
+			erro.render(out);
+			e.printStackTrace();
+		} catch (ExcecaoNaoAutorizado e) {
+			response.setStatus(403);
+			ErroView erro = new ErroView(e.mensagem, e.causa);
+			erro.render(out);
+			e.printStackTrace();
+		} catch (ExcecaoPadrao e) {
+			response.setStatus(400);
+			ErroView erro = new ErroView(e.mensagem, e.causa);
+			erro.render(out);
+			e.printStackTrace();
 		}
 	}
 
