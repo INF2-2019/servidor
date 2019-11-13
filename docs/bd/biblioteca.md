@@ -35,13 +35,13 @@ Traduções:
 
 ## `admin`
 
-| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA |
-| ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | ----- |
-| id          | 1                | `-`            | NO          | int(11)      | PRI        | `-`   |
-| nome        | 2                | `-`            | NO          | varchar(255) | `-`        | `-`   |
-| usuario     | 3                | `-`            | NO          | varchar(255) | `-`        | `-`   |
-| email       | 4                | `-`            | NO          | varchar(255) | UNI        | `-`   |
-| senha       | 5                | `-`            | NO          | varchar(255) | `-`        | `-`   |
+| COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          |
+| ----------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- |
+| id          | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment |
+| nome        | 2                | `-`            | NO          | varchar(255) | `-`        | `-`            |
+| usuario     | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            |
+| email       | 4                | `-`            | NO          | varchar(255) | UNI        | `-`            |
+| senha       | 5                | `-`            | NO          | varchar(255) | `-`        | `-`            |
 
 ## `alunos`
 
@@ -60,7 +60,7 @@ Traduções:
 | cidade      | 11               | `-`            | NO          | varchar(255)  | `-`        | `-`   |
 | cep         | 12               | `-`            | NO          | int(11)       | `-`        | `-`   |
 | uf          | 13               | `-`            | NO          | varchar(255)  | `-`        | `-`   |
-| foto        | 14               | `-`            | NO          | text          | `-`        | `-`   |
+| foto        | 14               | `-`            | YES         | text          | `-`        | `-`   |
 
 ## `autores`
 
@@ -90,8 +90,8 @@ Traduções:
 | id-acervo       | 3                | `-`            | NO          | int(11)      | `-`        | `-`            |
 | data-emprestimo | 4                | `-`            | NO          | date         | `-`        | `-`            |
 | data-prev-devol | 5                | `-`            | NO          | date         | `-`        | `-`            |
-| data-devolucao  | 6                | `-`            | NO          | date         | `-`        | `-`            |
-| multa           | 7                | `-`            | NO          | decimal(5,2) | `-`        | `-`            |
+| data-devolucao  | 6                | `-`            | YES         | date         | `-`        | `-`            |
+| multa           | 7                | `-`            | NO          | decimal(7,2) | `-`        | `-`            |
 
 ## `livros`
 
@@ -100,7 +100,7 @@ Traduções:
 | id-obra     | 1                | `-`            | NO          | int(11)     | `-`        | `-`   |
 | id-acervo   | 2                | `-`            | NO          | int(11)     | `-`        | `-`   |
 | edicao      | 3                | `-`            | NO          | int(11)     | `-`        | `-`   |
-| isbn        | 4                | `-`            | NO          | int(11)     | `-`        | `-`   |
+| isbn        | 4                | `-`            | NO          | bigint(20)  | `-`        | `-`   |
 
 ## `midias`
 
@@ -133,15 +133,15 @@ Traduções:
 
 ## `periodicos`
 
-| COLUMN_NAME   | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA          |
-| ------------- | ---------------- | -------------- | ----------- | ------------ | ---------- | -------------- |
-| id            | 1                | `-`            | NO          | int(11)      | PRI        | auto_increment |
-| id-acervo     | 2                | `-`            | NO          | int(11)      | `-`        | `-`            |
-| periodicidade | 3                | `-`            | NO          | varchar(255) | `-`        | `-`            |
-| mes           | 4                | `-`            | NO          | varchar(255) | `-`        | `-`            |
-| volume        | 5                | `-`            | NO          | int(11)      | `-`        | `-`            |
-| subtipo       | 6                | `-`            | NO          | varchar(255) | `-`        | `-`            |
-| issn          | 7                | `-`            | NO          | int(11)      | `-`        | `-`            |
+| COLUMN_NAME   | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | COLUMN_TYPE  | COLUMN_KEY | EXTRA |
+| ------------- | ---------------- | -------------- | ----------- | ------------ | ---------- | ----- |
+| id            | 1                | `-`            | NO          | int(11)      | PRI        | `-`   |
+| id-acervo     | 2                | `-`            | NO          | int(11)      | `-`        | `-`   |
+| periodicidade | 3                | `-`            | NO          | varchar(255) | `-`        | `-`   |
+| mes           | 4                | `-`            | NO          | varchar(255) | `-`        | `-`   |
+| volume        | 5                | `-`            | NO          | int(11)      | `-`        | `-`   |
+| subtipo       | 6                | `-`            | NO          | varchar(255) | `-`        | `-`   |
+| issn          | 7                | `-`            | NO          | int(11)      | `-`        | `-`   |
 
 ## `reservas`
 
@@ -152,4 +152,4 @@ Traduções:
 | id-acervo    | 3                | `-`            | NO          | int(11)     | `-`        | `-`            |
 | data-reserva | 4                | `-`            | NO          | date        | `-`        | `-`            |
 | tempo-espera | 5                | `-`            | NO          | int(11)     | `-`        | `-`            |
-| emprestou    | 6                | `-`            | NO          | tinyint(1)  | `-`        | `-`            |
+| emprestou    | 6                | 0              | NO          | tinyint(1)  | `-`        | `-`            |

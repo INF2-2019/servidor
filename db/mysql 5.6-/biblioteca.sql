@@ -6,9 +6,9 @@ USE biblioteca;
 
 DROP TABLE IF EXISTS `alunos`;
 CREATE TABLE IF NOT EXISTS `alunos` (
-  `id` INT NOT NULL,
+  `id` BIGINT NOT NULL,
   `nome` VARCHAR(127) NOT NULL,
-  `senha` VARCHAR(127) NOT NULL,
+  `senha` varchar(170) NOT NULL,
   `email` VARCHAR(127) NOT NULL UNIQUE,
   `sexo` ENUM('M', 'F') NOT NULL,
   `nascimento` DATE NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `alunos` (
   `cidade` VARCHAR(127) NOT NULL,
   `cep` INT NOT NULL,
   `uf` VARCHAR(127) NOT NULL,
-  `foto` text NOT NULL,
+  `foto` text,
   PRIMARY KEY(id)
 );
 
@@ -27,18 +27,18 @@ DROP TABLE IF EXISTS `operador`;
 CREATE TABLE IF NOT EXISTS `operador` (
   `id` INT NOT NULL,
   `nome` VARCHAR(127) NOT NULL,
-  `senha` VARCHAR(127) NOT NULL,
+  `senha` varchar(170) NOT NULL,
   `email` VARCHAR(127) NOT NULL UNIQUE,
   PRIMARY KEY(id)
 );
 
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE IF NOT EXISTS `admin` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(127) NOT NULL,
   `usuario` VARCHAR(127) NOT NULL, 
   `email` VARCHAR(127) NOT NULL UNIQUE,
-  `senha` VARCHAR(127) NOT NULL,
+  `senha` varchar(170) NOT NULL,
   PRIMARY KEY(id)
 );
 
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `livros` (
   `id-obra` INT NOT NULL,
   `id-acervo` INT NOT NULL,
   `edicao` INT NOT NULL,
-  `isbn` INT NOT NULL
+  `isbn` BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS `midias`;
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `partes` (
 
 DROP TABLE IF EXISTS `periodicos`;
 CREATE TABLE IF NOT EXISTS `periodicos` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL,
   `id-acervo` INT NOT NULL,
   `periodicidade` VARCHAR(127) NOT NULL,
   `mes` VARCHAR(127) NOT NULL,
@@ -128,22 +128,22 @@ CREATE TABLE IF NOT EXISTS `descartes` (
 DROP TABLE IF EXISTS `emprestimos`;
 CREATE TABLE IF NOT EXISTS `emprestimos` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `id-alunos` INT NOT NULL,
+  `id-alunos` BIGINT NOT NULL,
   `id-acervo` INT NOT NULL,
   `data-emprestimo` DATE NOT NULL,
   `data-prev-devol` DATE NOT NULL,
-  `data-devolucao` DATE NOT NULL,
-  `multa` DECIMAL(5,2) NOT NULL,
+  `data-devolucao` DATE,
+  `multa` DECIMAL(7,2) NOT NULL,
   PRIMARY KEY (id)
 );
 
 DROP TABLE IF EXISTS `reservas`;
 CREATE TABLE IF NOT EXISTS `reservas` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `id-aluno` INT NOT NULL,
+  `id-alunos` BIGINT NOT NULL,
   `id-acervo` INT NOT NULL,
   `data-reserva` DATE NOT NULL,
   `tempo-espera` INT NOT NULL,
-  `emprestou` BOOLEAN NOT NULL,
+  `emprestou` BOOLEAN NOT NULL DEFAULT False,
   PRIMARY KEY (id)
 );

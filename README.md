@@ -66,6 +66,16 @@ A documentação pode ser acessada [aqui](docs/bd/README.md)
 As bibliotecas usadas atualmente são:
 
 - `MySQL Connector`
+- `Mail`
+- `Commons Email`
+- `Activation`
+
+As três últimas bibliotecas precisam ser incluídas no projeto (caso já não estejam automaticamente), para isso siga os passos:
+
+1. Clique com o botão direito em "Bibliotecas" e selecione "Adicionar JAR/Pasta..." conforme [a imagem](http://prntscr.com/puoihq)
+2. Localize a pasta `app/web/WEB-INF/lib`
+3. Segure CTRL e clique sobre `mail`, `commons-email-1.3` e `activation`
+4. Clique em abrir
 
 ## Documentações e links úteis
 

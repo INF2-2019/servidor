@@ -7,10 +7,10 @@ USE diario;
 
 DROP TABLE IF EXISTS `alunos`;
 CREATE TABLE IF NOT EXISTS `alunos` (
-  `id` INT NOT NULL,
+  `id` BIGINT NOT NULL,
   `nome` VARCHAR(127) NOT NULL,
   `email` VARCHAR(127) NOT NULL UNIQUE,
-  `senha` VARCHAR(127) NOT NULL,
+  `senha` varchar(170) NOT NULL,
   `sexo` ENUM('M', 'F') NOT NULL,
   `nascimento` DATE NOT NULL,
   `logradouro` VARCHAR(127) NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `alunos` (
   `cidade` VARCHAR(127) NOT NULL,
   `cep` INT NOT NULL,
   `uf` VARCHAR(127) NOT NULL,
-  `foto` text NOT NULL,
+  `foto` text,
   PRIMARY KEY(id)
 );
 
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `professores` (
   `id` INT NOT NULL,
   `id-depto` INT NOT NULL,
   `nome` VARCHAR(127) NOT NULL,
-  `senha` VARCHAR(127) NOT NULL,
+  `senha` varchar(170) NOT NULL,
   `email` VARCHAR(127) NOT NULL UNIQUE,
   `titulacao` ENUM('M', 'D', 'E', 'G') NOT NULL,
   PRIMARY KEY(id)
@@ -37,11 +37,11 @@ CREATE TABLE IF NOT EXISTS `professores` (
 
 DROP TABLE IF EXISTS `admin`;
 CREATE TABLE IF NOT EXISTS `admin` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(127) NOT NULL,
   `usuario` VARCHAR(127) NOT NULL, 
-  `email` VARCHAR(127) NOT NULL UNIQUE,
-  `senha` VARCHAR(127) NOT NULL,
+  `email` VARCHAR(127),
+  `senha` varchar(170) NOT NULL,
   PRIMARY KEY(id)
 );
 
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `cursos` (
   `id-depto` INT NOT NULL,
   `nome` VARCHAR(127) NOT NULL,
   `horas-total` INT NOT NULL,
-  `modalidade` VARCHAR(127) NOT NULL,
+  `modalidade` VARCHAR(127),
   PRIMARY KEY(id)
 );
 
@@ -85,17 +85,17 @@ DROP TABLE IF EXISTS `etapas`;
 CREATE TABLE IF NOT EXISTS `etapas` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `ano` INT NOT NULL,
-  `valor` DECIMAL(3, 2) NOT NULL,
+  `valor` DECIMAL(5, 2) NOT NULL,
   PRIMARY KEY(id)
 );
 
 DROP TABLE IF EXISTS `matriculas`;
 CREATE TABLE IF NOT EXISTS `matriculas` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `id-alunos` INT NOT NULL,
+  `id-alunos` BIGINT NOT NULL,
   `id-disciplinas` INT NOT NULL,
   `ano` INT NOT NULL,
-  `ativo` BOOLEAN NOT NULL,
+  `ativo` BOOLEAN NOT NULL DEFAULT True,
   PRIMARY KEY(id)
 );
 
@@ -113,23 +113,14 @@ CREATE TABLE IF NOT EXISTS `turmas` (
   PRIMARY KEY(id)
 );
 
-DROP TABLE IF EXISTS `atividades`;
-CREATE TABLE IF NOT EXISTS `atividades` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `id-disciplinas` INT NOT NULL,
-  `nome` VARCHAR(127) NOT NULL,
-  `data` DATE NOT NULL,
-  `valor` DECIMAL(3, 2) NOT NULL,
-  PRIMARY KEY(id)
-);
-
 DROP TABLE IF EXISTS `conteudos`;
 CREATE TABLE IF NOT EXISTS `conteudos` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `id-etapas` INT NOT NULL,
   `id-disciplinas` INT NOT NULL,
-  `conteudos` TEXT NOT NULL,
-  `datas` DATE NOT NULL,
+  `conteudos` TEXT,
+  `data` DATE NOT NULL,
+  `valor` DECIMAL(5, 2) NOT NULL DEFAULT 000.00,
   PRIMARY KEY(id)
 );
 
@@ -137,7 +128,6 @@ DROP TABLE IF EXISTS `diario`;
 CREATE TABLE IF NOT EXISTS `diario` (
   `id-conteudos` INT NOT NULL,
   `id-matriculas` INT NOT NULL,
-  `id-atividades` INT NOT NULL,
-  `faltas` INT NOT NULL,
-  `nota` DECIMAL(3, 2) NOT NULL
+  `faltas` INT NOT NULL DEFAULT 0,
+  `nota` DECIMAL(5, 2) NOT NULL DEFAULT 000.00
 );
