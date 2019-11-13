@@ -75,7 +75,7 @@ public class ProfessoresDisciplinasRepository {
 		}
                 
                 
-                ps = con.prepareStatement("SELECT  * FROM `prof_disciplinas` WHERE `id-disciplinas` = ? ");
+                ps = con.prepareStatement("SELECT  * FROM `prof_disciplinas` WHERE `id-disciplinas` = ?");
 		ps.setInt(1, idDisciplinas);
 		result = ps.executeQuery();
 		if (result.next()) {
