@@ -16,7 +16,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebServlet(name = "DeletarDisciplinas", urlPatterns = {"/diario/professoresdisciplinas/deletar"})
+@WebServlet(name = "DeletarProfessoresDisciplinas", urlPatterns = {"/diario/professoresdisciplinas/deletar"})
 public class DeletarProfessoresDisciplinas extends HttpServlet {
 
 	@Override
