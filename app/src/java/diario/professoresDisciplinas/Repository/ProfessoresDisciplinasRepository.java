@@ -73,7 +73,21 @@ public class ProfessoresDisciplinasRepository {
 		if (!result.next()) {
 			throw new ExcecaoConteudoVinculado("Não existe essa disciplina cadastrada.");
 		}
-
+                
+                
+                ps = con.prepareStatement("SELECT  * FROM `prof_disciplinas` WHERE `id-disciplinas` = ? ");
+		ps.setInt(1, idDisciplinas);
+		result = ps.executeQuery();
+		if (result.next()) {
+			throw new ExcecaoConteudoVinculado("Essa Disciplina já foi vinculada à um Professor.");
+		}
+                ps = con.prepareStatement("SELECT  * FROM `prof_disciplinas` WHERE `id-professores` = ? ");
+		ps.setInt(1, idProfessor);
+		result = ps.executeQuery();
+		if (result.next()) {
+			throw new ExcecaoConteudoVinculado("Esse Professor já foi vinculado à uma Disciplina.");
+		}
+                
 		ps = con.prepareStatement("INSERT INTO `prof_disciplinas` (`id-professores`, `id-disciplinas`) VALUES (?, ?)");
 
 		ps.setInt(1, idProfessor);
