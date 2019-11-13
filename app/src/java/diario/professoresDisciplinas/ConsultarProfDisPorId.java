@@ -22,8 +22,8 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
-@WebServlet(name = "ConsultarPorId", urlPatterns = {"/diario/professoresdisciplinas/consultarporid"})
-public class ConsultarPorId extends HttpServlet {
+@WebServlet(name = "ConsultarProfDisPorId", urlPatterns = {"/diario/professoresdisciplinas/consultarporid"})
+public class ConsultarProfDisPorId extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
