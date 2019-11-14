@@ -1,9 +1,11 @@
 package diario.professores;
 
-import utils.ConnectionFactory;
-import utils.Hasher;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
+import utils.ConnectionFactory;
+import utils.Hasher;
+import diario.professores.services.ExcecaoNaoAutorizado;
+import diario.professores.services.ExcecaoParametrosIncorretos;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,8 +29,7 @@ public class LogarProfessor extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest requisicao, HttpServletResponse resposta)
-		throws IOException {
-
+			throws IOException {
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
@@ -43,11 +44,11 @@ public class LogarProfessor extends HttpServlet {
 			senha = requisicao.getParameter("senha");
 			manter = requisicao.getParameter("manter") != null;
 
-			if (siape == null) {
-				throw new ExcecaoParametrosIncorretos("'siape' é um parâmetro obrigatório");
+			if (siape == null || siape.equals("")) {
+				throw new ExcecaoParametrosIncorretos("'siape' é um campo obrigatório");
 			}
-			if (senha == null) {
-				throw new ExcecaoParametrosIncorretos("'senha' é um parâmetro obrigatório");
+			if (senha == null || senha.equals("")) {
+				throw new ExcecaoParametrosIncorretos("'senha' é um campo obrigatório");
 			}
 
 			// Valida credenciais
@@ -55,7 +56,7 @@ public class LogarProfessor extends HttpServlet {
 			ps.setInt(1, Integer.parseInt(siape));
 			ResultSet professor = ps.executeQuery();
 			if (!professor.first() || !Hasher.validar(senha, professor.getString("senha"))) {
-				throw new NotAuthorizedException("Credenciais inválidas");
+				throw new ExcecaoNaoAutorizado("Credenciais inválidas");
 			}
 
 			DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
@@ -66,20 +67,14 @@ public class LogarProfessor extends HttpServlet {
 			saida.println("</sucesso>");
 
 		} catch (ExcecaoParametrosIncorretos e) {
-			resposta.setStatus(400);
-			saida.println("<erro>");
-			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
-			saida.println("</erro>");
-		} catch (NotAuthorizedException e) {
+			resposta.setStatus(422);
+			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
+		} catch (ExcecaoNaoAutorizado e) {
 			resposta.setStatus(403);
-			saida.println("<erro>");
-			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
-			saida.println("</erro>");
+			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
 		} catch (Exception e) {
 			resposta.setStatus(500);
-			saida.println("<erro>");
-			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
-			saida.println("</erro>");
+			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
 		}
 
 	}
