@@ -48,6 +48,18 @@ public class DepartamentosView extends View<List<Departamento>> {
 			nomeEl.appendChild(document.createTextNode(depto.getNome()));
 			deptoEl.appendChild(nomeEl);
 
+            Element nomeCampiEl = document.createElement("nome-campi");
+			nomeCampiEl.appendChild(document.createTextNode(depto.getNomeCampi()));
+			deptoEl.appendChild(nomeCampiEl);
+            
+            Element cidadeEl = document.createElement("cidade");
+			cidadeEl.appendChild(document.createTextNode(depto.getCidade()));
+			deptoEl.appendChild(cidadeEl);
+            
+            Element ufEl = document.createElement("uf");
+			ufEl.appendChild(document.createTextNode(depto.getUf()));
+			deptoEl.appendChild(ufEl);
+            
 			deptosEl.appendChild(deptoEl);
 		}
 
