@@ -1,25 +1,25 @@
 package biblioteca.campi.servlets;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import biblioteca.campi.repository.CampiRepository;
+import diario.cursos.view.ErroView;
+import diario.cursos.view.RenderException;
+import diario.cursos.view.SucessoView;
+import diario.cursos.view.View;
+import utils.ConnectionFactory;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import biblioteca.campi.repository.*;
-import diario.cursos.view.*;
-import java.io.PrintWriter;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import utils.ConnectionFactory;
-import utils.Headers;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- *
  * @author User
  */
 @WebServlet(name = "AlterarCampus", urlPatterns = {"/biblioteca/campi/alterar"})
@@ -29,7 +29,7 @@ public class AlterarCampus extends HttpServlet {
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		CampiRepository rep = new CampiRepository(conexao);
 		PrintWriter out = response.getWriter();
-		Headers.XMLHeaders(request, response);
+
 
 		if (rep.checarAutorizacaoADM(request, response)) {
 

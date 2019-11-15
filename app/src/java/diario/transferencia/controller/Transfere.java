@@ -6,7 +6,6 @@ import diario.transferencia.view.ErroView;
 import diario.transferencia.view.RenderException;
 import diario.transferencia.view.SucessoView;
 import utils.ConnectionFactory;
-import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -26,7 +25,6 @@ public class Transfere extends HttpServlet {
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException {
 
-		Headers.XMLHeaders(request, response);
 
 		try (PrintWriter out = response.getWriter()) {
 

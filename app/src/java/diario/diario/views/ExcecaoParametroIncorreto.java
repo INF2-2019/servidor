@@ -6,16 +6,15 @@
 package diario.diario.views;
 
 /**
- *
  * @author juanr
  */
 public class ExcecaoParametroIncorreto extends ExcecaoPadrao {
 
-    public ExcecaoParametroIncorreto(String causa, String mensagem) {
-	super(causa, mensagem);
-    }
+	public ExcecaoParametroIncorreto(String causa, String mensagem) {
+		super(causa, mensagem);
+	}
 
-    public ExcecaoParametroIncorreto(String string) {
-	super(string);
-    }
+	public ExcecaoParametroIncorreto(String string) {
+		super(string);
+	}
 }

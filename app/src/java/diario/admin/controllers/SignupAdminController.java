@@ -7,7 +7,6 @@ import diario.admin.views.RenderException;
 import diario.admin.views.SucessoView;
 import utils.ConnectionFactory;
 import utils.Hasher;
-import utils.Headers;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -34,7 +33,7 @@ public class SignupAdminController extends HttpServlet {
 	private final static String SOMENTE_ADMIN = "Você não tem permissão para acessar essa rota!";
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Headers.XMLHeaders(request, response);
+
 		PrintWriter out = response.getWriter();
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 
