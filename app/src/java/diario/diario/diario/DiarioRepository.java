@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 
 /**
@@ -24,14 +25,28 @@ public class DiarioRepository {
 		this.conexao = conexao;
 	}
 
-	public boolean insere(DiarioModel modelo) throws SQLException {
-		String query = "INSERT INTO diario(`id-conteudos`,`id-matriculas`, faltas, nota) VALUES (?, ?, ?, COALESCE(?,0.0))";
-		PreparedStatement st = conexao.prepareStatement(query);
-		st.setInt(1, modelo.getIdConteudo());
-		st.setInt(2, modelo.getIdMatricula());
-		st.setInt(3, modelo.getFalta());
-		st.setDouble(4, modelo.getNota());
-		int r = st.executeUpdate();
+    public boolean insere(DiarioModel modelo) throws SQLException, ExcecaoPadrao {
+	DiarioModel filtro = new DiarioModel(modelo.getIdConteudo(), modelo.getIdMatricula());
+	ArrayList<DiarioModel> lista = consulta(filtro);
+
+	// Se diario já existir, atualiza o existente com os novos dados
+	if (lista.size() > 0) {
+	    return atualizar(modelo, filtro);
+	}
+
+	String query = "INSERT INTO diario(`id-conteudos`,`id-matriculas`, faltas, nota) VALUES (?, ?, ?, COALESCE(?,0.0))";
+	PreparedStatement st = conexao.prepareStatement(query);
+	st.setInt(1, modelo.getIdConteudo());
+	st.setInt(2, modelo.getIdMatricula());
+	st.setInt(3, modelo.getFalta());
+
+	if (modelo.getNota() != null) {
+	    st.setDouble(4, modelo.getNota());
+	} else {
+	    st.setDouble(4, Types.DECIMAL);
+	}
+
+	int r = st.executeUpdate();
 
 		st.close();
 		conexao.close();
