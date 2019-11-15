@@ -19,6 +19,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
+import utils.Validators;
 
 @WebServlet(name = "InserirAlunos", urlPatterns = {"/diario/alunos/inserir"})
 public class InserirAlunos extends HttpServlet {
@@ -28,6 +29,7 @@ public class InserirAlunos extends HttpServlet {
 		Connection conexao = ConnectionFactory.getDiario();
 		AlunosRepository rep = new AlunosRepository(conexao);
 		PrintWriter out = response.getWriter();
+		Validators val = new Validators();
 
 		if (rep.checarAutorizacaoADM(request, response)) {
 
@@ -46,7 +48,7 @@ public class InserirAlunos extends HttpServlet {
 			String uf = request.getParameter("uf");
 			String foto = request.getParameter("foto");
 			try {
-				if (!rep.isCPF(id)) {
+				if (!val.isCPF(id)) {
 					response.setStatus(422);
 					out.println("<erro><mensagem>CPF inserido é inválido</mensagem></erro>");
 				} else {
