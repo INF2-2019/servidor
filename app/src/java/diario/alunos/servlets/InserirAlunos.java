@@ -48,9 +48,15 @@ public class InserirAlunos extends HttpServlet {
 			String uf = request.getParameter("uf");
 			String foto = request.getParameter("foto");
 			try {
+				if (!rep.isCPF(id)) {
+					response.setStatus(422);
+					out.println("<erro><mensagem>CPF inserido é inválido</mensagem></erro>");
+				}
+				else {
 				boolean sucesso = rep.inserirAlunos(id, nome, email, senha, sexo, nascimento, logradouro, numero, complemento, bairro, cidade, cep, uf, foto);
 				View sucessoView = new SucessoView("Inserido com sucesso.");
 				sucessoView.render(out);
+				}
 			} catch (NumberFormatException excecaoFormatoErrado) {
 				response.setStatus(422);
 				System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());
