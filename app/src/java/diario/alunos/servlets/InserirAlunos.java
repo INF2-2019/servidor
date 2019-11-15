@@ -29,7 +29,6 @@ public class InserirAlunos extends HttpServlet {
 		Connection conexao = ConnectionFactory.getDiario();
 		AlunosRepository rep = new AlunosRepository(conexao);
 		PrintWriter out = response.getWriter();
-		Validators val = new Validators();
 
 		if (rep.checarAutorizacaoADM(request, response)) {
 
@@ -48,7 +47,7 @@ public class InserirAlunos extends HttpServlet {
 			String uf = request.getParameter("uf");
 			String foto = request.getParameter("foto");
 			try {
-				if (!val.isCPF(id)) {
+				if (!Validators.isCPF(id)) {
 					response.setStatus(422);
 					out.println("<erro><mensagem>CPF inserido é inválido</mensagem></erro>");
 				} else {

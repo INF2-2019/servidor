@@ -5,6 +5,7 @@ import java.util.InputMismatchException;
 public class Validators {
 
 	public static boolean isCPF(String CPF) {
+		CPF = CPF.replaceAll("\\D", "");
 		// considera-se erro CPF's formados por uma sequencia de numeros iguais
 		if (CPF.equals("00000000000")
 				|| CPF.equals("11111111111")
