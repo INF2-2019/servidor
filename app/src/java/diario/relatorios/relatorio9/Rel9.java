@@ -161,7 +161,6 @@ public class Rel9 extends HttpServlet {
 			idCursos = procuraIdCurso(con, rs.getInt("id-depto"));
 			nomeCursos = procuraCursos(con, rs.getInt("id-depto"));
 			xml += XmlProf.xmlProf(id, rs.getString("nome"));
-			System.out.println(xml);
 			if (idCursos.length != 0) {
 				for (int i = 0; i < idCursos.length; i++) {
 					xml = XmlProf.xmlCurso(xml, nomeCursos[i]);
