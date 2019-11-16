@@ -34,6 +34,7 @@ public class HistoricoEscolar extends HttpServlet {
 
 			/*if (usuario == DiarioCargos.CONVIDADO) {
 				response.setStatus(403);
+				out.println("<erro><mensagem>Você não tem permissão para essa operação</mensagem></erro>");
 				return;
 			}*/
 			if (conexao == null) {
@@ -52,7 +53,7 @@ public class HistoricoEscolar extends HttpServlet {
 				aluno.next();
 				String nomeDoAluno = aluno.getString("nome");
 
-				PreparedStatement ps1 = conexao.prepareStatement("SELECT `id` FROM `matriculas` WHERE `id-alunos` = ?");
+				PreparedStatement ps1 = conexao.prepareStatement("SELECT * FROM `matriculas` WHERE `id-alunos` = ?");
 				ps1.setLong(1, cpf);
 				matriculas = ps1.executeQuery();
 
@@ -69,6 +70,7 @@ public class HistoricoEscolar extends HttpServlet {
 				out.println("<historico>");
 				out.println(" <cpf>" + cpfPrint + "</cpf>");
 				out.println(" <nome>" + nomeDoAluno + "</nome>");
+				out.println("  <disciplinas>");
 
 				while (matriculas.next()) {
 					int idMatricula = matriculas.getInt("id");
@@ -97,23 +99,26 @@ public class HistoricoEscolar extends HttpServlet {
 							disciplinas = ps4.executeQuery();
 
 							while (disciplinas.next()) {
-								out.println("  <item>");
-								out.println("   <matricula>" + diario.getInt("id-matriculas") + "</matricula>");
-								out.println("   <conteudo>" + conteudos.getString("conteudos") + "</conteudo>");
-								out.println("   <disciplina>" + disciplinas.getString("nome") + "</disciplina>");
-								out.println("   <faltas>" + diario.getInt("faltas") + "</faltas>");
-								out.println("   <nota>" + diario.getDouble("nota") + "</nota>");
-								out.println("  </item>");
+								out.println("   <disciplina>");
+								out.println("    <matricula>" + diario.getInt("id-matriculas") + "</matricula>");
+								out.println("    <ano>" + matriculas.getInt("ano") + "</ano>");
+								out.println("    <nome>" + disciplinas.getString("nome") + "</nome>");
+								out.println("    <conteudo>" + conteudos.getString("conteudos") + "</conteudo>");
+								out.println("    <faltas>" + diario.getInt("faltas") + "</faltas>");
+								out.println("    <nota>" + diario.getDouble("nota") + "</nota>");
+								out.println("   </disciplina>");
 							}
 						}
+
 					}
 				}
-
+				out.println("  </disciplinas>");
 				out.println("</historico>");
 			}
 
 		} catch (Exception e) {
-
+			response.setStatus(500);
+			out.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
 		}
 	}
 
