@@ -32,11 +32,11 @@ public class HistoricoEscolar extends HttpServlet {
 			DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 			DiarioCargos usuario = autenticador.cargoLogado();
 
-			/*if (usuario == DiarioCargos.CONVIDADO) {
+			if (usuario == DiarioCargos.CONVIDADO) {
 				response.setStatus(403);
 				out.println("<erro><mensagem>Você não tem permissão para essa operação</mensagem></erro>");
 				return;
-			}*/
+			}
 			if (conexao == null) {
 				throw new SQLException("Impossível se conectar ao banco de dados");
 			}
