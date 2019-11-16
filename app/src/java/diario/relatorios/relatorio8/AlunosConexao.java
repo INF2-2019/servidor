@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import utils.ConnectionFactory;
-import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.*;
 
 @WebServlet(name = "Relatorio8", urlPatterns = {"/diario/relatorios/relatorio8"})
 public class AlunosConexao extends HttpServlet {
@@ -25,7 +25,12 @@ public class AlunosConexao extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		DiarioAutenticador aut = new DiarioAutenticador(request,response);
         try {
-            out.println(consulta((long) aut.idLogado()));
+			if (aut.cargoLogado() == DiarioCargos.ALUNO) {
+				out.println(consulta((long) aut.idLogado()));
+			} else {
+				response.setStatus(403);
+				out.println("<erro><mensagem>Você não tem permissão para fazer isso</mensagem></erro>");
+			}
         } catch (SQLException ex) {
 			response.setStatus(500);
             out.println("<erro><mensagem>Falha ao consultar banco de dados</mensagem></erro>");
