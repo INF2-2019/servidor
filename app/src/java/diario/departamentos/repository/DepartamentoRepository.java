@@ -18,10 +18,10 @@ public class DepartamentoRepository {
 		if (con != null) {
 			List<Departamento> deptos;
 			try (Statement stmt = con.createStatement()) {
-				ResultSet rs = stmt.executeQuery("SELECT * FROM `departamentos`");
+				ResultSet rs = stmt.executeQuery("SELECT * FROM `departamentos` INNER JOIN `campi` ON departamentos.`id-campi` = campi.id");
 				deptos = new LinkedList();
 				while (rs.next()) {
-					deptos.add(new Departamento(rs.getInt("id"), rs.getInt("id-campi"), rs.getString("nome")));
+					deptos.add(new Departamento(rs.getInt("departamentos.id"), rs.getInt("departamentos.id-campi"), rs.getString("departamentos.nome"), rs.getString("campi.nome"), rs.getString("campi.cidade"), rs.getString("campi.uf")));
 				}
 			}
 			con.close();
@@ -36,13 +36,13 @@ public class DepartamentoRepository {
 		Connection con = ConnectionFactory.getDiario();
 		if (con != null) {
 			Departamento depto;
-			try (PreparedStatement prst = con.prepareStatement("SELECT * FROM `departamentos` WHERE `id` = ?")) {
+			try (PreparedStatement prst = con.prepareStatement("SELECT * FROM `departamentos`, `campi` WHERE `departamentos`.`id` = ? AND `departamentos`.`id-campi` = `campi`.`id`")) {
 				prst.setInt(1, id);
 				ResultSet rs = prst.executeQuery();
 				if (!rs.next()) {
 					throw new DepartamentoInexistenteException();
 				}
-				depto = new Departamento(rs.getInt("id"), rs.getInt("id-campi"), rs.getString("nome"));
+				depto = new Departamento(rs.getInt("departamentos.id"), rs.getInt("departamentos.id-campi"), rs.getString("departamentos.nome"), rs.getString("campi.nome"), rs.getString("campi.cidade"), rs.getString("campi.uf"));
 			}
 			con.close();
 

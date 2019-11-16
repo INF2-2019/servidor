@@ -13,7 +13,7 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import java.util.InputMismatchException;
 
 public class AlunosRepository {
 
@@ -277,8 +277,9 @@ public class AlunosRepository {
 			Long id = rs.getLong("id");
 			String idStr = Long.toString(id);
 			String zeros = "";
-			for (int i = idStr.length(); i < 11; i++)
+			for (int i = idStr.length(); i < 11; i++) {
 				zeros += "0";
+			}
 			zeros += idStr;
 			xml += viewConsulta.XMLAluno(zeros, rs.getString("nome"), rs.getString("email"));
 		}
@@ -296,22 +297,23 @@ public class AlunosRepository {
 			Long id2 = rs.getLong("id");
 			String idStr = Long.toString(id2);
 			String zeros = "";
-			for (int i = idStr.length(); i < 11; i++)
+			for (int i = idStr.length(); i < 11; i++) {
 				zeros += "0";
+			}
 			zeros += idStr;
 			xml += viewConsulta.XMLAlunoCompleto(zeros,
-				rs.getString("nome"),
-				rs.getString("email"),
-				rs.getString("sexo"),
-				rs.getDate("nascimento"),
-				rs.getString("logradouro"),
-				rs.getInt("numero"),
-				rs.getString("complemento"),
-				rs.getString("bairro"),
-				rs.getString("cidade"),
-				rs.getInt("cep"),
-				rs.getString("uf"),
-				rs.getString("foto"));
+					rs.getString("nome"),
+					rs.getString("email"),
+					rs.getString("sexo"),
+					rs.getDate("nascimento"),
+					rs.getString("logradouro"),
+					rs.getInt("numero"),
+					rs.getString("complemento"),
+					rs.getString("bairro"),
+					rs.getString("cidade"),
+					rs.getInt("cep"),
+					rs.getString("uf"),
+					rs.getString("foto"));
 		}
 		return xml;
 	}
