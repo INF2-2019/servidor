@@ -74,6 +74,12 @@ public class Validacao {
 						if (!m.matches()) {
 							throw new ExcecaoParametrosIncorretos("Tempo da mídia em formato inválido");
 						}
+					} else if (param.equals("subtipo")) {
+						String subtipo = requisicao.getParameter("subtipo").toUpperCase();
+						if (!subtipo.equals("CD") && !subtipo.equals("DVD")
+								&& !subtipo.equals("PENDRIVE") && !subtipo.equals("FITA")) {
+							throw new ExcecaoParametrosIncorretos("O subtipo de uma mídia deve ser um dentre 'CD', 'DVD', 'PENDRIVE', 'FITA'");
+						}
 					}
 				}
 				break;
