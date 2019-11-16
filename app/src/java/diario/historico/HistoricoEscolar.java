@@ -105,6 +105,7 @@ public class HistoricoEscolar extends HttpServlet {
 								out.println("    <nome>" + disciplinas.getString("nome") + "</nome>");
 								out.println("    <conteudo>" + conteudos.getString("conteudos") + "</conteudo>");
 								out.println("    <faltas>" + diario.getInt("faltas") + "</faltas>");
+								out.println("    <valor>" + conteudos.getDouble("valor") + "</valor>");
 								out.println("    <nota>" + diario.getDouble("nota") + "</nota>");
 								out.println("   </disciplina>");
 							}
