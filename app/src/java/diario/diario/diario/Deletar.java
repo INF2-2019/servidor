@@ -22,13 +22,13 @@ import java.util.logging.Logger;
 public class Deletar extends HttpServlet {
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-	/*
+		/*
             ? especifico:String[conteudo,atividade] - String que filtra deletar entre conteudo e atividade
                 especifico = "conteudo" - deleta apenas conteudo
                 especifico = "atividade" - deleta apenas atividade
             ? conteudo:int - id do conteudo a ser deletado
             ? matricula:int - id da matricula a ser deletado
-	 */
+		 */
 
 		PrintWriter out = response.getWriter();
 
@@ -45,6 +45,7 @@ public class Deletar extends HttpServlet {
 
 			SucessoView view = new SucessoView("Atualizado com sucesso!");
 			view.render(out);
+			conexao.close();
 
 		} catch (SQLException e) {
 			response.setStatus(500);

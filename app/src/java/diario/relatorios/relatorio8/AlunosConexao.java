@@ -1,46 +1,29 @@
 package diario.relatorios.relatorio8;
 
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import utils.ConnectionFactory;
-import utils.autenticador.*;
 
 @WebServlet(name = "Relatorio8", urlPatterns = {"/diario/relatorios/relatorio8"})
 public class AlunosConexao extends HttpServlet {
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		PrintWriter out = response.getWriter();
-		DiarioAutenticador aut = new DiarioAutenticador(request, response);
-		try {
-			if (aut.cargoLogado() == DiarioCargos.ALUNO) {
-				out.println(consulta((long) aut.idLogado()));
-			} else {
-				response.setStatus(403);
-				out.println("<erro><mensagem>Você não tem permissão para fazer isso</mensagem></erro>");
-			}
-		} catch (SQLException ex) {
-			response.setStatus(500);
-			out.println("<erro><mensagem>Falha ao consultar banco de dados</mensagem></erro>");
-		} catch (Exception e) {
-			response.setStatus(500);
-			out.println("<erro><mensagem>Erro severo</mensagem></erro>");
-		}
-	}
 
 	public static double[] pegarNota(Connection con, int mat) throws SQLException {
 		PreparedStatement prst = con.prepareStatement("SELECT * FROM `diario` WHERE `id-matriculas` = ?");
 		prst.setInt(1, mat);
 		int cont = 0;
-		double notas[];
+		double[] notas;
 		ResultSet rs = prst.executeQuery();
 		prst = con.prepareStatement("SELECT * FROM `diario` WHERE `id-matriculas` = ?");
 		prst.setInt(1, mat);
@@ -61,7 +44,7 @@ public class AlunosConexao extends HttpServlet {
 		PreparedStatement prst = con.prepareStatement("SELECT * FROM `matriculas` WHERE `id-alunos` = ?");
 		prst.setLong(1, id);
 		int cont = 0;
-		int matriculas[];
+		int[] matriculas;
 		ResultSet rs = prst.executeQuery();
 		prst = con.prepareStatement("SELECT * FROM `matriculas` WHERE `id-alunos` = ?");
 		prst.setLong(1, id);
@@ -81,9 +64,9 @@ public class AlunosConexao extends HttpServlet {
 	public static String consulta(Long id) throws SQLException {
 		Connection con = ConnectionFactory.getDiario();
 		if (con != null) {
-			int mat[];
-			double notas[][];
-			double grade[];
+			int[] mat;
+			double[][] notas;
+			double[] grade;
 			mat = procuraMatricula(con, id);
 			if (mat.length != 0) {
 				for (int i = 0; i < mat.length; i++) {
@@ -112,6 +95,26 @@ public class AlunosConexao extends HttpServlet {
 			return "<sucesso><mensagem>" + nome + "</mensagem></sucesso>";
 		} else {
 			throw new SQLException();
+		}
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+		DiarioAutenticador aut = new DiarioAutenticador(request, response);
+		try {
+			if (aut.cargoLogado() == DiarioCargos.ALUNO) {
+				out.println(consulta((long) aut.idLogado()));
+			} else {
+				response.setStatus(403);
+				out.println("<erro><mensagem>Você não tem permissão para fazer isso</mensagem></erro>");
+			}
+		} catch (SQLException ex) {
+			response.setStatus(500);
+			out.println("<erro><mensagem>Falha ao consultar banco de dados</mensagem></erro>");
+		} catch (Exception e) {
+			response.setStatus(500);
+			out.println("<erro><mensagem>Erro severo</mensagem></erro>");
 		}
 	}
 

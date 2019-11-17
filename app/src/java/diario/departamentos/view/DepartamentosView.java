@@ -1,15 +1,16 @@
 package diario.departamentos.view;
 
 import diario.departamentos.model.Departamento;
-import java.io.PrintWriter;
-import java.util.List;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import utils.Conversores;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import utils.Conversores;
+import java.io.PrintWriter;
+import java.util.List;
 
 public class DepartamentosView extends View<List<Departamento>> {
 
@@ -48,18 +49,18 @@ public class DepartamentosView extends View<List<Departamento>> {
 			nomeEl.appendChild(document.createTextNode(depto.getNome()));
 			deptoEl.appendChild(nomeEl);
 
-            Element nomeCampiEl = document.createElement("nome-campi");
+			Element nomeCampiEl = document.createElement("nome-campi");
 			nomeCampiEl.appendChild(document.createTextNode(depto.getNomeCampi()));
 			deptoEl.appendChild(nomeCampiEl);
-            
-            Element cidadeEl = document.createElement("cidade");
+
+			Element cidadeEl = document.createElement("cidade");
 			cidadeEl.appendChild(document.createTextNode(depto.getCidade()));
 			deptoEl.appendChild(cidadeEl);
-            
-            Element ufEl = document.createElement("uf");
+
+			Element ufEl = document.createElement("uf");
 			ufEl.appendChild(document.createTextNode(depto.getUf()));
 			deptoEl.appendChild(ufEl);
-            
+
 			deptosEl.appendChild(deptoEl);
 		}
 

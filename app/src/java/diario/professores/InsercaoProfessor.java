@@ -1,5 +1,13 @@
 package diario.professores;
 
+import diario.professores.services.ExcecaoNaoAutorizado;
+import diario.professores.services.ExcecaoParametrosIncorretos;
+import diario.professores.services.Validacao;
+import utils.ConnectionFactory;
+import utils.Hasher;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -9,14 +17,6 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-import utils.ConnectionFactory;
-import utils.Hasher;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
-import diario.professores.services.ExcecaoNaoAutorizado;
-import diario.professores.services.ExcecaoParametrosIncorretos;
-import diario.professores.services.Validacao;
 
 @WebServlet(name = "InserirProfessor", urlPatterns = "/diario/professores/inserir")
 /**
@@ -30,7 +30,7 @@ public class InsercaoProfessor extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest requisicao, HttpServletResponse resposta)
-			throws IOException {
+		throws IOException {
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {

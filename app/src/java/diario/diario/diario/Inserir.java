@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 public class Inserir extends HttpServlet {
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-	/*
+		/*
             conteudo:int - id do conteudo a ser lançada a falta ou nota
             matricula:int - id da matricula a ser lançada a falta ou nota
             tipo:String[conteudo,atividade] - String que especifica se esta sendo lançado a um conteudo ou atividade,
@@ -33,7 +33,7 @@ public class Inserir extends HttpServlet {
                 tipo = "atividade" - permite que seja inserido a nota
             falta:int - quantidade de faltas do aluno
             nota:Double - nota do aluno
-	 */
+		 */
 
 		PrintWriter out = response.getWriter();
 
@@ -43,9 +43,7 @@ public class Inserir extends HttpServlet {
 			DiarioParametros p = new DiarioParametros(request);
 			p.obrigatorios("conteudo", "matricula", "tipo");
 
-			if (p.getTipo().equals("atividade")) {
-				p.obrigatorios("falta", "nota");
-			} else {
+			if (p.getTipo().equals("conteudo")) {
 				p.obrigatorios("falta");
 			}
 
@@ -63,7 +61,7 @@ public class Inserir extends HttpServlet {
 				ErroView view = new ErroView();
 				view.render(out);
 			}
-
+			conexao.close();
 		} catch (SQLException e) {
 			response.setStatus(500);
 			ErroView erro = new ErroView("Erro no banco de dados!", e.getMessage());

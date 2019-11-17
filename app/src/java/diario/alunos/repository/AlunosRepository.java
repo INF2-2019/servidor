@@ -13,7 +13,6 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.InputMismatchException;
 
 public class AlunosRepository {
 
@@ -302,18 +301,18 @@ public class AlunosRepository {
 			}
 			zeros += idStr;
 			xml += viewConsulta.XMLAlunoCompleto(zeros,
-					rs.getString("nome"),
-					rs.getString("email"),
-					rs.getString("sexo"),
-					rs.getDate("nascimento"),
-					rs.getString("logradouro"),
-					rs.getInt("numero"),
-					rs.getString("complemento"),
-					rs.getString("bairro"),
-					rs.getString("cidade"),
-					rs.getInt("cep"),
-					rs.getString("uf"),
-					rs.getString("foto"));
+				rs.getString("nome"),
+				rs.getString("email"),
+				rs.getString("sexo"),
+				rs.getDate("nascimento"),
+				rs.getString("logradouro"),
+				rs.getInt("numero"),
+				rs.getString("complemento"),
+				rs.getString("bairro"),
+				rs.getString("cidade"),
+				rs.getInt("cep"),
+				rs.getString("uf"),
+				rs.getString("foto"));
 		}
 		return xml;
 	}

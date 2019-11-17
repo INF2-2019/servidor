@@ -1,25 +1,25 @@
 package diario.departamentos.model;
 
 public class Departamento {
-	
+
 	private int id, idCampi;
 	private String nome, nomeCampi, cidade, uf;
-	
+
 	public Departamento() {
 		this(0, 0, "", "", "", "");
 	}
-	
+
 	public Departamento(int idCampi, String nome) {
 		this(0, idCampi, nome, "", "", "");
 	}
-	
+
 	public Departamento(int id, int idCampi, String nome, String nomeCampi, String cidade, String uf) {
 		this.id = id;
 		this.idCampi = idCampi;
 		this.nome = nome;
-        this.nomeCampi = nomeCampi;
-        this.cidade = cidade;
-        this.uf = uf;
+		this.nomeCampi = nomeCampi;
+		this.cidade = cidade;
+		this.uf = uf;
 	}
 
 	public int getId() {
@@ -46,28 +46,28 @@ public class Departamento {
 		this.nome = nome;
 	}
 
-    public String getNomeCampi() {
-        return nomeCampi;
-    }
+	public String getNomeCampi() {
+		return nomeCampi;
+	}
 
-    public void setNomeCampi(String nomeCampi) {
-        this.nomeCampi = nomeCampi;
-    }
+	public void setNomeCampi(String nomeCampi) {
+		this.nomeCampi = nomeCampi;
+	}
 
-    public String getCidade() {
-        return cidade;
-    }
+	public String getCidade() {
+		return cidade;
+	}
 
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
+	}
 
-    public String getUf() {
-        return uf;
-    }
+	public String getUf() {
+		return uf;
+	}
 
-    public void setUf(String uf) {
-        this.uf = uf;
-    }
-	
+	public void setUf(String uf) {
+		this.uf = uf;
+	}
+
 }

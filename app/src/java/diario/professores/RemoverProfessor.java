@@ -1,5 +1,11 @@
 package diario.professores;
 
+import diario.professores.services.ExcecaoNaoAutorizado;
+import diario.professores.services.ExcecaoParametrosIncorretos;
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -9,12 +15,6 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-import utils.ConnectionFactory;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
-import diario.professores.services.ExcecaoNaoAutorizado;
-import diario.professores.services.ExcecaoParametrosIncorretos;
 
 @WebServlet(name = "DeletarProfessor", urlPatterns = "/diario/professores/deletar")
 /**
@@ -28,7 +28,7 @@ public class RemoverProfessor extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
-			throws IOException {
+		throws IOException {
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {

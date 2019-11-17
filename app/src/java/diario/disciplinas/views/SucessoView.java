@@ -1,14 +1,14 @@
 package diario.disciplinas.views;
 
-import java.io.PrintWriter;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import utils.Conversores;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import utils.Conversores;
+import java.io.PrintWriter;
 
 public class SucessoView extends View<String> {
 

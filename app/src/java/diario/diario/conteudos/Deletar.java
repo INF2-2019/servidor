@@ -50,6 +50,7 @@ public class Deletar extends HttpServlet {
 
 			SucessoView view = new SucessoView("Deletado com sucesso!");
 			view.render(out);
+			conexao.close();
 		} catch (SQLException e) {
 			response.setStatus(500);
 			ErroView erro = new ErroView("Erro no banco de dados!", e.getMessage());

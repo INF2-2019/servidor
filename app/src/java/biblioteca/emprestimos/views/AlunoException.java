@@ -6,11 +6,10 @@
 package biblioteca.emprestimos.views;
 
 /**
- *
  * @author Aluno
  */
-public class AlunoException extends Exception{
-    public AlunoException(String message) {
+public class AlunoException extends Exception {
+	public AlunoException(String message) {
 		super(message);
 	}
 }

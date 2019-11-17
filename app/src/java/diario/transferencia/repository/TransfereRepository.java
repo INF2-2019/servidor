@@ -13,9 +13,9 @@ public class TransfereRepository {
 	}
 
 	public void transfere(long cpf) throws SQLException, AlunoInativoException {
-		try(PreparedStatement prst = con.prepareStatement("UPDATE `matriculas` SET `ativo` = 0 WHERE `id-alunos` = ? AND `ativo` = 1")) {
+		try (PreparedStatement prst = con.prepareStatement("UPDATE `matriculas` SET `ativo` = 0 WHERE `id-alunos` = ? AND `ativo` = 1")) {
 			prst.setLong(1, cpf);
-			if(prst.executeUpdate() == 0) {
+			if (prst.executeUpdate() == 0) {
 				throw new AlunoInativoException();
 			}
 		}

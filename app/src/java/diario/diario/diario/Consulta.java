@@ -26,13 +26,13 @@ import java.util.logging.Logger;
 public class Consulta extends HttpServlet {
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-	/*
+		/*
             [tipo:String[conteudo,atividade]] - String que filtra consulta entre conteudo e atividade
                 tipo = "conteudo" - mostra apenas conteudo
                 tipo = "atividade" - mostra apenas atividade
             conteudo:int - id do conteudo a ser consultado
             [matricula:int] - id da matricula a ser consultado
-	 */
+		 */
 
 		PrintWriter out = response.getWriter();
 
@@ -45,6 +45,7 @@ public class Consulta extends HttpServlet {
 			resultado = repositorio.consulta(p);
 			DiarioView view = new DiarioView(resultado);
 			view.render(out);
+			conexao.close();
 		} catch (SQLException e) {
 			response.setStatus(500);
 			ErroView erro = new ErroView("Erro no banco de dados!", e.getMessage());

@@ -14,7 +14,7 @@ public class Hasher {
 	}
 
 	public static String hash(String str, byte[] salt, int iteracoes) throws NoSuchAlgorithmException, InvalidKeySpecException {
-		char [] strChar = str.toCharArray();
+		char[] strChar = str.toCharArray();
 
 		PBEKeySpec spec = new PBEKeySpec(strChar, salt, iteracoes, 64 * 8);
 		SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
@@ -23,7 +23,7 @@ public class Hasher {
 		return iteracoes + ":" + toHex(salt) + ":" + toHex(hash);
 	}
 
-	public static boolean validar(String str, String hash) throws NoSuchAlgorithmException, InvalidKeySpecException{
+	public static boolean validar(String str, String hash) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		String[] parts = hash.split(":");
 		int iteracoes = Integer.parseInt(parts[0]);
 		byte[] salt = fromHex(parts[1]);
@@ -39,21 +39,21 @@ public class Hasher {
 	}
 
 
-	private static String toHex(byte[] bytes){
+	private static String toHex(byte[] bytes) {
 		BigInteger bi = new BigInteger(1, bytes);
 		String hex = bi.toString(16);
 		int pad = bytes.length * 2 - hex.length();
-		if(pad > 0){
+		if (pad > 0) {
 			return String.format("%0" + pad + "d", 0) + hex;
 		}
 
 		return hex;
 	}
 
-	private static byte[] fromHex(String str){
+	private static byte[] fromHex(String str) {
 		byte[] bytes = new byte[str.length() / 2];
-		for(int i = 0; i < bytes.length; i++){
-			bytes[i] = (byte) Integer.parseInt(str.substring(2*i, 2*i + 2), 16);
+		for (int i = 0; i < bytes.length; i++) {
+			bytes[i] = (byte) Integer.parseInt(str.substring(2 * i, 2 * i + 2), 16);
 		}
 		return bytes;
 	}

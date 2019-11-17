@@ -22,12 +22,12 @@ public class Validacao {
 	private static final int ID_PROPRIO = -1;
 
 	public static void validarParametros(Map<String, String[]> parametros)
-			throws ExcecaoParametrosIncorretos {
+		throws ExcecaoParametrosIncorretos {
 		validarParametros(parametros, true);
 	}
 
 	public static void validarParametros(Map<String, String[]> parametros, boolean validarSenha)
-			throws ExcecaoParametrosIncorretos {
+		throws ExcecaoParametrosIncorretos {
 		if ((parametros.size() < 6 && validarSenha) || (parametros.size() < 5 && !validarSenha)) {
 			throw new ExcecaoParametrosIncorretos("Parâmetros insuficientes");
 		}
@@ -84,7 +84,7 @@ public class Validacao {
 	}
 
 	public static void validarDepartamento(String depto, Connection con)
-			throws SQLException, ExcecaoParametrosIncorretos {
+		throws SQLException, ExcecaoParametrosIncorretos {
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM `departamentos` WHERE id = ?");
 		ps.setString(1, depto);
 		ps.execute();

@@ -22,12 +22,12 @@ import java.util.logging.Logger;
 public class Atualizar extends HttpServlet {
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-	/*
+		/*
             conteudo:int - id do conteudo a ser alterado
             matricula:int - id da matricula a ser alterado
             ? falta:int - quantidade de faltas do aluno
             ? nota:Double - nota do aluno
-	 */
+		 */
 
 		PrintWriter out = response.getWriter();
 
@@ -47,7 +47,7 @@ public class Atualizar extends HttpServlet {
 
 			SucessoView view = new SucessoView("Atualizado com sucesso!");
 			view.render(out);
-
+			conexao.close();
 		} catch (SQLException e) {
 			response.setStatus(500);
 			ErroView erro = new ErroView("Erro no banco de dados!", e.getMessage());

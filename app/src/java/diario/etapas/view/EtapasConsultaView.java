@@ -1,10 +1,10 @@
 package diario.etapas.view;
 
+import diario.etapas.RenderException;
 import diario.etapas.model.EtapasModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Conversores;
-import diario.etapas.RenderException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,15 +17,6 @@ public class EtapasConsultaView extends View<Set<EtapasModel>> {
 
 	public EtapasConsultaView(Set<EtapasModel> etapasModels) {
 		super(etapasModels);
-	}
-
-	@Override
-	public void render(PrintWriter writer) throws RenderException {
-		try {
-			writer.write(setParaXML(data));
-		} catch (Exception ex) {
-			throw new RenderException(ex);
-		}
 	}
 
 	public static String setParaXML(Set<EtapasModel> etapas) throws TransformerException, ParserConfigurationException {
@@ -75,6 +66,15 @@ public class EtapasConsultaView extends View<Set<EtapasModel>> {
 
 		return elemento;
 
+	}
+
+	@Override
+	public void render(PrintWriter writer) throws RenderException {
+		try {
+			writer.write(setParaXML(data));
+		} catch (Exception ex) {
+			throw new RenderException(ex);
+		}
 	}
 
 	/*public static Document criarSucessoXML() {

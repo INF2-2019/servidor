@@ -1,43 +1,23 @@
 package diario.relatorios.relatorio9;
 
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import utils.ConnectionFactory;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
 
 @WebServlet(name = "Relatorio89", urlPatterns = {"/diario/relatorios/relatorio9"})
 public class Rel9 extends HttpServlet {
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		PrintWriter out = response.getWriter();
-		DiarioAutenticador aut = new DiarioAutenticador(request, response);
-		try {
-			if (aut.cargoLogado() == DiarioCargos.PROFESSOR) {
-				out.println(consulta((int) aut.idLogado()));
-			} else if (aut.cargoLogado() == DiarioCargos.ADMIN) {
-				out.println(consulta(Integer.parseInt(request.getParameter("id"))));
-			} else {
-				response.setStatus(403);
-				out.println("<erro><mensagem>Você não tem permissão para fazer isso</mensagem></erro>");
-			}
-		} catch (SQLException ex) {
-			response.setStatus(500);
-			out.println("<erro><mensagem>Falha ao consultar banco de dados</mensagem></erro>");
-		} catch (Exception e) {
-			response.setStatus(500);
-			out.println("<erro><mensagem>Erro severo</mensagem></erro>");
-		}
-	}
 
 	public static String[] procuraDisciplinas(Connection con, int idTurma) throws SQLException {
 		PreparedStatement prst = con.prepareStatement("SELECT * FROM `disciplinas` WHERE `id-turmas` = ?");
@@ -46,7 +26,7 @@ public class Rel9 extends HttpServlet {
 		prst = con.prepareStatement("SELECT * FROM `disciplinas` WHERE `id-turmas` = ?");
 		prst.setInt(1, idTurma);
 		ResultSet cp = prst.executeQuery();
-		String nomesDis[];
+		String[] nomesDis;
 		int cont = 0;
 		while (rs.next()) {
 			cont++;
@@ -69,7 +49,7 @@ public class Rel9 extends HttpServlet {
 		prst.setInt(1, idTurma);
 		ResultSet cp = prst.executeQuery();
 		int cont = 0;
-		int cargas[];
+		int[] cargas;
 		while (rs.next()) {
 			cont++;
 		}
@@ -89,7 +69,7 @@ public class Rel9 extends HttpServlet {
 		prst = con.prepareStatement("SELECT * FROM `turmas` WHERE `id-cursos` = ?");
 		prst.setInt(1, idCurso);
 		ResultSet cp = prst.executeQuery();
-		int ids[];
+		int[] ids;
 		int cont = 0;
 		while (rs.next()) {
 			cont++;
@@ -110,7 +90,7 @@ public class Rel9 extends HttpServlet {
 		prst = con.prepareStatement("SELECT * FROM `cursos` WHERE `id-depto` = ?");
 		prst.setInt(1, idDepto);
 		ResultSet cp = prst.executeQuery();
-		String nomesCursos[];
+		String[] nomesCursos;
 		int cont = 0;
 		while (rs.next()) {
 			cont++;
@@ -131,7 +111,7 @@ public class Rel9 extends HttpServlet {
 		prst = con.prepareStatement("SELECT * FROM `cursos` WHERE `id-depto` = ?");
 		prst.setInt(1, idDepto);
 		ResultSet cp = prst.executeQuery();
-		int ids[];
+		int[] ids;
 		int cont = 0;
 		while (rs.next()) {
 			cont++;
@@ -152,11 +132,11 @@ public class Rel9 extends HttpServlet {
 			prst.setInt(1, id);
 			ResultSet rs = prst.executeQuery();
 			rs.next();
-			int idCursos[];
-			String nomeCursos[];
-			int idTurmas[][];
-			int cargas[];
-			String nomeDis[];
+			int[] idCursos;
+			String[] nomeCursos;
+			int[][] idTurmas;
+			int[] cargas;
+			String[] nomeDis;
 			String xml = "";
 			idCursos = procuraIdCurso(con, rs.getInt("id-depto"));
 			nomeCursos = procuraCursos(con, rs.getInt("id-depto"));
@@ -164,11 +144,11 @@ public class Rel9 extends HttpServlet {
 			if (idCursos.length != 0) {
 				for (int i = 0; i < idCursos.length; i++) {
 					xml = XmlProf.xmlCurso(xml, nomeCursos[i]);
-					int idT[];
+					int[] idT;
 					idT = procuraIdTurma(con, idCursos[i]);
 					if (idT.length != 0) {
 						for (int c = 0; c < idT.length; c++) {
-							idTurmas = new int[idCursos.length][idT.length];;
+							idTurmas = new int[idCursos.length][idT.length];
 							idTurmas[i][c] = idT[c];
 							nomeDis = procuraDisciplinas(con, idTurmas[i][c]);
 							cargas = procuraCarga(con, idTurmas[i][c]);
@@ -193,6 +173,28 @@ public class Rel9 extends HttpServlet {
 			return xml;
 		} else {
 			throw new SQLException();
+		}
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+		DiarioAutenticador aut = new DiarioAutenticador(request, response);
+		try {
+			if (aut.cargoLogado() == DiarioCargos.PROFESSOR) {
+				out.println(consulta((int) aut.idLogado()));
+			} else if (aut.cargoLogado() == DiarioCargos.ADMIN) {
+				out.println(consulta(Integer.parseInt(request.getParameter("id"))));
+			} else {
+				response.setStatus(403);
+				out.println("<erro><mensagem>Você não tem permissão para fazer isso</mensagem></erro>");
+			}
+		} catch (SQLException ex) {
+			response.setStatus(500);
+			out.println("<erro><mensagem>Falha ao consultar banco de dados</mensagem></erro>");
+		} catch (Exception e) {
+			response.setStatus(500);
+			out.println("<erro><mensagem>Erro severo</mensagem></erro>");
 		}
 	}
 

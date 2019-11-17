@@ -50,6 +50,7 @@ public class Inserir extends HttpServlet {
 				view = new SucessoView("Conteudo adicionado com sucesso!");
 			}
 			view.render(out);
+			conexao.close();
 
 		} catch (SQLException e) {
 			response.setStatus(500);

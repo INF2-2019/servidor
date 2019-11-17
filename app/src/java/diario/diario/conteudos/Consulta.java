@@ -51,6 +51,7 @@ public class Consulta extends HttpServlet {
 
 			ConteudosView view = new ConteudosView(resultado);
 			view.render(out);
+			conexao.close();
 
 		} catch (SQLException e) {
 			response.setStatus(500);

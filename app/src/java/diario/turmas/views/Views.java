@@ -1,6 +1,7 @@
 package diario.turmas.views;
 
 import diario.turmas.models.TurmaModel;
+
 import java.util.ArrayList;
 
 public class Views {

@@ -1,21 +1,21 @@
 package diario.professores;
 
+import diario.professores.services.ExcecaoNaoAutorizado;
+import diario.professores.services.ExcecaoParametrosIncorretos;
+import diario.professores.services.Validacao;
+import utils.ConnectionFactory;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import utils.ConnectionFactory;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
-import diario.professores.services.ExcecaoNaoAutorizado;
-import diario.professores.services.ExcecaoParametrosIncorretos;
-import diario.professores.services.Validacao;
 
 @WebServlet(name = "AtualizarProfessor", urlPatterns = "/diario/professores/atualizar")
 /**
@@ -29,7 +29,7 @@ public class AtualizarProfessor extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest requisicao, HttpServletResponse resposta)
-			throws IOException {
+		throws IOException {
 
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
@@ -37,7 +37,7 @@ public class AtualizarProfessor extends HttpServlet {
 			int id = Integer.parseInt(requisicao.getParameter("id"));
 			DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
 			if (autenticador.cargoLogado() != DiarioCargos.ADMIN
-					&& (Integer) autenticador.idLogado() != id) {
+				&& (Integer) autenticador.idLogado() != id) {
 				throw new ExcecaoNaoAutorizado("Você não tem permissão para realizar esta operação");
 			}
 
@@ -52,8 +52,8 @@ public class AtualizarProfessor extends HttpServlet {
 			Validacao.validarDepartamento(requisicao.getParameter("id-depto"), conexao);
 
 			String statement = "UPDATE `professores` SET "
-					+ "`id-depto` = ?, `nome` = ?, "
-					+ "`email` = ?, `titulacao` = ? WHERE `id` = ?";
+				+ "`id-depto` = ?, `nome` = ?, "
+				+ "`email` = ?, `titulacao` = ? WHERE `id` = ?";
 			PreparedStatement ps = conexao.prepareStatement(statement);
 
 			ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-depto")));
