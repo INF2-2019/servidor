@@ -6,7 +6,6 @@
 package diario.disciplinas.views;
 
 /**
- *
  * @author User
  */
 public class ExcecaoConteudoVinculado extends Exception {

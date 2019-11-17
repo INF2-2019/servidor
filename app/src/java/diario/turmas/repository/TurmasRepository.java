@@ -1,9 +1,10 @@
 package diario.turmas.repository;
 
+import utils.ConnectionFactory;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import utils.ConnectionFactory;
 
 public class TurmasRepository {
 

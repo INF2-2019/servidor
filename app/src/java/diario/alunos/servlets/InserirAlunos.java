@@ -6,6 +6,7 @@ import diario.cursos.view.RenderException;
 import diario.cursos.view.SucessoView;
 import diario.cursos.view.View;
 import utils.ConnectionFactory;
+import utils.Validators;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,13 +20,13 @@ import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
-import utils.Validators;
 
 @WebServlet(name = "InserirAlunos", urlPatterns = {"/diario/alunos/inserir"})
 public class InserirAlunos extends HttpServlet {
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
 		Connection conexao = ConnectionFactory.getDiario();
 		AlunosRepository rep = new AlunosRepository(conexao);
 		PrintWriter out = response.getWriter();

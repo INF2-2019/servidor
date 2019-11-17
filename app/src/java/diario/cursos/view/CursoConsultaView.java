@@ -18,15 +18,6 @@ public class CursoConsultaView extends View<Set<CursoModel>> {
 		super(cursoModels);
 	}
 
-	@Override
-	public void render(PrintWriter writer) throws RenderException {
-		try {
-			writer.write(setParaXML(data));
-		} catch (Exception ex) {
-			throw new RenderException(ex);
-		}
-	}
-
 	public static String setParaXML(Set<CursoModel> cursos) throws TransformerException, ParserConfigurationException {
 		// Converte para Document e então retorna como String
 		Document cursosEmDocument = cursoParaDocument(cursos);
@@ -82,6 +73,15 @@ public class CursoConsultaView extends View<Set<CursoModel>> {
 
 		return elemento;
 
+	}
+
+	@Override
+	public void render(PrintWriter writer) throws RenderException {
+		try {
+			writer.write(setParaXML(data));
+		} catch (Exception ex) {
+			throw new RenderException(ex);
+		}
 	}
 
 	/*public static Document criarSucessoXML() {

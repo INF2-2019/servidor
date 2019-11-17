@@ -27,7 +27,7 @@ public class ConnectionFactory {
 		try {
 			Class.forName(driver);
 			return DriverManager.getConnection(url + database + "?useTimezone=true&serverTimezone=UTC&useSSL=false", usuario,
-					senha);
+				senha);
 		} catch (ClassNotFoundException e) {
 			System.err.println("Driver não encontrado: " + e);
 			return null;

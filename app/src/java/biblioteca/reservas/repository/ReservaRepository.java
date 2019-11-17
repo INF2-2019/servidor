@@ -1,27 +1,22 @@
 package biblioteca.reservas.repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
 import biblioteca.reservas.model.ReservaModel;
 import biblioteca.reservas.views.AlunoException;
 import biblioteca.reservas.views.ExcecaoEmprestimoCadastrado;
 import biblioteca.reservas.views.ExcecaoreservaExistente;
-import java.util.SortedMap;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 public class ReservaRepository {
 
-	private Connection con;
 	SimpleDateFormat simpleFormat;
+	private Connection con;
 
 	public ReservaRepository(Connection con) {
 		this.con = con;
@@ -114,7 +109,7 @@ public class ReservaRepository {
 		} else {
 			throw new AlunoException("O id(CPF) do aluno é obrigatório");
 		}
-		
+
 		ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
 		ps.setLong(1, idAlunos);
 		resultadoBusca = ps.executeQuery();
@@ -144,7 +139,7 @@ public class ReservaRepository {
 			throw new ExcecaoreservaExistente("Ja existe uma reserva sobre o item no Acervo");
 		}
 
-		int tempoEspera = 0 ;
+		int tempoEspera = 0;
 		if (valores.containsKey("tempo-espera")) {
 			tempoEspera = Integer.parseUnsignedInt(valores.get("tempo-espera"));
 		}
@@ -157,7 +152,7 @@ public class ReservaRepository {
 		if (valores.containsKey("emprestou")) {
 			emprestou = Boolean.parseBoolean(valores.get("emprestou"));
 		}
-		
+
 
 		ps = con.prepareStatement("INSERT INTO `reservas` (`id-alunos`, `id-acervo`, `data-reserva`,`tempo-espera`,`emprestou`) VALUES (?, ?, ?, ?, ?)");
 
@@ -213,16 +208,20 @@ public class ReservaRepository {
 		Boolean emprestou = Boolean.parseBoolean(parametros.get("emprestou").toString());
 
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
-                ps.setLong(1, idAluno);
-                ResultSet resultadoBusca = ps.executeQuery();
-                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse aluno.");
-                ps = con.prepareStatement("SELECT * FROM `acervo` WHERE `id` = ? ");
-                ps.setInt(1, idAcervo);
-				System.out.println(idAcervo);
-                resultadoBusca = ps.executeQuery();
-                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse acervo.");
+		ps.setLong(1, idAluno);
+		ResultSet resultadoBusca = ps.executeQuery();
+		if (!resultadoBusca.next()) {
+			throw new AlunoException("Não existe esse aluno.");
+		}
+		ps = con.prepareStatement("SELECT * FROM `acervo` WHERE `id` = ? ");
+		ps.setInt(1, idAcervo);
+		System.out.println(idAcervo);
+		resultadoBusca = ps.executeQuery();
+		if (!resultadoBusca.next()) {
+			throw new AlunoException("Não existe esse acervo.");
+		}
 
-		 ps = con.prepareStatement("UPDATE `reservas` SET `id-alunos` = ?, `id-acervo` = ?, `tempo-espera` = ?, `data-reserva` = ?, `emprestou` = ?  WHERE `id` = ?");
+		ps = con.prepareStatement("UPDATE `reservas` SET `id-alunos` = ?, `id-acervo` = ?, `tempo-espera` = ?, `data-reserva` = ?, `emprestou` = ?  WHERE `id` = ?");
 		ps.setLong(1, idAluno);
 		ps.setInt(2, idAcervo);
 		ps.setInt(3, tempoEspera);

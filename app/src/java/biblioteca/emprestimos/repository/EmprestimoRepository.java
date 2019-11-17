@@ -3,23 +3,19 @@ package biblioteca.emprestimos.repository;
 import biblioteca.emprestimos.model.EmprestimoModel;
 import biblioteca.emprestimos.views.AlunoException;
 import biblioteca.emprestimos.views.InacessivelException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
+import java.util.*;
 
 public class EmprestimoRepository {
 
-	private Connection con;
 	SimpleDateFormat simpleFormat;
+	private Connection con;
 
 	public EmprestimoRepository(Connection con) {
 		this.con = con;
@@ -72,44 +68,51 @@ public class EmprestimoRepository {
 
 	public boolean inserir(Map<String, String> valores) throws NumberFormatException, SQLException, ParseException, InacessivelException, AlunoException {
 
-                PreparedStatement ps;
-                ResultSet resultadoBusca;
+		PreparedStatement ps;
+		ResultSet resultadoBusca;
 
 		long idAlunos = 00000000000L;
-                String SidAlunos;
+		String SidAlunos;
 		if (valores.containsKey("id-alunos")) {
 			SidAlunos = (valores.get("id-alunos"));
-                        if(SidAlunos.length()!=11) throw new AlunoException("Número inválido para um CPF.");
-                        idAlunos = Long.parseLong(SidAlunos);
+			if (SidAlunos.length() != 11) {
+				throw new AlunoException("Número inválido para um CPF.");
+			}
+			idAlunos = Long.parseLong(SidAlunos);
+		} else {
+			throw new AlunoException("O id(CPF) do aluno é obrigatório");
 		}
-                else throw new AlunoException("O id(CPF) do aluno é obrigatório");
-          
-                ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ?");
-                ps.setLong(1, idAlunos);
-                resultadoBusca = ps.executeQuery();
 
-                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse aluno.");
+		ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ?");
+		ps.setLong(1, idAlunos);
+		resultadoBusca = ps.executeQuery();
+
+		if (!resultadoBusca.next()) {
+			throw new AlunoException("Não existe esse aluno.");
+		}
 
 		int idAcervo = 0;
 
 		if (valores.containsKey("id-acervo")) {
 			idAcervo = Integer.parseUnsignedInt(valores.get("id-acervo"));
 		}
-                
-                ps = con.prepareStatement("SELECT * FROM `acervo` WHERE `id` = ? ");
-                ps.setInt(1, idAcervo);
-                resultadoBusca = ps.executeQuery();
 
-                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse acervo.");
-                
-               
+		ps = con.prepareStatement("SELECT * FROM `acervo` WHERE `id` = ? ");
+		ps.setInt(1, idAcervo);
+		resultadoBusca = ps.executeQuery();
+
+		if (!resultadoBusca.next()) {
+			throw new AlunoException("Não existe esse acervo.");
+		}
+
+
 		ps = con.prepareStatement("SELECT * FROM `emprestimos` WHERE `id-acervo` = ? AND `data-devolucao`= '1970-01-01'");
 		ps.setInt(1, idAcervo);
 		resultadoBusca = ps.executeQuery();
 		while (resultadoBusca.next()) {
 			throw new InacessivelException("Este livro, atualmente, já está emprestado");
 		}
-                
+
 		Date dataEmprestimo = new Date(new Date().getTime());
 
 		if (valores.containsKey("data-emprestimo")) {
@@ -150,7 +153,7 @@ public class EmprestimoRepository {
 	public boolean atualizar(SortedMap<String, String> filtros, String id) throws SQLException, NumberFormatException, ParseException, AlunoException {
 		int idParsed = Integer.parseUnsignedInt(id);
 		if (filtros.containsKey("id-alunos")) {
-			 Long.parseLong(filtros.get("id-alunos"));
+			Long.parseLong(filtros.get("id-alunos"));
 		}
 
 		if (filtros.containsKey("id-acervo")) {
@@ -196,17 +199,21 @@ public class EmprestimoRepository {
 		Date dataDevolucao = simpleFormat.parse(parametros.get("data-devolucao").toString());
 		double multa = Double.parseDouble(parametros.get("multa").toString());
 
-	
-		PreparedStatement ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
-                ps.setLong(1, idAlunos);
-                ResultSet resultadoBusca = ps.executeQuery();
-                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse aluno.");
-                ps = con.prepareStatement("SELECT * FROM `acervo` WHERE `id` = ? ");
-                ps.setInt(1, idAcervo);
-                resultadoBusca = ps.executeQuery();
-                if(!resultadoBusca.next()) throw new AlunoException("Não existe esse acervo.");
 
-                ps = con.prepareStatement("UPDATE `emprestimos` SET `id-alunos` = ?, `id-acervo` = ?, `data-emprestimo` = ?, `data-prev-devol` = ?, `data-devolucao` = ?, `multa` = ? WHERE `id` = ?");
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM `alunos` WHERE `id` = ? ");
+		ps.setLong(1, idAlunos);
+		ResultSet resultadoBusca = ps.executeQuery();
+		if (!resultadoBusca.next()) {
+			throw new AlunoException("Não existe esse aluno.");
+		}
+		ps = con.prepareStatement("SELECT * FROM `acervo` WHERE `id` = ? ");
+		ps.setInt(1, idAcervo);
+		resultadoBusca = ps.executeQuery();
+		if (!resultadoBusca.next()) {
+			throw new AlunoException("Não existe esse acervo.");
+		}
+
+		ps = con.prepareStatement("UPDATE `emprestimos` SET `id-alunos` = ?, `id-acervo` = ?, `data-emprestimo` = ?, `data-prev-devol` = ?, `data-devolucao` = ?, `multa` = ? WHERE `id` = ?");
 		ps.setLong(1, idAlunos);
 		ps.setInt(2, idAcervo);
 		ps.setDate(3, new java.sql.Date(dataEmprestimo.getTime()));
@@ -224,7 +231,7 @@ public class EmprestimoRepository {
 		Set<EmprestimoModel> emprestimoResultado = new LinkedHashSet<>();
 		sql = "SELECT * FROM `emprestimos` ORDER BY `id`";
 		int idAcervo = -1;
-                Long idAlunos = -1L;
+		Long idAlunos = -1L;
 		java.sql.Date dataEmprestimo = new java.sql.Date(0), dataPrevDevol = new java.sql.Date(0), dataDevolucao = new java.sql.Date(0);
 		double multa = -1;
 

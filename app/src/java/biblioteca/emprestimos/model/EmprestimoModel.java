@@ -1,20 +1,21 @@
 package biblioteca.emprestimos.model;
 
 import biblioteca.emprestimos.views.AlunoException;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import javax.servlet.http.HttpServletRequest;
 
 public class EmprestimoModel extends Model {
 
-	private int id, idAcervo;
-        private Long idAlunos;
-	private Date dataEmprestimo, dataPrevDevol, dataDevolucao;
-	private double multa;
 	public static double multaPerDay = 0.50;
 	public static int tempoEmprestimo = 7;
+	private int id, idAcervo;
+	private Long idAlunos;
+	private Date dataEmprestimo, dataPrevDevol, dataDevolucao;
+	private double multa;
 
 	public EmprestimoModel(int id, Long idAlunos, int idAcervo, Date dataEmprestimo, Date dataPrevDevol, Date dataDevolucao, double multa) {
 		this.id = id;
@@ -24,6 +25,23 @@ public class EmprestimoModel extends Model {
 		this.dataPrevDevol = dataPrevDevol;
 		this.dataDevolucao = dataDevolucao;
 		this.multa = multa;
+	}
+
+	public EmprestimoModel(Long idAlunos, int idAcervos, Date dataEmprestimo, Date dataPrevDevol, Date dataDevolucao, double multa) {
+		this(ID_INDEFINIDO, idAlunos, idAcervos, dataEmprestimo, dataPrevDevol, dataDevolucao, multa);
+	}
+
+	public static SortedMap<String, String> definirMap(HttpServletRequest req) throws AlunoException {
+		final String[] params = {"id-alunos", "id-acervo", "data-emprestimo", "data-prev-devol", "data-devolucao", "multa"};
+		SortedMap<String, String> dados = new TreeMap<String, String>();
+
+		// definir os valores do map condicionalmente, conforme a requisição
+		for (String param : params) {
+			if (req.getParameter(param) != null) {
+				dados.put(param, req.getParameter(param));
+			}
+		}
+		return dados;
 	}
 
 	public Object[] retornarValoresRestantes(Map<String, String> parametros) {
@@ -64,10 +82,6 @@ public class EmprestimoModel extends Model {
 		}
 
 		return retorno;
-	}
-
-	public EmprestimoModel(Long idAlunos, int idAcervos, Date dataEmprestimo, Date dataPrevDevol, Date dataDevolucao, double multa) {
-		this(ID_INDEFINIDO, idAlunos, idAcervos, dataEmprestimo, dataPrevDevol, dataDevolucao, multa);
 	}
 
 	public int getId() {
@@ -124,19 +138,6 @@ public class EmprestimoModel extends Model {
 
 	public void setMulta(double multa) {
 		this.multa = multa;
-	}
-
-	public static SortedMap<String, String> definirMap(HttpServletRequest req) throws AlunoException {
-		final String[] params = {"id-alunos", "id-acervo", "data-emprestimo", "data-prev-devol", "data-devolucao", "multa"};
-		SortedMap<String, String> dados = new TreeMap<String, String>();
-
-		// definir os valores do map condicionalmente, conforme a requisição
-                for (String param : params) {
-			if (req.getParameter(param) != null) {
-				dados.put(param, req.getParameter(param));
-			}
-		}
-		return dados;
 	}
 
 }

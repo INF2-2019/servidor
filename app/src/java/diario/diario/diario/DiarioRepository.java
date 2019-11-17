@@ -7,11 +7,7 @@ package diario.diario.diario;
 
 import diario.diario.views.ExcecaoPadrao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -61,10 +57,10 @@ public class DiarioRepository {
 
 	public boolean atualizar(DiarioModel modelo, DiarioModel filtro) throws SQLException, ExcecaoPadrao {
 		String query = "UPDATE diario SET"
-				+ "`id-conteudos`=COALESCE(?,diario.`id-conteudos`),"
-				+ "`id-matriculas`=COALESCE(?,diario.`id-matriculas`),"
-				+ " faltas=COALESCE(?, diario.faltas),"
-				+ " nota=COALESCE(?, diario.nota)";
+			+ "`id-conteudos`=COALESCE(?,diario.`id-conteudos`),"
+			+ "`id-matriculas`=COALESCE(?,diario.`id-matriculas`),"
+			+ " faltas=COALESCE(?, diario.faltas),"
+			+ " nota=COALESCE(?, diario.nota)";
 		PreparedStatement st;
 
 		if (filtro.getIdConteudo() != null && filtro.getIdMatricula() != null) {

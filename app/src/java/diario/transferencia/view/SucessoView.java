@@ -1,13 +1,14 @@
 package diario.transferencia.view;
 
-import java.io.PrintWriter;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import utils.Conversores;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import utils.Conversores;
+import java.io.PrintWriter;
 
 public class SucessoView extends View {
 
@@ -19,7 +20,7 @@ public class SucessoView extends View {
 	public void render(PrintWriter writer) throws RenderException {
 		try {
 			writer.write(Conversores.converterDocumentEmXMLString(criarSucessoXML((String) data)));
-		} catch(TransformerException | ParserConfigurationException e) {
+		} catch (TransformerException | ParserConfigurationException e) {
 			throw new RenderException(e);
 		}
 	}

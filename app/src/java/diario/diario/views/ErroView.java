@@ -38,13 +38,13 @@ public class ErroView {
 
 	public String gerar() {
 		String resposta = "<info>\n"
-				+ "<erro>\n"
-				+ "<mensagem>" + mensagem + "</mensagem>\n";
+			+ "<erro>\n"
+			+ "<mensagem>" + mensagem + "</mensagem>\n";
 		if (causa != null) {
 			resposta += "<causa>" + causa + "</causa>\n";
 		}
 		resposta += "</erro>"
-				+ "</info>";
+			+ "</info>";
 		return resposta;
 	}
 }

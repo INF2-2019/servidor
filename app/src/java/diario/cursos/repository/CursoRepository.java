@@ -7,7 +7,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class CursoRepository {
 
@@ -91,8 +94,8 @@ public class CursoRepository {
 		// Se id não for um inteiro sem sinal, joga a exceção NumberFormatException
 		int id = Integer.parseUnsignedInt(idStr);
 
-		ResultSet verificacao = con.prepareCall("SELECT * FROM `turmas` WHERE `id-cursos` = "+id).executeQuery();
-		if(verificacao.next()) {
+		ResultSet verificacao = con.prepareCall("SELECT * FROM `turmas` WHERE `id-cursos` = " + id).executeQuery();
+		if (verificacao.next()) {
 			throw new ExcecaoTurmaVinculada();
 		}
 		verificacao.close();
@@ -166,8 +169,9 @@ public class CursoRepository {
 		}
 
 		CursoModel curso = consultarId(Integer.toString(id));
-		if(curso == null)
+		if (curso == null) {
 			throw new NullPointerException("Id inválido");
+		}
 		Object[] vals = curso.retornarValoresRestantes(parametros);
 		String[] keys = {"id", "id-depto", "nome", "horas-total", "modalidade"};
 		Map<String, Object> valores = new LinkedHashMap<>();

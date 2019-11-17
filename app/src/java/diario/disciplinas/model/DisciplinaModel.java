@@ -14,6 +14,10 @@ public class DisciplinaModel extends Model {
 		this.nome = nome;
 	}
 
+	public DisciplinaModel(int idTurmas, int cargaHorariaMin, String nome) {
+		this(ID_INDEFINIDO, idTurmas, nome, cargaHorariaMin);
+	}
+
 	public Object[] retornarValoresRestantes(Map<String, String> parametros) {
 		Object[] retorno = new Object[4];
 		retorno[0] = id;
@@ -36,10 +40,6 @@ public class DisciplinaModel extends Model {
 		}
 
 		return retorno;
-	}
-
-	public DisciplinaModel(int idTurmas, int cargaHorariaMin, String nome) {
-		this(ID_INDEFINIDO, idTurmas, nome, cargaHorariaMin);
 	}
 
 	public int getId() {

@@ -19,6 +19,15 @@ public class ReservaModel extends Model {
 		this.emprestou = emprestou;
 	}
 
+	public ReservaModel(long idAlunos, int idAcervo, int TempoEspera, Date dataReserva, boolean emprestou) {
+		this.id = ID_INDEFINIDO;
+		this.idAlunos = idAlunos;
+		this.idAcervo = idAcervo;
+		this.TempoEspera = TempoEspera;
+		this.dataReserva = dataReserva;
+		this.emprestou = emprestou;
+	}
+
 	public Object[] retornarValoresRestantes(Map<String, String> parametros) {
 		Object[] retorno = new Object[6];
 		retorno[0] = id;
@@ -51,15 +60,6 @@ public class ReservaModel extends Model {
 		}
 
 		return retorno;
-	}
-
-	public ReservaModel(long idAlunos, int idAcervo, int TempoEspera, Date dataReserva, boolean emprestou) {
-		this.id = ID_INDEFINIDO;
-		this.idAlunos = idAlunos;
-		this.idAcervo = idAcervo;
-		this.TempoEspera = TempoEspera;
-		this.dataReserva = dataReserva;
-		this.emprestou = emprestou;
 	}
 
 	public int getId() {

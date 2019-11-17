@@ -1,11 +1,7 @@
 package biblioteca.reservas;
 
 import biblioteca.reservas.repository.ReservaRepository;
-import biblioteca.reservas.views.AlunoException;
-import biblioteca.reservas.views.ErroView;
-import biblioteca.reservas.views.RenderException;
-import biblioteca.reservas.views.SucessoView;
-import biblioteca.reservas.views.View;
+import biblioteca.reservas.views.*;
 import utils.ConnectionFactory;
 import utils.autenticador.BibliotecaAutenticador;
 import utils.autenticador.BibliotecaCargos;
@@ -26,12 +22,13 @@ import java.util.Map;
 @WebServlet(name = "AtualizarReservas", urlPatterns = {"/biblioteca/reservas/atualizar"})
 public class AtualizarReservas extends HttpServlet {
 
+	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
 		Connection con = ConnectionFactory.getBiblioteca();
 		PrintWriter out = res.getWriter();
 		BibliotecaAutenticador autenticador = new BibliotecaAutenticador(req, res);
-	
+
 		if (autenticador.cargoLogado() != BibliotecaCargos.ADMIN) {
 			res.setStatus(403);
 			View erroView = new ErroView(new Exception("O usuario não tem permisão para essa operação"));
@@ -42,7 +39,7 @@ public class AtualizarReservas extends HttpServlet {
 			}
 			return;
 		}
-	
+
 		if (con == null) {
 			View erroView = new ErroView(new Exception("Não foi possível conectar ao banco de dados"));
 			try {

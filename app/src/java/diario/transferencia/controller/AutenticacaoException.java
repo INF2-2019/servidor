@@ -1,7 +1,7 @@
 package diario.transferencia.controller;
 
 public class AutenticacaoException extends Exception {
-	
+
 	public AutenticacaoException() {
 		super("Permissão apenas para administrador");
 	}
@@ -9,5 +9,5 @@ public class AutenticacaoException extends Exception {
 	public AutenticacaoException(String msg) {
 		super(msg);
 	}
-	
+
 }
