@@ -34,16 +34,21 @@ public class DiarioRepository {
 	    return atualizar(modelo, filtro);
 	}
 
-	String query = "INSERT INTO diario(`id-conteudos`,`id-matriculas`, faltas, nota) VALUES (?, ?, ?, COALESCE(?,0.0))";
+	String query = "INSERT INTO diario(`id-conteudos`,`id-matriculas`, faltas, nota) VALUES (?, ?, COALESCE(?,0), COALESCE(?,0.0))";
 	PreparedStatement st = conexao.prepareStatement(query);
 	st.setInt(1, modelo.getIdConteudo());
 	st.setInt(2, modelo.getIdMatricula());
-	st.setInt(3, modelo.getFalta());
+
+	if (modelo.getFalta() != null) {
+	    st.setInt(3, modelo.getFalta());
+	} else {
+	    st.setNull(3, Types.INTEGER);
+	}
 
 	if (modelo.getNota() != null) {
 	    st.setDouble(4, modelo.getNota());
 	} else {
-	    st.setDouble(4, Types.DECIMAL);
+	    st.setNull(4, Types.DECIMAL);
 	}
 
 	int r = st.executeUpdate();
@@ -80,27 +85,27 @@ public class DiarioRepository {
 	}
 
 	if (modelo.getIdConteudo() != null) {
-	    st.setInt(1, modelo.getIdConteudo());
+	    st.setNull(1, modelo.getIdConteudo());
 	} else {
-	    st.setInt(1, Types.INTEGER);
+	    st.setNull(1, Types.INTEGER);
 	}
 
 	if (modelo.getIdMatricula() != null) {
 	    st.setInt(2, modelo.getIdMatricula());
 	} else {
-	    st.setInt(2, Types.INTEGER);
+	    st.setNull(2, Types.INTEGER);
 	}
 
 	if (modelo.getFalta() != null) {
 	    st.setInt(3, modelo.getFalta());
 	} else {
-	    st.setInt(3, Types.INTEGER);
+	    st.setNull(3, Types.INTEGER);
 	}
 
 	if (modelo.getNota() != null) {
 	    st.setDouble(4, modelo.getNota());
 	} else {
-	    st.setDouble(4, Types.NULL);
+	    st.setNull(4, Types.DECIMAL);
 	}
 
 	int r = st.executeUpdate();

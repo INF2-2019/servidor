@@ -43,9 +43,7 @@ public class Inserir extends HttpServlet {
 	    DiarioParametros p = new DiarioParametros(request);
 	    p.obrigatorios("conteudo", "matricula", "tipo");
 
-	    if (p.getTipo().equals("atividade")) {
-		p.obrigatorios("falta", "nota");
-	    } else {
+	    if (p.getTipo().equals("conteudo")) {
 		p.obrigatorios("falta");
 	    }
 
