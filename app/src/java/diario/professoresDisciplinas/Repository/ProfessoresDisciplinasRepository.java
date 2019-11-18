@@ -77,7 +77,7 @@ public class ProfessoresDisciplinasRepository {
                 
 		ps = con.prepareStatement("SELECT  * FROM `prof_disciplinas` WHERE `id-professores` = ? AND `id-disciplinas` = ?");
 		ps.setInt(1, idProfessor);
-                ps.setInt(2, idDisciplinas);
+		ps.setInt(2, idDisciplinas);
 		result = ps.executeQuery();
 		if (result.next()) {
 			throw new ExcecaoConteudoVinculado("Esse Professor já foi vinculado a esta Disciplina.");
