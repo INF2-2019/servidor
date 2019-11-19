@@ -13,13 +13,11 @@ public class XmlProf {
 
 	;
 	
-	public static String xmlFinal(String xml, String[] dis, int[] cargas) {
-		for (int i = 0; i < dis.length; i++) {
-			xml += "<disciplina>";
-			xml += "<nome>" + dis[i] + "</nome>";
-			xml += "<carga>" + cargas[i] + "</carga>";
-			xml += "</disciplina>";
-		}
+	public static String xmlFinal(String xml, String dis, String cargas) {
+		xml += "<disciplina>";
+		xml += "<nome>" + dis + "</nome>";
+		xml += "<carga>" + cargas + "</carga>";
+		xml += "</disciplina>";
 		return xml;
 	}
 
