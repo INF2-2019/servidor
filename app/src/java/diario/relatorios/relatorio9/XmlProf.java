@@ -4,28 +4,30 @@ public class XmlProf {
 
 	public static String xmlProf(int id, String nome) {
 		String xml
-			= "<professor>"
-			+ "<id>" + id + "</id>"
-			+ "<nome>" + nome + "</nome>"
-			+ "<cursos>";
+				= "<professor>"
+				+ "<id>" + id + "</id>"
+				+ "<nome>" + nome + "</nome>"
+				+ "<cursos>";
 		return xml;
 	}
 
-	public static String xmlFinal(String xml, String[] dis, int[] cargas) {
-		for (int i = 0; i < dis.length; i++) {
-			xml += "<disciplina>";
-			xml += "<nome>" + dis[i] + "</nome>";
-			xml += "<carga>" + cargas[i] + "</carga>";
-			xml += "</disciplina>";
-		}
+	;
+	
+	public static String xmlFinal(String xml, String dis, String cargas) {
+		xml += "<disciplina>";
+		xml += "<nome>" + dis + "</nome>";
+		xml += "<carga>" + cargas + "</carga>";
+		xml += "</disciplina>";
 		return xml;
 	}
 
+	;
+	
 	public static String xmlCurso(String xml, String nomeCurso) {
 		xml
-			+= "<curso>"
-			+ "<nome>" + nomeCurso + "</nome>"
-			+ "<disciplinas>";
+				+= "<curso>"
+				+ "<nome>" + nomeCurso + "</nome>"
+				+ "<disciplinas>";
 		return xml;
 	}
 }
