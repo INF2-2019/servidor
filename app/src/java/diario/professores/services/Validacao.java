@@ -1,4 +1,4 @@
-package diario.professores;
+package diario.professores.services;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,10 +19,16 @@ public class Validacao {
 
 	private static final String[] PARAMS = {"id", "id-depto", "nome", "senha", "email", "titulacao"};
 	private static final String REGEXP_EMAIL = "[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*";
+	private static final int ID_PROPRIO = -1;
 
 	public static void validarParametros(Map<String, String[]> parametros)
-			throws ExcecaoParametrosIncorretos {
-		if (parametros.size() < 6) {
+		throws ExcecaoParametrosIncorretos {
+		validarParametros(parametros, true);
+	}
+
+	public static void validarParametros(Map<String, String[]> parametros, boolean validarSenha)
+		throws ExcecaoParametrosIncorretos {
+		if ((parametros.size() < 6 && validarSenha) || (parametros.size() < 5 && !validarSenha)) {
 			throw new ExcecaoParametrosIncorretos("Parâmetros insuficientes");
 		}
 		if (parametros.size() > 6) {
@@ -43,10 +49,10 @@ public class Validacao {
 
 		// Valida o código SIAPE
 		try {
-			if (parametros.get("id")[0].length() != 9) {
+			int temp = Integer.parseInt(parametros.get("id")[0]);
+			if (parametros.get("id")[0].length() != 9 && temp != ID_PROPRIO) {
 				throw new NumberFormatException();
 			}
-			Integer.parseInt(parametros.get("id")[0]);
 		} catch (NumberFormatException e) {
 			throw new ExcecaoParametrosIncorretos("Parâmetro inválido: 'id' deve ser um número de 9 dígitos");
 		}
@@ -55,7 +61,7 @@ public class Validacao {
 		try {
 			Integer.parseInt(parametros.get("id-depto")[0]);
 		} catch (NumberFormatException e) {
-			throw new ExcecaoParametrosIncorretos("Parâmetro inválido: 'id' deve ser um número de 9 dígitos");
+			throw new ExcecaoParametrosIncorretos("Parâmetro inválido: 'id-depto' deve ser um número inteiro");
 		}
 
 		// Valida titulação
@@ -78,7 +84,7 @@ public class Validacao {
 	}
 
 	public static void validarDepartamento(String depto, Connection con)
-			throws SQLException, ExcecaoParametrosIncorretos {
+		throws SQLException, ExcecaoParametrosIncorretos {
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM `departamentos` WHERE id = ?");
 		ps.setString(1, depto);
 		ps.execute();

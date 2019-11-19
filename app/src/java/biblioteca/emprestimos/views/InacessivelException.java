@@ -6,7 +6,6 @@
 package biblioteca.emprestimos.views;
 
 /**
- *
  * @author gabri
  */
 public class InacessivelException extends Exception {

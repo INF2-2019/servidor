@@ -1,19 +1,16 @@
 package diario.campi.repository;
 
 import diario.campi.view.viewConsulta;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import utils.autenticador.DiarioAutenticador;
+import utils.autenticador.DiarioCargos;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import utils.autenticador.*;
+import java.sql.*;
 
 /**
- *
  * @author User
  */
 public class CampiRepository {

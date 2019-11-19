@@ -157,3 +157,5 @@ local.properties
 
 # Libs
 !/**/lib/*.jar
+
+!/war/*.war

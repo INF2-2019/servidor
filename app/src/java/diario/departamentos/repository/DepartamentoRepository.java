@@ -1,27 +1,24 @@
 package diario.departamentos.repository;
 
 import diario.departamentos.model.Departamento;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import utils.ConnectionFactory;
+
+import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
-import utils.ConnectionFactory;
 
 public class DepartamentoRepository {
 
 	public static List<Departamento> consulta()
-			throws SQLException, DepartamentoInexistenteException {
+		throws SQLException, DepartamentoInexistenteException {
 		Connection con = ConnectionFactory.getDiario();
 		if (con != null) {
 			List<Departamento> deptos;
 			try (Statement stmt = con.createStatement()) {
-				ResultSet rs = stmt.executeQuery("SELECT * FROM `departamentos`");
+				ResultSet rs = stmt.executeQuery("SELECT * FROM `departamentos` INNER JOIN `campi` ON departamentos.`id-campi` = campi.id");
 				deptos = new LinkedList();
 				while (rs.next()) {
-					deptos.add(new Departamento(rs.getInt("id"), rs.getInt("id-campi"), rs.getString("nome")));
+					deptos.add(new Departamento(rs.getInt("departamentos.id"), rs.getInt("departamentos.id-campi"), rs.getString("departamentos.nome"), rs.getString("campi.nome"), rs.getString("campi.cidade"), rs.getString("campi.uf")));
 				}
 			}
 			con.close();
@@ -32,17 +29,17 @@ public class DepartamentoRepository {
 	}
 
 	public static Departamento consulta(int id)
-			throws SQLException, DepartamentoInexistenteException {
+		throws SQLException, DepartamentoInexistenteException {
 		Connection con = ConnectionFactory.getDiario();
 		if (con != null) {
 			Departamento depto;
-			try (PreparedStatement prst = con.prepareStatement("SELECT * FROM `departamentos` WHERE `id` = ?")) {
+			try (PreparedStatement prst = con.prepareStatement("SELECT * FROM `departamentos`, `campi` WHERE `departamentos`.`id` = ? AND `departamentos`.`id-campi` = `campi`.`id`")) {
 				prst.setInt(1, id);
 				ResultSet rs = prst.executeQuery();
 				if (!rs.next()) {
 					throw new DepartamentoInexistenteException();
 				}
-				depto = new Departamento(rs.getInt("id"), rs.getInt("id-campi"), rs.getString("nome"));
+				depto = new Departamento(rs.getInt("departamentos.id"), rs.getInt("departamentos.id-campi"), rs.getString("departamentos.nome"), rs.getString("campi.nome"), rs.getString("campi.cidade"), rs.getString("campi.uf"));
 			}
 			con.close();
 
@@ -81,7 +78,7 @@ public class DepartamentoRepository {
 	}
 
 	public static void atualiza(int id, int idCampi)
-			throws SQLException, DepartamentoInexistenteException {
+		throws SQLException, DepartamentoInexistenteException {
 		Connection con = ConnectionFactory.getDiario();
 		if (con != null) {
 			try (PreparedStatement prst = con.prepareStatement("UPDATE `departamentos` SET `id-campi` = ? WHERE `id` = ?")) {
@@ -98,7 +95,7 @@ public class DepartamentoRepository {
 	}
 
 	public static void atualiza(int id, String nome)
-			throws SQLException, DepartamentoInexistenteException {
+		throws SQLException, DepartamentoInexistenteException {
 		Connection con = ConnectionFactory.getDiario();
 		if (con != null) {
 			try (PreparedStatement prst = con.prepareStatement("UPDATE `departamentos` SET `nome` = ? WHERE `id` = ?")) {
@@ -115,7 +112,7 @@ public class DepartamentoRepository {
 	}
 
 	public static void atualiza(int id, int idCampi, String nome)
-			throws SQLException, DepartamentoInexistenteException {
+		throws SQLException, DepartamentoInexistenteException {
 		Connection con = ConnectionFactory.getDiario();
 		if (con != null) {
 			try (PreparedStatement prst = con.prepareStatement("UPDATE `departamentos` SET `id-campi` = ?, `nome` = ? WHERE `id` = ?")) {
@@ -133,7 +130,7 @@ public class DepartamentoRepository {
 	}
 
 	public static void atualiza(Departamento depto)
-			throws SQLException, DepartamentoInexistenteException {
+		throws SQLException, DepartamentoInexistenteException {
 		Connection con = ConnectionFactory.getDiario();
 		if (con != null) {
 			try (PreparedStatement prst = con.prepareStatement("UPDATE `departamentos` SET `id-campi` = ?, `nome` = ? WHERE `id` = ?")) {
@@ -151,7 +148,7 @@ public class DepartamentoRepository {
 	}
 
 	public static void remove(int id)
-			throws SQLException, DepartamentoInexistenteException {
+		throws SQLException, DepartamentoInexistenteException {
 		Connection con = ConnectionFactory.getDiario();
 		if (con != null) {
 			try (PreparedStatement prst = con.prepareStatement("DELETE FROM `departamentos` WHERE `id` = ?")) {
@@ -167,7 +164,7 @@ public class DepartamentoRepository {
 	}
 
 	public static void remove(Departamento depto)
-			throws SQLException, DepartamentoInexistenteException {
+		throws SQLException, DepartamentoInexistenteException {
 		Connection con = ConnectionFactory.getDiario();
 		if (con != null) {
 			try (PreparedStatement prst = con.prepareStatement("DELETE FROM `departamentos` WHERE `id` = ?")) {

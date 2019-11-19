@@ -2,11 +2,10 @@ package diario.turmas.models;
 
 public class TurmaModel {
 
-	private int id, idCursos;
-	private String nome;
-
 	private static final int ID_INDEFINIDO = -1, IDCURSOS_INDEFINIDO = 0;
 	private static final String NOME_INDEFINIDO = "";
+	private int id, idCursos;
+	private String nome;
 
 	public TurmaModel() {
 		this(ID_INDEFINIDO, IDCURSOS_INDEFINIDO, NOME_INDEFINIDO);

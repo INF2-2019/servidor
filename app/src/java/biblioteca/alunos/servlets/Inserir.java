@@ -6,6 +6,7 @@ import diario.cursos.view.RenderException;
 import diario.cursos.view.SucessoView;
 import diario.cursos.view.View;
 import utils.ConnectionFactory;
+import utils.Validators;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,16 +21,15 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 
-
 @WebServlet(name = "InserirAluno", urlPatterns = {"/biblioteca/alunos/inserir"})
 public class Inserir extends HttpServlet {
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException {
 		Connection conexao = ConnectionFactory.getBiblioteca();
 		AlunosRepository rep = new AlunosRepository(conexao);
 		PrintWriter out = response.getWriter();
-
 
 		if (rep.checarAutorizacaoADM(request, response) || rep.checarAutorizacaoOperador(request, response)) {
 
@@ -48,9 +48,14 @@ public class Inserir extends HttpServlet {
 			String uf = request.getParameter("uf");
 			String foto = request.getParameter("foto");
 			try {
-				boolean sucesso = rep.inserirAlunos(id, nome, email, senha, sexo, nascimento, logradouro, numero, complemento, bairro, cidade, cep, uf, foto);
-				View sucessoView = new SucessoView("Inserido com sucesso.");
-				sucessoView.render(out);
+				if (!Validators.isCPF(id)) {
+					response.setStatus(422);
+					out.println("<erro><mensagem>CPF inserido é inválido</mensagem></erro>");
+				} else {
+					boolean sucesso = rep.inserirAlunos(id, nome, email, senha, sexo, nascimento, logradouro, numero, complemento, bairro, cidade, cep, uf, foto);
+					View sucessoView = new SucessoView("Inserido com sucesso.");
+					sucessoView.render(out);
+				}
 			} catch (NumberFormatException excecaoFormatoErrado) {
 				response.setStatus(422);
 				System.err.println("Número inteiro inválido para o parâmetro. Erro: " + excecaoFormatoErrado.toString());

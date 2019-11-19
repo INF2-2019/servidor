@@ -16,17 +16,8 @@ public class ErroView extends View {
 		super(excecao);
 	}
 
-	@Override
-	public void render(PrintWriter writer) throws RenderException {
-		try {
-			writer.write(Conversores.converterDocumentEmXMLString(criarErroXML((Exception) data)));
-		} catch(ParserConfigurationException | TransformerException ex) {
-			throw new RenderException(ex);
-		}
-	}
-
 	private static Document criarErroXML(Exception excecao)
-			throws ParserConfigurationException {
+		throws ParserConfigurationException {
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = dbf.newDocumentBuilder();
@@ -41,6 +32,15 @@ public class ErroView extends View {
 		document.appendChild(erro);
 
 		return document;
+	}
+
+	@Override
+	public void render(PrintWriter writer) throws RenderException {
+		try {
+			writer.write(Conversores.converterDocumentEmXMLString(criarErroXML((Exception) data)));
+		} catch (ParserConfigurationException | TransformerException ex) {
+			throw new RenderException(ex);
+		}
 	}
 
 }

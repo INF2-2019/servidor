@@ -1,9 +1,9 @@
 package diario.etapas.view;
 
+import diario.etapas.RenderException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Conversores;
-import diario.etapas.RenderException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

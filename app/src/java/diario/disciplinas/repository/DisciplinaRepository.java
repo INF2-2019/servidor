@@ -1,16 +1,13 @@
 package diario.disciplinas.repository;
 
+import diario.disciplinas.model.DisciplinaModel;
+import diario.disciplinas.views.ExcecaoConteudoVinculado;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import diario.disciplinas.model.DisciplinaModel;
-import java.util.SortedMap;
-import diario.disciplinas.views.ExcecaoConteudoVinculado;
+import java.util.*;
 
 public class DisciplinaRepository {
 

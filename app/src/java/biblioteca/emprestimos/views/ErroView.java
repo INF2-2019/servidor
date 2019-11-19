@@ -9,21 +9,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.PrintWriter;
-import biblioteca.emprestimos.views.InacessivelException;
 
 public class ErroView extends View {
 
 	public ErroView(Exception excecao) {
 		super(excecao);
-	}
-
-	@Override
-	public void render(PrintWriter writer) throws RenderException {
-		try {
-			writer.write(Conversores.converterDocumentEmXMLString(criarErroXML((Exception) data)));
-		} catch (ParserConfigurationException | TransformerException ex) {
-			throw new RenderException(ex);
-		}
 	}
 
 	private static Document criarErroXML(Exception excecao) throws ParserConfigurationException {
@@ -41,6 +31,15 @@ public class ErroView extends View {
 		documento.appendChild(erro);
 
 		return documento;
+	}
+
+	@Override
+	public void render(PrintWriter writer) throws RenderException {
+		try {
+			writer.write(Conversores.converterDocumentEmXMLString(criarErroXML((Exception) data)));
+		} catch (ParserConfigurationException | TransformerException ex) {
+			throw new RenderException(ex);
+		}
 	}
 
 }

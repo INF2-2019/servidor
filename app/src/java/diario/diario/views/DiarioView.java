@@ -34,7 +34,7 @@ public class DiarioView {
 			diarioUnicoXML += "<id-matriculas>" + diario.getIdMatricula() + "</id-matriculas>\n";
 
 			if (diario.getFalta() != null) {
-				diarioUnicoXML += "<faltas>" + diario.getNota() + "</faltas>\n";
+				diarioUnicoXML += "<faltas>" + diario.getFalta() + "</faltas>\n";
 			}
 			if (diario.getNota() != null) {
 				diarioUnicoXML += "<nota>" + diario.getNota() + "</nota>\n";

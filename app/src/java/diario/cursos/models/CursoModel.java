@@ -56,36 +56,36 @@ public class CursoModel extends Model {
 		return id;
 	}
 
-	public int getIdDepto() {
-		return idDepto;
-	}
-
-	public int getHorasTotal() {
-		return horasTotal;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public String getModalidade() {
-		return modalidade;
-	}
-
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public int getIdDepto() {
+		return idDepto;
 	}
 
 	public void setIdDepto(int idDepto) {
 		this.idDepto = idDepto;
 	}
 
+	public int getHorasTotal() {
+		return horasTotal;
+	}
+
 	public void setHorasTotal(int horasTotal) {
 		this.horasTotal = horasTotal;
 	}
 
+	public String getNome() {
+		return nome;
+	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public String getModalidade() {
+		return modalidade;
 	}
 
 	public void setModalidade(String modalidade) {

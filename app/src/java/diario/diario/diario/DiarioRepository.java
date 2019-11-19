@@ -7,10 +7,7 @@ package diario.diario.diario;
 
 import diario.diario.views.ExcecaoPadrao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -24,13 +21,32 @@ public class DiarioRepository {
 		this.conexao = conexao;
 	}
 
-	public boolean insere(DiarioModel modelo) throws SQLException {
-		String query = "INSERT INTO diario(`id-conteudos`,`id-matriculas`, faltas, nota) VALUES (?, ?, ?, COALESCE(?,0.0))";
+	public boolean insere(DiarioModel modelo) throws SQLException, ExcecaoPadrao {
+		DiarioModel filtro = new DiarioModel(modelo.getIdConteudo(), modelo.getIdMatricula());
+		ArrayList<DiarioModel> lista = consulta(filtro);
+
+		// Se diario já existir, atualiza o existente com os novos dados
+		if (lista.size() > 0) {
+			return atualizar(modelo, filtro);
+		}
+
+		String query = "INSERT INTO diario(`id-conteudos`,`id-matriculas`, faltas, nota) VALUES (?, ?, COALESCE(?,0), COALESCE(?,0.0))";
 		PreparedStatement st = conexao.prepareStatement(query);
 		st.setInt(1, modelo.getIdConteudo());
 		st.setInt(2, modelo.getIdMatricula());
-		st.setInt(3, modelo.getFalta());
-		st.setDouble(4, modelo.getNota());
+
+		if (modelo.getFalta() != null) {
+			st.setInt(3, modelo.getFalta());
+		} else {
+			st.setNull(3, Types.INTEGER);
+		}
+
+		if (modelo.getNota() != null) {
+			st.setDouble(4, modelo.getNota());
+		} else {
+			st.setNull(4, Types.DECIMAL);
+		}
+
 		int r = st.executeUpdate();
 
 		st.close();
@@ -40,7 +56,11 @@ public class DiarioRepository {
 	}
 
 	public boolean atualizar(DiarioModel modelo, DiarioModel filtro) throws SQLException, ExcecaoPadrao {
-		String query = "UPDATE diario SET `id-conteudos=?`,`id-matriculas`=?, faltas=?, nota=? WHERE `id-conteudos=?` AND `id-matriculas`=?";
+		String query = "UPDATE diario SET"
+			+ "`id-conteudos`=COALESCE(?,diario.`id-conteudos`),"
+			+ "`id-matriculas`=COALESCE(?,diario.`id-matriculas`),"
+			+ " faltas=COALESCE(?, diario.faltas),"
+			+ " nota=COALESCE(?, diario.nota)";
 		PreparedStatement st;
 
 		if (filtro.getIdConteudo() != null && filtro.getIdMatricula() != null) {
@@ -60,10 +80,30 @@ public class DiarioRepository {
 			throw new ExcecaoPadrao("Nenhuma alteração efetuada!");
 		}
 
-		st.setInt(1, modelo.getIdConteudo());
-		st.setInt(2, modelo.getIdMatricula());
-		st.setInt(3, modelo.getFalta());
-		st.setDouble(4, modelo.getNota());
+		if (modelo.getIdConteudo() != null) {
+			st.setNull(1, modelo.getIdConteudo());
+		} else {
+			st.setNull(1, Types.INTEGER);
+		}
+
+		if (modelo.getIdMatricula() != null) {
+			st.setInt(2, modelo.getIdMatricula());
+		} else {
+			st.setNull(2, Types.INTEGER);
+		}
+
+		if (modelo.getFalta() != null) {
+			st.setInt(3, modelo.getFalta());
+		} else {
+			st.setNull(3, Types.INTEGER);
+		}
+
+		if (modelo.getNota() != null) {
+			st.setDouble(4, modelo.getNota());
+		} else {
+			st.setNull(4, Types.DECIMAL);
+		}
+
 		int r = st.executeUpdate();
 
 		st.close();

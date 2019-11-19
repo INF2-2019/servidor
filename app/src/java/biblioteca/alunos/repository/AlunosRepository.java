@@ -2,7 +2,8 @@ package biblioteca.alunos.repository;
 
 import diario.campi.view.viewConsulta;
 import utils.Hasher;
-
+import utils.autenticador.BibliotecaAutenticador;
+import utils.autenticador.BibliotecaCargos;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,9 +13,6 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import utils.autenticador.BibliotecaAutenticador;
-import utils.autenticador.BibliotecaCargos;
-
 
 public class AlunosRepository {
 
@@ -32,7 +30,7 @@ public class AlunosRepository {
 		if (rs.next()) {
 			return "emprestimo";
 		}
-                PreparedStatement ps2 = con.prepareStatement("SELECT * FROM `reservas` WHERE `id-alunos` = ?");
+		PreparedStatement ps2 = con.prepareStatement("SELECT * FROM `reservas` WHERE `id-alunos` = ?");
 		ps2.setLong(1, idParsed);
 		ResultSet rs2 = ps2.executeQuery();
 		if (rs2.next()) {
@@ -284,8 +282,9 @@ public class AlunosRepository {
 			Long id = rs.getLong("id");
 			String idStr = Long.toString(id);
 			String zeros = "";
-			for (int i = idStr.length(); i < 11; i++)
+			for (int i = idStr.length(); i < 11; i++) {
 				zeros += "0";
+			}
 			zeros += idStr;
 			xml += viewConsulta.XMLAluno(zeros, rs.getString("nome"), rs.getString("email"));
 		}
@@ -303,8 +302,9 @@ public class AlunosRepository {
 			Long id2 = rs.getLong("id");
 			String idStr = Long.toString(id2);
 			String zeros = "";
-			for (int i = idStr.length(); i < 11; i++)
+			for (int i = idStr.length(); i < 11; i++) {
 				zeros += "0";
+			}
 			zeros += idStr;
 			xml += viewConsulta.XMLAlunoCompleto(zeros,
 				rs.getString("nome"),
@@ -329,4 +329,3 @@ public class AlunosRepository {
 	}
 
 }
-

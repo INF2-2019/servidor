@@ -1,7 +1,9 @@
 package diario.professores;
 
+import diario.professores.services.ExcecaoNaoAutorizado;
+import diario.professores.services.ExcecaoParametrosIncorretos;
+import diario.professores.services.Validacao;
 import utils.ConnectionFactory;
-import utils.Hasher;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
 
@@ -29,35 +31,43 @@ public class AtualizarProfessor extends HttpServlet {
 	protected void doPost(HttpServletRequest requisicao, HttpServletResponse resposta)
 		throws IOException {
 
-
-		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
-		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
-			resposta.setStatus(403);
-			return;
-		}
-
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
+
+			int id = Integer.parseInt(requisicao.getParameter("id"));
+			DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
+			if (autenticador.cargoLogado() != DiarioCargos.ADMIN
+				&& (Integer) autenticador.idLogado() != id) {
+				throw new ExcecaoNaoAutorizado("Você não tem permissão para realizar esta operação");
+			}
 
 			if (conexao == null) {
 				throw new SQLException("Impossível se conectar ao banco de dados");
 			}
 
-			Validacao.validarParametros(requisicao.getParameterMap());
+			String senha = requisicao.getParameter("senha");
+			boolean haSenha = senha != null && !senha.equals("");
+
+			Validacao.validarParametros(requisicao.getParameterMap(), haSenha);
 			Validacao.validarDepartamento(requisicao.getParameter("id-depto"), conexao);
 
 			String statement = "UPDATE `professores` SET "
-				+ "`id-depto` = ?, `nome` = ?, `senha` = ?, "
+				+ "`id-depto` = ?, `nome` = ?, "
 				+ "`email` = ?, `titulacao` = ? WHERE `id` = ?";
 			PreparedStatement ps = conexao.prepareStatement(statement);
 
 			ps.setInt(1, Integer.parseInt(requisicao.getParameter("id-depto")));
 			ps.setString(2, requisicao.getParameter("nome"));
-			ps.setString(3, Hasher.hash(requisicao.getParameter("senha")));
-			ps.setString(4, requisicao.getParameter("email"));
-			ps.setString(5, requisicao.getParameter("titulacao"));
-			ps.setInt(6, Integer.parseInt(requisicao.getParameter("id")));
+			ps.setString(3, requisicao.getParameter("email"));
+			ps.setString(4, requisicao.getParameter("titulacao"));
+			ps.setInt(5, id);
 			ps.execute();
+			ps.close();
+
+			if (haSenha) {
+				AtualizarSenha.atualizarSenha(id, senha, conexao);
+			}
+
 			conexao.close();
 
 			saida.println("<sucesso>");
@@ -65,15 +75,14 @@ public class AtualizarProfessor extends HttpServlet {
 			saida.println("</sucesso>");
 
 		} catch (ExcecaoParametrosIncorretos e) {
-			resposta.setStatus(400);
-			saida.println("<erro>");
-			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
-			saida.println("</erro>");
+			resposta.setStatus(422);
+			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
+		} catch (ExcecaoNaoAutorizado e) {
+			resposta.setStatus(403);
+			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
 		} catch (Exception e) {
 			resposta.setStatus(500);
-			saida.println("<erro>");
-			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
-			saida.println("</erro>");
+			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
 		}
 
 	}

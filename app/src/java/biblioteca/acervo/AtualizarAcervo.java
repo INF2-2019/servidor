@@ -28,7 +28,6 @@ public class AtualizarAcervo extends HttpServlet {
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
 		throws IOException {
 
-
 		PrintWriter saida = resposta.getWriter();
 
 		try (Connection conexao = ConnectionFactory.getBiblioteca()) {

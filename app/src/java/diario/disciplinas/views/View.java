@@ -16,7 +16,7 @@ public abstract class View<D> {
 	public String render() throws RenderException {
 		StringWriter data = new StringWriter();
 		PrintWriter printWriter = new PrintWriter(data);
-		render(printWriter);   
+		render(printWriter);
 		return data.toString();
 	}
 

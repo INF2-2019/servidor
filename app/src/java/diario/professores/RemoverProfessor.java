@@ -1,5 +1,7 @@
 package diario.professores;
 
+import diario.professores.services.ExcecaoNaoAutorizado;
+import diario.professores.services.ExcecaoParametrosIncorretos;
 import utils.ConnectionFactory;
 import utils.autenticador.DiarioAutenticador;
 import utils.autenticador.DiarioCargos;
@@ -28,15 +30,13 @@ public class RemoverProfessor extends HttpServlet {
 	protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta)
 		throws IOException {
 
-
-		DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
-		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
-			resposta.setStatus(403);
-			return;
-		}
-
 		PrintWriter saida = resposta.getWriter();
 		try (Connection conexao = ConnectionFactory.getDiario()) {
+
+			DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
+			if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+				throw new ExcecaoNaoAutorizado("Você não tem permissão para realizar esta operação");
+			}
 
 			if (conexao == null) {
 				throw new SQLException("Impossível se conectar ao banco de dados");
@@ -58,15 +58,14 @@ public class RemoverProfessor extends HttpServlet {
 			saida.println("</sucesso>");
 
 		} catch (ExcecaoParametrosIncorretos e) {
-			resposta.setStatus(400);
-			saida.println("<erro>");
-			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
-			saida.println("</erro>");
+			resposta.setStatus(422);
+			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
+		} catch (ExcecaoNaoAutorizado e) {
+			resposta.setStatus(403);
+			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
 		} catch (Exception e) {
 			resposta.setStatus(500);
-			saida.println("<erro>");
-			saida.println("  <mensagem>" + e.getMessage() + "</mensagem>");
-			saida.println("</erro>");
+			saida.println("<erro><mensagem>" + e.getMessage() + "</mensagem></erro>");
 		}
 
 	}

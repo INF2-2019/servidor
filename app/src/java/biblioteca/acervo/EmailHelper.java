@@ -1,6 +1,8 @@
 package biblioteca.acervo;
 
-import org.apache.commons.mail.*;
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.MultiPartEmail;
 
 /**
  * <h1> Envio de Email </h1>
@@ -16,13 +18,13 @@ public class EmailHelper {
 	private static final String SENHA = "carecasecreto";
 	private static final String ASSUNTO = "Item excluído do acervo";
 	private static final String MENSAGEM_CORPO
-			= "Comunicamos que um item que você reservou foi excluído do nosso acervo.\n"
-			+ "Pedimos desculpas pelo inconveniente mas temos que atualizar nosso acervo"
-			+ " frequentemente para agradar a todos os alunos :) \n\n"
-			+ "Atenciosamente,\nSistema de Controle de Biblioteca.\n\n\nNão responda a este email";
+		= "Comunicamos que um item que você reservou foi excluído do nosso acervo.\n"
+		+ "Pedimos desculpas pelo inconveniente mas temos que atualizar nosso acervo"
+		+ " frequentemente para agradar a todos os alunos :) \n\n"
+		+ "Atenciosamente,\nSistema de Controle de Biblioteca.\n\n\nNão responda a este email";
 
 	public static void enviarEmail(String destinatario, String nome)
-			throws EmailException {
+		throws EmailException {
 
 		MultiPartEmail email = new MultiPartEmail();
 		email.setSmtpPort(587);

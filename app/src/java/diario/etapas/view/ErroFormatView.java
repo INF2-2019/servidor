@@ -1,9 +1,9 @@
 package diario.etapas.view;
 
+import diario.etapas.RenderException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Conversores;
-import diario.etapas.RenderException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,15 +15,6 @@ public class ErroFormatView extends View {
 
 	public ErroFormatView(Exception excecao) {
 		super(excecao);
-	}
-
-	@Override
-	public void render(PrintWriter writer) throws RenderException {
-		try {
-			writer.write(Conversores.converterDocumentEmXMLString(criarErroXML((Exception) data)));
-		} catch (ParserConfigurationException | TransformerException ex) {
-			throw new RenderException(ex);
-		}
 	}
 
 	private static Document criarErroXML(Exception excecao) throws ParserConfigurationException {
@@ -40,6 +31,15 @@ public class ErroFormatView extends View {
 		documento.appendChild(erro);
 
 		return documento;
+	}
+
+	@Override
+	public void render(PrintWriter writer) throws RenderException {
+		try {
+			writer.write(Conversores.converterDocumentEmXMLString(criarErroXML((Exception) data)));
+		} catch (ParserConfigurationException | TransformerException ex) {
+			throw new RenderException(ex);
+		}
 	}
 
 }

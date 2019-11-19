@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@WebServlet(name = "ConsultarDisciplinas", urlPatterns = {"/diario/professoresdisciplinas/consultar"})
+@WebServlet(name = "ConsultaProfessoresDisciplinas", urlPatterns = {"/diario/professoresdisciplinas/consultar"})
 public class ConsultaProfessoresDisciplinas extends HttpServlet {
 
 	@Override

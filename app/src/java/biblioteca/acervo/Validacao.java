@@ -24,7 +24,7 @@ public class Validacao {
 	private static final String[] PARAMS_PERIODICOS = {"id-obra", "periodicidade", "mes", "volume", "subtipo", "issn"};
 
 	public static void validarParametros(HttpServletRequest requisicao)
-			throws ExcecaoParametrosIncorretos, NumberFormatException {
+		throws ExcecaoParametrosIncorretos, NumberFormatException {
 
 		for (String param : PARAMS_ACERVO) {
 			if (requisicao.getParameter(param) == null) {
@@ -74,6 +74,12 @@ public class Validacao {
 						if (!m.matches()) {
 							throw new ExcecaoParametrosIncorretos("Tempo da mídia em formato inválido");
 						}
+					} else if (param.equals("subtipo")) {
+						String subtipo = requisicao.getParameter("subtipo").toUpperCase();
+						if (!subtipo.equals("CD") && !subtipo.equals("DVD")
+							&& !subtipo.equals("PENDRIVE") && !subtipo.equals("FITA")) {
+							throw new ExcecaoParametrosIncorretos("O subtipo de uma mídia deve ser um dentre 'CD', 'DVD', 'PENDRIVE', 'FITA'");
+						}
 					}
 				}
 				break;
@@ -96,7 +102,7 @@ public class Validacao {
 	}
 
 	public static void validarIdCampi(int idCampi, Connection conexao)
-			throws ExcecaoParametrosIncorretos, SQLException {
+		throws ExcecaoParametrosIncorretos, SQLException {
 
 		if (idCampi != 1 && idCampi != 2) {
 			throw new ExcecaoParametrosIncorretos("Parâmetro inválido: 'id-campi' deve ser 1 ou 2");
@@ -105,7 +111,7 @@ public class Validacao {
 	}
 
 	public static void validarIdObra(int idObra, Connection conexao)
-			throws ExcecaoParametrosIncorretos, SQLException {
+		throws ExcecaoParametrosIncorretos, SQLException {
 
 		PreparedStatement ps = conexao.prepareStatement("SELECT * FROM `periodicos` WHERE `id` = ?");
 		ps.setInt(1, idObra);
