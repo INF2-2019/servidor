@@ -23,11 +23,13 @@ import java.sql.SQLException;
 @WebServlet(name = "Deletar", urlPatterns = "/diario/etapas/deletar")
 public class DeletarEtapas extends HttpServlet {
 
-	// método doGet será alterado para doPost quando for terminado o front-end
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doPost(req, resp);
+	}
 
-
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
 		if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
 			response.setStatus(403);

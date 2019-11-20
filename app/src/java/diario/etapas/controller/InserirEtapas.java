@@ -26,8 +26,13 @@ import java.util.Map;
 @WebServlet(name = "InserirEtapas", urlPatterns = "/diario/etapas/inserir")
 public class InserirEtapas extends HttpServlet {
 
-	// método doGet será alterado para doPost quando for terminado o front-end
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doPost(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 
 		DiarioAutenticador autenticador = new DiarioAutenticador(request, response);
