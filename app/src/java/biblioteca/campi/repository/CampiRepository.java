@@ -1,8 +1,8 @@
 package biblioteca.campi.repository;
 
 import diario.campi.view.viewConsulta;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
+import utils.autenticador.BibliotecaAutenticador;
+import utils.autenticador.BibliotecaCargos;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -115,9 +115,9 @@ public class CampiRepository {
 	}
 
 	public boolean checarAutorizacaoADM(HttpServletRequest request, HttpServletResponse response) {
-		DiarioAutenticador x = new DiarioAutenticador(request, response);
+		BibliotecaAutenticador x = new BibliotecaAutenticador(request, response);
 
-		return x.cargoLogado() == DiarioCargos.ADMIN;
+		return x.cargoLogado() == BibliotecaCargos.ADMIN;
 	}
 
 	public String listarCampi() throws SQLException {
