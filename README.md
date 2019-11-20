@@ -2,10 +2,6 @@
 
 Esse repositório é dedicado a parte de `back-end` da aplicação a ser der desenvolvida, no caso a tecnologia utilizada será a `Java EE`.
 
-## Aviso
-
-Esse repositório tem afazeres globais, caso queira ajudar verifique o [`TO-DO`](TO-DO.md).
-
 ## A estrutura do projeto
 
 Leia sobre a estrutura do projeto [aqui](docs/estrutura.md).
