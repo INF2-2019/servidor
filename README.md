@@ -1,6 +1,6 @@
 # Servidor
 
-Esse repositório é dedicado a parte de `back-end` da aplicação a ser der desenvolvida, no caso a tecnologia utilizada será a `Java EE`.
+Este repositório é dedicado à parte de `back-end` da aplicação web desenvolvida. No caso, a tecnologia utilizada é a `Java EE`.
 
 ## A estrutura do projeto
 
@@ -23,9 +23,9 @@ Instruções para instalação: [aqui](https://duckduckgo.com/)
 
 ### Plugins e Configurações
 
-Recomendamos, para sua facilidade, instalar o plugin `EditorConfig` que ira padronizar o seu projeto "automaticamente" baseado no arquivo `.editorconfig` em `app`. [Tutorial para instalação no NetBeans](https://inf2-2019.github.io/help/editorconfig/).
+Recomendamos, para sua facilidade, instalar o plugin `EditorConfig`, que irá padronizar o seu projeto automaticamente, baseado no arquivo `.editorconfig` em `app`. [Tutorial para instalação no NetBeans](https://inf2-2019.github.io/help/editorconfig/).
 
-Serão usados:
+São usados:
 
 - Indentação por `TAB`
 - Charset `UTF-8`
@@ -66,15 +66,15 @@ As bibliotecas usadas atualmente são:
 - `Commons Email`
 - `Activation`
 
-As três últimas bibliotecas precisam ser incluídas no projeto (caso já não estejam automaticamente), para isso siga os passos:
+As três últimas bibliotecas precisam ser incluídas no projeto, caso já não estejam automaticamente. Para isso, siga os passos:
 
-1. Clique com o botão direito em "Bibliotecas" e selecione "Adicionar JAR/Pasta..." conforme [a imagem](http://prntscr.com/puoihq)
+1. Clique com o botão direito em "Bibliotecas" e selecione "Adicionar JAR/Pasta...", conforme [a imagem](http://prntscr.com/puoihq)
 2. Localize a pasta `app/web/WEB-INF/lib`
 3. Segure CTRL e clique sobre `mail`, `commons-email-1.3` e `activation`
 4. Clique em abrir
 
 ## Documentações e links úteis
 
-A documentação estará disponível na pasta `docs`.
+A documentação está disponível na pasta `docs`.
 
 `Glassfish 4.1.2-` download: [aqui](https://javaee.github.io/glassfish/download)
