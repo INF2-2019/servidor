@@ -1,8 +1,8 @@
 package biblioteca.acervo;
 
 import utils.ConnectionFactory;
-import utils.autenticador.DiarioAutenticador;
-import utils.autenticador.DiarioCargos;
+import utils.autenticador.BibliotecaAutenticador;
+import utils.autenticador.BibliotecaCargos;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,8 +32,8 @@ public class AtualizarAcervo extends HttpServlet {
 
 		try (Connection conexao = ConnectionFactory.getBiblioteca()) {
 
-			DiarioAutenticador autenticador = new DiarioAutenticador(requisicao, resposta);
-			if (autenticador.cargoLogado() != DiarioCargos.ADMIN) {
+			BibliotecaAutenticador autenticador = new BibliotecaAutenticador(requisicao, resposta);
+			if (autenticador.cargoLogado() != BibliotecaCargos.ADMIN) {
 				throw new ExcecaoNaoAutorizado("Você não tem permissão para essa operação");
 			}
 
