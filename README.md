@@ -2,9 +2,23 @@
 
 Este repositório é dedicado à parte de `back-end` da aplicação web desenvolvida. No caso, a tecnologia utilizada é a `Java EE`.
 
-## A estrutura do projeto
+## Como _buildar_ o projeto
 
-Leia sobre a estrutura do projeto [aqui](docs/estrutura.md).
+Utilizar a ferramenta de _build_ padrão da IDE utilizada. O servidor tem que ser o `Glassfish 4.1.x`.
+
+## Sobre os bancos de dados
+
+Os bancos de dados seguem um padrão semelhante ao documento do projeto.
+
+Os "dumps" estão na pasta [db](db/) do projeto.  
+A documentação pode ser acessada [aqui](docs/bd/README.md)
+
+Caso você queira facilitar sua vida na hora de incluir os arquivos, execute o `prod.sql`, que é um compilado dos outros arquivos.
+
+### Configurando o banco de dados
+
+Por questões de praticidade, foi adicionada a possibilidade de criar um arquivo `bd.properties` no pacote `config` do projeto. Caso você queira uma referência, existe um arquivo `_bd.properties` no mesmo pacote.  
+O arquivo `bd.properties` é ignorado na hora de dar `commit` nos seus arquivos, então pode ficar tranquilo.
 
 ## Instruções para IDEs e Editores recomendados
 
@@ -45,19 +59,6 @@ trim_trailing_whitespace = true
 end_of_line = lf
 insert_final_newline = true
 ```
-
-## Como _buildar_ o projeto
-
-Utilizar a ferramenta de _build_ padrão da IDE utilizada. O servidor tem que ser o `Glassfish 4.1.x`.
-
-## Sobre os bancos de dados
-
-Os bancos de dados seguem um padrão semelhante ao documento do projeto.
-
-Os "dumps" estão na pasta [db](db/) do projeto.  
-A documentação pode ser acessada [aqui](docs/bd/README.md)
-
-Caso você queira facilitar sua vida na hora de incluir os arquivos, execute o `prod.sql`, que é um compilado dos outros arquivos.
 
 ## Bibliotecas
 
