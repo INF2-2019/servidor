@@ -11,7 +11,7 @@ Leia sobre a estrutura do projeto [aqui](docs/estrutura.md).
 ### Ferramentas necessárias
 
 - `Oracle JDK 8+` ou `OpenJDK 8+`
-- Servidor para desenvolvimento: `Glassfish 4`
+- Servidor para desenvolvimento: `Glassfish 4.1.x`
 - Uma IDE recomendada
 
 Instruções para instalação: [aqui](https://duckduckgo.com/)
@@ -48,7 +48,7 @@ insert_final_newline = true
 
 ## Como _buildar_ o projeto
 
-Utilizar a ferramenta de _build_ padrão da IDE utilizada. O servidor tem que ser o `Glassfish 4`.
+Utilizar a ferramenta de _build_ padrão da IDE utilizada. O servidor tem que ser o `Glassfish 4.1.x`.
 
 ## Sobre os bancos de dados
 
@@ -56,6 +56,8 @@ Os bancos de dados seguem um padrão semelhante ao documento do projeto.
 
 Os "dumps" estão na pasta [db](db/) do projeto.  
 A documentação pode ser acessada [aqui](docs/bd/README.md)
+
+Caso você queira facilitar sua vida na hora de incluir os arquivos, execute o `prod.sql`, que é um compilado dos outros arquivos.
 
 ## Bibliotecas
 
@@ -66,12 +68,13 @@ As bibliotecas usadas atualmente são:
 - `Commons Email`
 - `Activation`
 
-As três últimas bibliotecas precisam ser incluídas no projeto, caso já não estejam automaticamente. Para isso, siga os passos:
+### Caso você esteja tendo problemas com as bibliotecas
+
+Geralmente essas bibliotecas costumam estar incluídas no projeto "automaticamente", caso você esteja tendo problemas com elas, tente:
 
 1. Clique com o botão direito em "Bibliotecas" e selecione "Adicionar JAR/Pasta...", conforme [a imagem](http://prntscr.com/puoihq)
 2. Localize a pasta `app/web/WEB-INF/lib`
-3. Segure CTRL e clique sobre `mail`, `commons-email-1.3` e `activation`
-4. Clique em abrir
+3. Clique em abrir
 
 ## Documentações e links úteis
 
