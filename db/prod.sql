@@ -1,9 +1,5 @@
 SET time_zone = "-03:00";
 
-----------------
--- diario.sql --
-----------------
-
 CREATE DATABASE IF NOT EXISTS diario CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE diario;
 
@@ -134,10 +130,6 @@ CREATE TABLE IF NOT EXISTS `diario` (
   `faltas` INT NOT NULL DEFAULT 0,
   `nota` DECIMAL(5, 2) NOT NULL DEFAULT 000.00
 );
-
---------------------
--- biblioteca.sql --
---------------------
 
 CREATE DATABASE IF NOT EXISTS biblioteca CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE biblioteca;
@@ -294,10 +286,6 @@ CREATE TABLE IF NOT EXISTS `reservas` (
   `emprestou` BOOLEAN NOT NULL DEFAULT False,
   PRIMARY KEY (id)
 );
-
--------------------
--- add_admin.sql --
--------------------
 
 USE diario;
 INSERT INTO admin (nome, usuario, email, senha) VALUES ('Admins Adminos',	'admin',	'admin@admin.com',	'1000:47e67c5a0984a060b51ce53b809890ce:ef7fbe203771c4625150809b0e3cd64eedc0a3e13364e5aad40fb3d14cac37d4a0c458e0c5773519ac9b0303099da9f1d6ed847b57ec99f5920944c283c5a7c7');
